@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import { connectDB } from "./config/db.js";
 
 
 
@@ -14,6 +15,8 @@ app.listen(port,()=>{
 app.use(express.json()); //we send request frontend to backend
 app.use(cors());  //using this we access the backend from any frontend
 
+//db connectin
+connectDB();
 
 app.get("/",(req,res)=>{
 
@@ -21,5 +24,5 @@ app.get("/",(req,res)=>{
 });
 
 
-//deepumelkani123:projects123@cluster0.yywca.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
 
