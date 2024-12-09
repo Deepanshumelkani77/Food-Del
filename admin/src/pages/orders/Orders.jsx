@@ -1,7 +1,7 @@
 import React from 'react'
-import "./Add.css"
+import "./Orders.css"
 
-const Add = () => {
+const Orders = () => {
   return (
     <div>
       
@@ -9,4 +9,4 @@ const Add = () => {
   )
 }
 
-export default Add
+export default Orders

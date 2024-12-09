@@ -1,7 +1,7 @@
 import React from 'react'
-import "./Add.css"
+import "./List.css"
 
-const Add = () => {
+const List = () => {
   return (
     <div>
       
@@ -9,4 +9,4 @@ const Add = () => {
   )
 }
 
-export default Add
+export default List
