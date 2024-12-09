@@ -1,5 +1,5 @@
 const express=require("express")
-import cors from "cors";
+const cors=require("cors")
 //app config
 const app=express();
 const port=4000;
@@ -10,7 +10,7 @@ app.listen(port,()=>{
 
 
 //database connection
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
  const connectDB = async () => {
     try {
       await mongoose.connect(
@@ -24,7 +24,7 @@ import mongoose from "mongoose";
 //db connectin
 connectDB();
 
-
+const Food = require("./models/Food");
 
 
 
@@ -47,13 +47,20 @@ app.use(cors());  //using this we access the backend from any frontend
 
 
 
-//appi endpoint
-app.use("/api/food",foodRouter);
 
 app.get("/",(req,res)=>{
 
     res.send("api working")
 });
+
+app.get('/api/foods', async (req, res) => {
+    try {
+      const foods = await Food.find(); // Fetch all documents from the Food collection
+      res.status(200).json(foods);    // Send the data as a JSON response
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching data", error });
+    }
+  });
 
 
 
