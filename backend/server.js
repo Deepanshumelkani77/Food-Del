@@ -21,7 +21,7 @@ const mongoose = require("mongoose");
       console.error("Error connecting to database:", error);
     }
   };
-//db connectin
+//db connectin model
 connectDB();
 
 const Food = require("./models/Food.js");
