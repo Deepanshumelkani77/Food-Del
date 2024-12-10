@@ -14,6 +14,7 @@ const mongoose = require("mongoose");
  const connectDB = async () => {
     try {
       await mongoose.connect(
+        //this url come from mongo atlas
         "mongodb+srv://deepumelkani123:projects123@cluster0.yywca.mongodb.net/food-del?retryWrites=true&w=majority"
       );
       console.log("database connected successfully");
