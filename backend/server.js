@@ -1,5 +1,5 @@
 const express=require("express")
-const cors=require("cors")
+const cors=require("cors")  //it is use for fetch data from database in frontend 
 //app config
 const app=express();
 const port=4000;
@@ -24,7 +24,7 @@ const mongoose = require("mongoose");
 //db connectin
 connectDB();
 
-const Food = require("./models/Food");
+const Food = require("./models/Food.js");
 
 
 
@@ -41,19 +41,7 @@ app.use(cors());  //using this we access the backend from any frontend
 
 
 
-
-
-
-
-
-
-
-app.get("/",(req,res)=>{
-
-    res.send("api working")
-});
-
-app.get('/api/foods', async (req, res) => {
+app.get('/foods', async (req, res) => {
     try {
       const foods = await Food.find(); // Fetch all documents from the Food collection
       res.status(200).json(foods);    // Send the data as a JSON response
