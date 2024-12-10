@@ -41,6 +41,7 @@ app.use(cors());  //using this we access the backend from any frontend
 
 
 
+// this router for home page
 
 app.get('/foods', async (req, res) => {
     try {
