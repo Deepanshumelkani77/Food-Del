@@ -7,10 +7,13 @@ const List = () => {
   const[category ,setCategory]=useState("All");
 
   return (
-    <div>
+    <div className='list'>
       
+      <div className="list-content">
       <ExploreMenu category={category} setCategory={setCategory}/>
-<FoodDisplay category={category}/>
+      <FoodDisplay category={category}/>
+      </div>
+   
 
     </div>
   )
