@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import "./Item.css"
+import { assets } from '../../assets/assets';
 
 const Item = () => {
 
     const { id } = useParams(); // Get the dynamic ID from the URL
-    const [foodItem, setFoodItem] = useState(null);
+    const [foodItem, setFoodItem] = useState({});
   
     useEffect(() => {
       // Fetch the food item's details from the backend
-      fetch(`http://localhost:4000/food/${id}`)
+      fetch(`http://localhost:4000/foods/${id}`)
         .then((response) => response.json())
         .then((data) => setFoodItem(data))
         .catch((error) => console.error('Error fetching food item:', error));
