@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import "./FoodItem.css"
 import { assets } from '../../assets/assets'
+import { Link } from 'react-router-dom'
 
 
 const FoodItem = ({id,name,description,price,image}) => {
@@ -10,7 +11,7 @@ const FoodItem = ({id,name,description,price,image}) => {
 
 
   return (
-    <div className='food-item'>
+    <Link to={`/${id}`} className='food-item'>
       
 <div className="food-item-img-container">
     <img className='food-item-image'  src={image} alt="" />
@@ -34,7 +35,7 @@ const FoodItem = ({id,name,description,price,image}) => {
 
 </div>
 
-    </div>
+    </Link>
   )
 }
 

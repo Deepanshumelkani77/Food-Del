@@ -6,6 +6,7 @@ import Cart from './pages/cart/Cart.jsx'
 import Placeorder from "./pages/placeorder/Placeorder.jsx"
 import Footer from './components/footer/Footer.jsx'
 import LoginPopup from './components/loginpopup/LoginPopup.jsx'
+import Item from './pages/item/Item.jsx'
 
 const App = () => {
 //state variable for login page
@@ -23,6 +24,7 @@ const App = () => {
 <Route path='/' element={<Home/>}></Route>
 <Route path='/cart' element={<Cart/>}></Route>
 <Route path='/order' element={<Placeorder/>}></Route>
+<Route path='/:id' element={<Item.jsx/>}></Route>
       </Routes>
 
 
