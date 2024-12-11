@@ -23,11 +23,16 @@ const Item = () => {
     <div className='item-containe'>
 
        <div className="item-card">
-        <div className="image"><img src={foodItem.image} alt="" /></div>
+        <div className="item-card-image"><img src={foodItem.image} alt="" /></div>
+        <div className="item-card-name">
         <h2>{foodItem.name}</h2>
         <img src={assets.rating_starts} alt="" />
-        <p>description</p>
-   <p>price</p>
+        </div>
+        <p>{foodItem.description}</p>
+        <p className="item-card-price">${foodItem.price}</p>
+      
+        
+
         </div> 
       
     </div>

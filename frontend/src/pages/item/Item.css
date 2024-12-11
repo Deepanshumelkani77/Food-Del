@@ -1,0 +1,69 @@
+.item-container{
+    width:100%;
+    margin-bottom:0px ;
+  
+    
+}
+.item-card{
+    width:40vw;
+    margin: auto;
+    margin-top: 30px;
+    font-family: "Outfit",sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap:1vw;
+   box-shadow:  0 0 5px rgb(131, 129, 129);
+   padding: 10px 10px;
+}
+.item-card-image{
+    width:40vw;
+}
+.item-card-image img{
+    width:40vw;
+    height:35vw;
+}
+.item-card-name{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.item-card-name img{
+height:20px
+}
+
+.item-card-price{
+    color:tomato;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+@media (max-width:1200px){
+
+    .item-card{
+        width:50vw;
+    }
+    .item-card-image{
+        width:50vw;
+    }
+    .item-card-image img{
+        width:50vw;
+        height:40vw;
+    }
+
+}
+
+
+@media (max-width:500px){
+
+    .item-card{
+        width:75vw;
+    }
+    .item-card-image{
+        width:75vw;
+    }
+    .item-card-image img{
+        width:75vw;
+        height:70vw;
+    }
+
+}
