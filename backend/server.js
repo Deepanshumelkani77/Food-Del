@@ -11,7 +11,6 @@ app.listen(port,()=>{
 
 //database connection
 const mongoose = require("mongoose");
-
  const connectDB = async () => {
     try {
       await mongoose.connect(
