@@ -1,47 +1,63 @@
 .add{
-    width:70%;
-    margin-left: max(5vw,25px);
+    width:100%;
     margin-top: 50px;
     color:#6d6d6d;
     font-size: 16px;
+    
 }
 
-.add form{
-    gap:20px;
 
-}
 .flex-col{
+    width:60%;
+    margin: auto;
     display: flex;
     flex-direction: column;
-    gap:10px;
+    gap:25px;
 }
 
-.add-img-upload img{
-    width:120px;
-}
 
-.add-product-name,.add-product-discription{
-width:max(40%,280px);
-
-}
-.add-product-name input,.add-product-discription textarea{
+.add-img-upload input,.add-product-name input,.add-product-discription textarea{
     width:100%;
     padding:10px;
+    outline-color: tomato;
 }
 .add-category-price{
 display: flex;
-gap:30px
+width:100%;
+justify-content: space-between;
+}
+.add-category,.add-price{
+    width:45%;
 }
 .add-category-price select,.add-category-price input{
-max-width: 120px;
+width:100%;
 padding: 10px;
+outline-color: tomato;
 
 }
 .add-btn{
     max-width: 120px;
     border: none;
     padding: 10px;
-    background-color: black;
+    background-color:black;
     color: white;
     cursor: pointer;
+  font-weight: bold;
+}
+
+
+@media (max-width:700px){
+
+    .flex-col{
+        width:90%;
+        
+    }
+
+}
+
+@media (max-width:380px){
+
+    .add-category,.add-price{
+        width:50%;
+    }
 }

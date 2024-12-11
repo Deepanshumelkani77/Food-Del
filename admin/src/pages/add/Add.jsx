@@ -4,32 +4,32 @@ import { assets } from '../../assets/assets'
 
 const Add = () => {
 
-  const [image,setImage]=useState(false);
+  
 
   return (
     <div className='add'>
 
       <form className='flex-col'>
 
-
-<div className="add-img-upload flex-col">
-  <p>Upload Image</p>
-  <label htmlFor="image"> <img src={image?URL.createObjectURL(image):assets.upload_area} alt="" /></label>
-<input onChange={(event)=>setImage(event.target.files[0])} type="file" id='image' hidden required/>
-</div>
-
-<div className="add-product-name flex col">
+      <div className="add-product-name ">
 <p>Product name</p>
 <input type="text" name='name'  placeholder='Type here' />
 </div>
 
-<div className="add-product-discription flex-col">
+
+<div className="add-img-upload ">
+  <p>Upload Image</p>
+<input  type="text" id='image' placeholder="Type here"  required/>
+</div>
+
+
+<div className="add-product-discription ">
   <p>Product description</p>
-  <textarea name="discription" row='6' placeholder='write content here' required></textarea>
+  <textarea name="discription" row='5' placeholder='write content here' required></textarea>
 </div>
 
 <div className="add-category-price">
-  <div className="add-category flex-col">
+  <div className="add-category ">
 <p>Product category</p>
 <select name="category" >
   <option value="Salad">Salad</option>
@@ -42,7 +42,7 @@ const Add = () => {
   <option value="Noodles">Noodles</option>
 </select>
   </div>
-  <div className="add-price flex-col">
+  <div className="add-price ">
     <p>Product price</p>
     <input type="number" name="price" placeholder='$20'/>
   </div>
