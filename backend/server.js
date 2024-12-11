@@ -53,5 +53,19 @@ app.get('/foods', async (req, res) => {
   });
 
 
+//show(item) page
+  app.get('foods/:id', async (req, res) => {
+    try {
+      const foodId = req.params.id;
+      const foodItem = await Food.findById(foodId); // Assuming MongoDB
+      if (!foodItem) {
+        return res.status(404).json({ message: 'Food item not found' });
+      }
+      res.json(foodItem);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error', error });
+    }
+  });
+
 
 
