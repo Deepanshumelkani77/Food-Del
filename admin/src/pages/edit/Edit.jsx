@@ -44,7 +44,7 @@ const Edit = () => {
   </div>
 </div>
 
-<button type='submit' className='add-btn'>ADD</button>
+<button type='submit' className='add-btn'>Update</button>
 
       </form>
       
