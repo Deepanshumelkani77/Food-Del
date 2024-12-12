@@ -16,9 +16,6 @@ const FoodItem = ({id,name,description,price,image}) => {
 <div className="food-item-img-container">
     <img className='food-item-image'  src={image} alt="" />
    
-   
-      
-   
 </div>
 
 <div className="food-item-info">
@@ -29,6 +26,11 @@ const FoodItem = ({id,name,description,price,image}) => {
 <p className="food-item-description">{description}</p>
 <p className="food-item-price">${price}</p>
 
+</div>
+
+<div className="food-item-btns">
+  <button>Edit</button>
+  <button>Delete</button>
 </div>
 
     </div>
