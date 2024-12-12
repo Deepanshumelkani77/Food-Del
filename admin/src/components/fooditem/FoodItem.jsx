@@ -11,7 +11,7 @@ const FoodItem = ({id,name,description,price,image}) => {
 
 
   return (
-    <Link to={`/${id}`} className='food-item'>
+    <div className='food-item'>
       
 <div className="food-item-img-container">
     <img className='food-item-image'  src={image} alt="" />
@@ -31,7 +31,7 @@ const FoodItem = ({id,name,description,price,image}) => {
 
 </div>
 
-    </Link>
+    </div>
   )
 }
 
