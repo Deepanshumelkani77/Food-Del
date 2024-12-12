@@ -1,13 +1,13 @@
 import React, { useContext } from 'react'
 import "./FoodItem.css"
 import { assets } from '../../assets/assets'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 
 const FoodItem = ({id,name,description,price,image}) => {
 
 
-
+const navigate=useNavigate();
 
 
   return (
@@ -29,7 +29,7 @@ const FoodItem = ({id,name,description,price,image}) => {
 </div>
 
 <div className="food-item-btns">
-  <button>Edit</button>
+  <button onClick={()=>navigate(`/edit/${id}`)}>Edit</button>
   <button>Delete</button>
 </div>
 

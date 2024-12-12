@@ -4,6 +4,7 @@ import Sidebar from "./components/sidebar/Sidebar"
 import {Route, Routes} from "react-router-dom"
 import Add from "./pages/add/Add.jsx"
 import List from "./pages/list/List.jsx"
+import Edit from './pages/edit/Edit.jsx'
 
 
 const App = () => {
@@ -16,7 +17,7 @@ const App = () => {
 <Routes>
   <Route path="/add" element={<Add/>}></Route>
   <Route path="/list" element={<List/>}></Route>
-  
+  <Route path='/edit/:id' element={<Edit/>}></Route>
 
   </Routes>  
       </div>
