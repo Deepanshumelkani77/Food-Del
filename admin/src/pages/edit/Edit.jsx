@@ -1,5 +1,5 @@
 import React from 'react'
-import "./Edit.css"
+import "../add/Add.css"
 
 const Edit = () => {
   return (
