@@ -52,6 +52,20 @@ app.get('/foods', async (req, res) => {
   });
 
 
+
+  app.post('/api/food-items', async(req, res) => {
+    const { name,image, description,category, price } = req.body;
+  
+   Food.insert({ name, description, price });
+  
+    res.status(201).send({ message: 'Food item added successfully' });
+  });
+  
+ 
+
+
+
+
 //show(item) page
 
 
@@ -75,3 +89,5 @@ app.get('/foods/:id', async (req, res) => {
   }
 });
  
+
+
