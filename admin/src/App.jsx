@@ -16,7 +16,7 @@ const App = () => {
 <Sidebar/>    
 <Routes>
   <Route path="/add" element={<Add/>}></Route>
-  <Route path="/list" element={<List/>}></Route>
+  <Route path="/" element={<List/>}></Route>
   <Route path='/edit/:id' element={<Edit/>}></Route>
 
   </Routes>  
