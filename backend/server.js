@@ -53,11 +53,12 @@ app.get('/foods', async (req, res) => {
 
 
 
-  app.post('/api/food-items', async(req, res) => {
+  app.post('/foods', async(req, res) => {
     const { name,image, description,category, price } = req.body;
   
-   Food.insert({ name, description, price });
-  
+const food1=new Food({name:name,image:image,description:description,category:category,price:price})
+food1.save();  
+
     res.status(201).send({ message: 'Food item added successfully' });
   });
   
@@ -91,3 +92,11 @@ app.get('/foods/:id', async (req, res) => {
  
 
 
+app.put('/foods/edit/:id', async(req, res) => {
+  const { id } = req.params;
+  const { name, description, price } = req.body;
+
+  await Food.update(id, { name, description, price });
+
+  res.status(200).send({ message: 'Food item updated successfully' });
+});

@@ -17,7 +17,7 @@ const Add = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:4000/api/foods', {
+      const response = await fetch('http://localhost:4000/foods', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -38,7 +38,7 @@ const Add = () => {
   return (
     <div className='add'>
 
-      <form className='flex-col'>
+      <form className='flex-col' onSubmit={handleSubmit}>
 
       <div className="add-product-name ">
 <p>Product name</p>
