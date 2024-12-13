@@ -110,3 +110,18 @@ app.put('/foods/edit/:id', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+app.delete('/foods/delete/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedFood = await Food.findByIdAndDelete(id);
+    if (!deletedFood) {
+      return res.status(404).json({ message: 'Food item not found' });
+    }
+    res.status(200).json({ message: 'Food item deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting food item:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});

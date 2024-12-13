@@ -75,7 +75,7 @@ const Edit = () => {
 <div className="add-category-price">
   <div className="add-category ">
 <p>Product category</p>
-<select name="category"  value={formData.category}  onChange={handleChange} placeholder={foodItem.category} >
+<select name="category"    onChange={handleChange} placeholder={foodItem.category} >
   <option value="Salad">Salad</option>
   <option value="Rolls">Rolls</option>
   <option value="Deserts">Deserts</option>
