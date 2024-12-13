@@ -63,13 +63,13 @@ const Edit = () => {
 
 <div className="add-img-upload ">
   <p>Upload Image</p>
-<input  type="text" id='image' placeholder={foodItem.image} value={formData.image}  onChange={handleChange}   required/>
+<input  type="text" id='image' name='image' placeholder={foodItem.image} value={formData.image}  onChange={handleChange}   required/>
 </div>
 
 
 <div className="add-product-discription ">
   <p>Product description</p>
-  <textarea name="discription" row='5' placeholder={foodItem.description} value={formData.description}  onChange={handleChange}  required></textarea>
+  <textarea name="description" row='5' placeholder={foodItem.description} value={formData.description}  onChange={handleChange}  required></textarea>
 </div>
 
 <div className="add-category-price">

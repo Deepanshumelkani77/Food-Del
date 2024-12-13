@@ -94,9 +94,10 @@ app.get('/foods/:id', async (req, res) => {
 
 app.put('/foods/edit/:id', async(req, res) => {
   const { id } = req.params;
-  const { name, description, price } = req.body;
+  console.log(req.body);
+  const { name,image, description,category, price } = req.body;
 
-  await Food.update(id, { name, description, price });
+  await Food.update(id, { name,image, description,category, price });
 
   res.status(200).send({ message: 'Food item updated successfully' });
 });
