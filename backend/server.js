@@ -92,12 +92,21 @@ app.get('/foods/:id', async (req, res) => {
  
 
 
-app.put('/foods/edit/:id', async(req, res) => {
+app.put('/foods/edit/:id', async (req, res) => {
   const { id } = req.params;
-  console.log(req.body);
-  const { name,image, description,category, price } = req.body;
+  const { name, image, description, category, price } = req.body;
 
-  await Food.update(id, { name,image, description,category, price });
-
-  res.status(200).send({ message: 'Food item updated successfully' });
+  // Perform update logic here
+  try {
+    // Assume updateFood is a function that updates the food item in the database
+    const updatedFood = await Food.findByIdAndUpdate(
+      id, 
+      { name, image, description, category, price },
+      { new: true } // Return the updated document
+    );
+    res.status(200).json({ message: 'Food item updated successfully', updatedFood });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 });
