@@ -17,7 +17,7 @@ const Add = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5000/api/food-items', {
+      const response = await fetch('http://localhost:4000/api/foods', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -77,7 +77,7 @@ const Add = () => {
   </div>
 </div>
 
-<button type='submit' className='add-btn' >ADD</button>
+<button type='submit' className='add-btn' onClick={handleSubmit}>ADD</button>
 
       </form>
       
