@@ -51,7 +51,7 @@ app.get('/foods', async (req, res) => {
     }
   });
 
-
+//add new item
 
   app.post('/foods', async(req, res) => {
     const { name,image, description,category, price } = req.body;
