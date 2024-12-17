@@ -1,5 +1,6 @@
 //database connection
 const mongoose = require("mongoose");
+const {Schema}=mongoose;
 const Cart=require("./cart.js")
 
 const foodSchema=new mongoose.Schema({
