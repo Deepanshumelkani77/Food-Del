@@ -25,7 +25,7 @@ const mongoose = require("mongoose");
 connectDB();
 
 const Food = require("./models/Food.js");
-
+const Cart =require('./models/cart.js');
 
 
 
