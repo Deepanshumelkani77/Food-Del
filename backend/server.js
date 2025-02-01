@@ -32,6 +32,7 @@ const Cart =require('./models/cart.js');
 
 
 
+
 //middleware
 app.use(express.json()); //we send request frontend to backend
 app.use(cors());  //using this we access the backend from any frontend
