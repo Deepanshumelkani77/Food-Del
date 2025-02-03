@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, {useState, useContext } from 'react'
 import "./FoodItem.css"
 import { assets } from '../../assets/assets'
 import { Link } from 'react-router-dom'
@@ -17,16 +17,13 @@ const FoodItem = ({id,name,description,price,image}) => {
 <Link to={`/${id}`}>
 <img className='food-item-image'  src={image} alt="" />
 </Link>
-    
- 
-      <img className='add' src={assets.add_icon_white} alt></img>
-        <div className='food-item-counter'>   
-        <img  src={assets.remove_icon_red}></img>
-       
-        <img  src={assets.add_icon_green} alt="" />
-                 </div>
-   
+{itemCount===0?<img className='add' src={assets.add_icon_white} alt></img>:<div className="food-item-counter">   <img  src={assets.remove_icon_red}></img>   <img  src={assets.add_icon_green} alt="" /></div>}
+
+
 </div>
+     
+  
+        
 
 <div className="food-item-info">
 <div className="food-item-name-rating">
