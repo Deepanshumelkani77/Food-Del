@@ -17,7 +17,7 @@ const FoodItem = ({id,name,description,price,image}) => {
 <Link to={`/${id}`}>
 <img className='food-item-image'  src={image} alt="" />
 </Link>
-{itemCount===0?<img className='add' src={assets.add_icon_white} alt></img>:<div className="food-item-counter">   <img  src={assets.remove_icon_red}></img>   <img  src={assets.add_icon_green} alt="" /></div>}
+{itemCount===0?<img className='add' onClick={()=>{setitemCount(itemCount+1)}} src={assets.add_icon_white} alt></img>:<div className="food-item-counter">   <img onClick={()=>{setitemCount(itemCount-1)}}  src={assets.remove_icon_red}></img> <p>{itemCount}</p>  <img onClick={()=>{setitemCount(itemCount+1)}}  src={assets.add_icon_green} alt="" /></div>}
 
 
 </div>
