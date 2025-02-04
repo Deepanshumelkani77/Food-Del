@@ -128,6 +128,10 @@ app.delete('/foods/delete/:id', async (req, res) => {
 
 app.post("foods/cart",async(req,res)=>{
 
+  const { namee,imagee, pricee,count } = req.body;
+const cart1=new Cart({name:namee,image:imagee,price:pricee,count:count});
+cart1.save();
 
+res.status(201).send({ message: 'Food item added successfully into cart' });
 
 })
