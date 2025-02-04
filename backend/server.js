@@ -125,3 +125,9 @@ app.delete('/foods/delete/:id', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+app.post("foods/cart",async(req,res)=>{
+
+
+
+})
