@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 const FoodItem = ({id,name,description,price,image}) => {
 
   const [itemCount,setitemCount]=useState(0)
-
+const [cartItem,setCartItem]=useState({name:'' ,image:'',price:'' ,count:'' ,})
 
 
   return (
