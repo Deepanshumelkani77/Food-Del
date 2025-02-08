@@ -63,8 +63,7 @@ food1.save();
   });
   
  
-
-
+ 
 
 
 //show(item) page
@@ -126,13 +125,30 @@ app.delete('/foods/delete/:id', async (req, res) => {
   }
 });
 
-app.post("foods/cart",async(req,res)=>{
 
-  console.log(req.body);
-  const { namee,imagee, pricee,count } = req.body;
-const cart1=new Cart({name:namee,image:imagee,price:pricee,count:count});
-cart1.save();
 
-res.status(201).send({ message: 'Food item added successfully into cart' });
+
+app.post("/foods/cart",async(req,res)=>{
+
+  console.log("Received request at /foods/cart:", req.body);
+  
+  const { namee, imagee, pricee, count } = req.body;
+  
+  try {
+    const cart1 = new Cart({
+      name: namee,
+      image: imagee,
+      price: pricee,
+      count: count,
+    });
+
+    await cart1.save();
+    res.status(201).json({ message: "Food item added successfully into cart" });
+  } catch (error) {
+    console.error("Error saving to database:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+
 
 })
+

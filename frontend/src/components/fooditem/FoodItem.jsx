@@ -3,13 +3,12 @@ import React, {useState } from 'react'
 import "./FoodItem.css"
 import { assets } from '../../assets/assets'
 import { Link ,useNavigate} from 'react-router-dom'
-const navigate = useNavigate();
 
 const FoodItem = ({id,name,description,price,image}) => {
 
   const [itemCount,setitemCount]=useState(0)
 const [cartItem,setCartItem]=useState({namee:'' ,imagee:'',pricee:'' ,count:'' ,})
-
+const navigate = useNavigate(); 
 
 const handleSubmit = async (updatedCartItem) => {
   try {
