@@ -2,8 +2,8 @@ import React, {useState } from 'react'
 
 import "./FoodItem.css"
 import { assets } from '../../assets/assets'
-import { Link } from 'react-router-dom'
-
+import { Link ,useNavigate} from 'react-router-dom'
+const navigate = useNavigate();
 
 const FoodItem = ({id,name,description,price,image}) => {
 
@@ -21,6 +21,7 @@ const handleSubmit = async (updatedCartItem) => {
 
     if (response.ok) {
       alert('Food item added successfully into cart!');
+      navigate('/'); // Redirect to home page
     } else {
       console.error('Failed to add food item into cart');
     }
