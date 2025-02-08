@@ -1,4 +1,6 @@
-import React, {useState, useContext } from 'react'
+import React, {useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+const navigate = useNavigate();
 import "./FoodItem.css"
 import { assets } from '../../assets/assets'
 import { Link } from 'react-router-dom'
