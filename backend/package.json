@@ -3,11 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
-
-  "scripts": {
- "start":"node server.js",
-"dev":"nodemon server.js"   
-  },
+  "scripts": {},
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -19,7 +15,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.4",
     "multer": "^1.4.5-lts.1",
-    "nodemon": "^3.1.7",
+    "nodemon": "^3.1.9",
     "stripe": "^17.4.0",
     "validator": "^13.12.0"
   }

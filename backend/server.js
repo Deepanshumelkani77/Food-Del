@@ -128,6 +128,7 @@ app.delete('/foods/delete/:id', async (req, res) => {
 
 app.post("foods/cart",async(req,res)=>{
 
+  console.log(req.body);
   const { namee,imagee, pricee,count } = req.body;
 const cart1=new Cart({name:namee,image:imagee,price:pricee,count:count});
 cart1.save();
