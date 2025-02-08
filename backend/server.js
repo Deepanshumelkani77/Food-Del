@@ -126,7 +126,7 @@ app.delete('/foods/delete/:id', async (req, res) => {
 });
 
 
-
+//add items into cart
 
 app.post("/foods/cart",async(req,res)=>{
 
@@ -152,3 +152,31 @@ app.post("/foods/cart",async(req,res)=>{
 
 })
 
+
+app.put("/foods/cart/edit/",async(req,res)=>{
+
+  console.log(req.body)
+  try {
+    const { name, newCount } = req.body;
+
+    if (!name || newCount === undefined) {
+      return res.status(400).json({ message: "Name and new count are required" });
+    }
+
+    const updatedItem = await Cart.findOneAndUpdate(
+      { name: name }, 
+      { $set: { count: newCount } }, 
+      { new: true }
+    );
+
+    if (!updatedItem) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+
+    res.status(200).json({ message: "Count updated successfully", updatedItem });
+  } catch (error) {
+    console.error("Error updating count:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+
+})

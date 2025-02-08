@@ -1,5 +1,4 @@
 import React, {useState } from 'react'
-
 import "./FoodItem.css"
 import { assets } from '../../assets/assets'
 import { Link ,useNavigate} from 'react-router-dom'
@@ -30,6 +29,29 @@ const handleSubmit = async (updatedCartItem) => {
 };
 
 
+
+const updateItemCount = async (itemName) => {
+  try {
+    const response = await fetch("http://localhost:4000/foods/cart/edit", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: itemName, newCount: itemCount}),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert("Count updated successfully!");
+      console.log(data);
+    } else {
+      alert("Failed to update count: " + data.message);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+
+
   return (
     
 <div className='food-item'>
@@ -50,7 +72,22 @@ const handleSubmit = async (updatedCartItem) => {
       handleSubmit(updatedCartItem); // Pass the updated item
       return newCount;
     });
-  }}   src={assets.add_icon_white} alt></img>:<div className="food-item-counter">   <img onClick={()=>{setitemCount(itemCount-1)}}  src={assets.remove_icon_red}></img> <p>{itemCount}</p>  <img onClick={()=>{setitemCount(itemCount+1)}}  src={assets.add_icon_green} alt="" /></div>}
+  }}   src={assets.add_icon_white} alt></img>:<div className="food-item-counter">   <img onClick={() => {
+    setitemCount((prevCount) => {
+      const newCount = prevCount - 1;
+      
+  
+      updateItemCount(name); // Pass the updated item
+      return newCount;
+    }); } } src={assets.remove_icon_red}></img> <p>{itemCount}</p>  <img 
+  onClick={() => {
+    setitemCount((prevCount) => {
+      const newCount = prevCount + 1;
+      
+  
+      updateItemCount(name); // Pass the updated item
+      return newCount;
+    }); } } src={assets.add_icon_green} alt="" /></div>}
 
 
 </div>
@@ -75,3 +112,5 @@ const handleSubmit = async (updatedCartItem) => {
 }
 
 export default FoodItem
+
+
