@@ -36,16 +36,17 @@ const handleSubmit = async (updatedCartItem) => {
 <Link to={`/${id}`}>
 <img className='food-item-image'  src={image} alt="" />
 </Link>
-{itemCount===0?<img className='add'  onClick={() => {
+{itemCount===0?<img className='add'   onClick={() => {
     setitemCount((prevCount) => {
       const newCount = prevCount + 1;
-      setCartItem({
+      const updatedCartItem = {
         namee: name,
         imagee: image,
         pricee: price,
-        count: newCount, // Use the updated count
-      });
-      handleSubmit(); // Correctly call the function
+        count: newCount,
+      };
+      setCartItem(updatedCartItem);
+      handleSubmit(updatedCartItem); // Pass the updated item
       return newCount;
     });
   }}   src={assets.add_icon_white} alt></img>:<div className="food-item-counter">   <img onClick={()=>{setitemCount(itemCount-1)}}  src={assets.remove_icon_red}></img> <p>{itemCount}</p>  <img onClick={()=>{setitemCount(itemCount+1)}}  src={assets.add_icon_green} alt="" /></div>}
