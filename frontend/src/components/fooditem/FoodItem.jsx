@@ -83,11 +83,8 @@ const updateItemCount = async (itemName) => {
   onClick={() => {
     setitemCount((prevCount) => {
       const newCount = prevCount + 1;
-      
-  
-      updateItemCount(name); // Pass the updated item
       return newCount;
-    }); } } src={assets.add_icon_green} alt="" /></div>}
+    }); updateItemCount(name); } } src={assets.add_icon_green} alt="" /></div>}
 
 
 </div>
