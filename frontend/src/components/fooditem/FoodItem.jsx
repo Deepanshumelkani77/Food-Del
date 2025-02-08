@@ -10,19 +10,16 @@ const FoodItem = ({id,name,description,price,image}) => {
 const [cartItem,setCartItem]=useState({namee:'' ,imagee:'',pricee:'' ,count:'' ,})
 
 
-const handleSubmit = async () => {
- 
-
+const handleSubmit = async (updatedCartItem) => {
   try {
     const response = await fetch('http://localhost:4000/foods/cart', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(cartItem),
+      body: JSON.stringify(updatedCartItem), // Use the updated cart item
     });
 
     if (response.ok) {
       alert('Food item added successfully into cart!');
-      navigate('/'); // Redirect to the home page
     } else {
       console.error('Failed to add food item into cart');
     }
