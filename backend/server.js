@@ -181,3 +181,16 @@ app.put("/foods/cart/edit/",async(req,res)=>{
   }
 
 })
+
+
+
+
+
+app.get('/foods/cart', async (req, res) => {
+  try {
+    const cart = await Cart.find(); // Fetch all documents from the Food collection
+    res.status(200).json(cart);    // Send the data as a JSON response
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching data", error });
+  }
+});
