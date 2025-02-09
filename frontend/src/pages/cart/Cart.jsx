@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState,useContext } from "react";
 import "./Cart.css";
 import { StoreContext } from "../../context/StoreContext";
 import {useNavigate} from "react-router-dom"
@@ -7,7 +7,25 @@ const Cart = () => {
   const { cartItem, food_list, removeFromCart, getTotalCartAmmount } =
     useContext(StoreContext);
 
+  const [cart, setCart] = useState([]);
+
 const navigate=useNavigate();
+
+useEffect(() => {
+  // Fetch data from backend
+  axios.get('http://localhost:4000/foods/cart')
+       // Backend API endpoint
+    .then(response => {
+     
+      setCart(response.data); // Store the data in state
+    })
+    .catch(error => {
+      console.error("Error fetching food data:", error);
+    });
+}, []);
+
+
+
 
   return (
     <div className="cart">

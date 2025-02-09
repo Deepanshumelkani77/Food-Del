@@ -184,7 +184,7 @@ app.put("/foods/cart/edit/",async(req,res)=>{
 
 
 
-
+// to get a data from a cart
 
 app.get('/foods/cart', async (req, res) => {
   try {
