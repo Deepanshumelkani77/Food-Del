@@ -25,20 +25,21 @@ useEffect(() => {
     });
 }, []);
 
-const handleDelete = async () => {
+
+const handleDelete = async (id) => {
 
   const confirmDelete = window.confirm('Are you sure you want to delete this food item?');
   if (!confirmDelete) return;
 
   try {
-    const response = await fetch(`http://localhost:4000/foods/cart/delete/${cart._id}`, {
+    const response = await fetch(`http://localhost:4000/foods/cart/delete/${id}`, {
       method: 'DELETE',
     });
 
     if (response.ok) {
       alert('Food item deleted successfully!');
      
-      navigate('/'); // Redirect to the home page
+      setCart(prevCart => prevCart.filter(item => item._id !== id)); // Redirect to the home page
     } else {
       alert('Failed to delete the food item.');
     }
@@ -77,9 +78,7 @@ const handleDelete = async () => {
                   <p>${item.price * item.count}</p>
                   <p
                     className="cross"
-                    onClick={() => {
-                      handleDelete
-                    }}
+                    onClick={()=>{ handleDelete(item._id)}}
                   >
                     X
                   </p>

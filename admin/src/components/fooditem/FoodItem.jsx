@@ -24,7 +24,7 @@ const handleDelete = async () => {
     if (response.ok) {
       alert('Food item deleted successfully!');
      
-      navigate('/'); // Redirect to the home page
+      // Redirect to the home page
     } else {
       alert('Failed to delete the food item.');
     }
