@@ -152,10 +152,11 @@ app.post("/foods/cart",async(req,res)=>{
 
 })
 
+//update item count
 
 app.put("/foods/cart/edit/",async(req,res)=>{
 
-  console.log(req.body)
+ 
   try {
     const { name, newCount } = req.body;
 

@@ -30,12 +30,12 @@ const handleSubmit = async (updatedCartItem) => {
 
 
 
-const updateItemCount = async (itemName) => {
+const updateItemCountAdd = async (itemName) => {
   try {
     const response = await fetch("http://localhost:4000/foods/cart/edit", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: itemName, newCount: itemCount}),
+      body: JSON.stringify({ name: itemName, newCount: itemCount+1}),
     });
 
     const data = await response.json();
@@ -49,6 +49,28 @@ const updateItemCount = async (itemName) => {
     console.error("Error:", error);
   }
 };
+
+
+const updateItemCountRemove = async (itemName) => {
+  try {
+    const response = await fetch("http://localhost:4000/foods/cart/edit", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: itemName, newCount: itemCount-1}),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert("Count updated successfully!");
+      console.log(data);
+    } else {
+      alert("Failed to update count: " + data.message);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
 
 
 
@@ -77,14 +99,11 @@ const updateItemCount = async (itemName) => {
       const newCount = prevCount - 1;
       
   
-      updateItemCount(name); // Pass the updated item
+      updateItemCountRemove(name); // Pass the updated item
       return newCount;
     }); } } src={assets.remove_icon_red}></img> <p>{itemCount}</p>  <img 
   onClick={() => {
-    setitemCount((prevCount) => {
-      const newCount = prevCount + 1;
-      return newCount;
-    }); updateItemCount(name); } } src={assets.add_icon_green} alt="" /></div>}
+    setitemCount(itemCount+1); updateItemCountAdd(name); } } src={assets.add_icon_green} alt="" /></div>}
 
 
 </div>
