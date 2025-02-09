@@ -40,6 +40,18 @@ const { ObjectId } = require('mongodb');
 
 
 
+app.get('/foods/cart', async (req, res) => {
+  try {
+    const cart = await Cart.find();
+    res.status(200).json(cart);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).json({ message: "Error fetching data", error });
+  }
+});
+
+
+
 // this router for home page
 
 app.get('/foods', async (req, res) => {
@@ -126,6 +138,9 @@ app.delete('/foods/delete/:id', async (req, res) => {
 });
 
 
+
+
+
 //add items into cart
 
 app.post("/foods/cart",async(req,res)=>{
@@ -186,11 +201,5 @@ app.put("/foods/cart/edit/",async(req,res)=>{
 
 // to get a data from a cart
 
-app.get('/foods/cart', async (req, res) => {
-  try {
-    const cart = await Cart.find(); // Fetch all documents from the Food collection
-    res.status(200).json(cart);    // Send the data as a JSON response
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching data", error });
-  }
-});
+
+
