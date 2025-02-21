@@ -13,7 +13,7 @@ const App = () => {
   const [showLogin,setShowLogin]=useState(false)
 
   return (
-    //if  showlogin true login page open
+    //if  showlogin true login page open 
     <>
     {
       showLogin?<LoginPopup setShowLogin={setShowLogin}/>:<></>
