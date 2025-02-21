@@ -6,6 +6,8 @@ const port=4000;
 app.listen(port,()=>{
     console.log("server is running",port);
 })
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 
 //database connection
@@ -26,7 +28,7 @@ connectDB();
 
 const Food = require("./models/Food.js");
 const Cart =require('./models/cart.js');
-
+const User=require("./models/user.js");
 
 //middleware
 app.use(express.json()); //we send request frontend to backend
