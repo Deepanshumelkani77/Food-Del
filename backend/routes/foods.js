@@ -1,6 +1,30 @@
 const express=require("express");
 const router=express.Router();
 const Food = require("../models/Food.js");
+const mongoose = require("mongoose");
+
+
+
+//show(item) page
+router.get("/:id", async (req, res) => {
+    try {
+      const { id } = req.params;  // Extract the id from params correctly
+      if (!mongoose.Types.ObjectId.isValid(id)) {  // Optional: check if id is a valid ObjectId
+        return res.status(400).json({ message: 'Invalid food ID' });
+      }
+  
+      const foodItem = await Food.findById(id);  // Use 'id' directly
+  
+      if (!foodItem) {
+        return res.status(404).json({ message: 'Food item not found' });
+      }
+  
+      res.json(foodItem);  // Return the food item as JSON
+    } catch (error) {
+      console.error('Error fetching food item:', error);
+      res.status(500).json({ message: 'Server error', error });
+    }
+  });
 
 
 
@@ -28,26 +52,7 @@ food1.save();
   });
   
  
-//show(item) page
-router.get("/:id", async (req, res) => {
-    try {
-      const { id } = req.params;  // Extract the id from params correctly
-      if (!mongoose.Types.ObjectId.isValid(id)) {  // Optional: check if id is a valid ObjectId
-        return res.status(400).json({ message: 'Invalid food ID' });
-      }
-  
-      const foodItem = await Food.findById(id);  // Use 'id' directly
-  
-      if (!foodItem) {
-        return res.status(404).json({ message: 'Food item not found' });
-      }
-  
-      res.json(foodItem);  // Return the food item as JSON
-    } catch (error) {
-      console.error('Error fetching food item:', error);
-      res.status(500).json({ message: 'Server error', error });
-    }
-  });
+
 
 
   router.put('/edit/:id', async (req, res) => {
@@ -68,6 +73,9 @@ router.get("/:id", async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
     }
   });
+
+
+
 
 router.delete('/delete/:id', async (req, res) => {
   const { id } = req.params;
