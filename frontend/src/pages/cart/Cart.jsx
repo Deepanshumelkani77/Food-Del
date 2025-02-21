@@ -17,7 +17,7 @@ const getTotalCartAmount = () => {
 
 useEffect(() => {
   // Fetch data from backend
-  axios.get('http://localhost:4000/foods/cart')
+  axios.get('http://localhost:4000/cart')
        // Backend API endpoint
     .then(response => {
      
@@ -35,7 +35,7 @@ const handleDelete = async (id) => {
   if (!confirmDelete) return;
 
   try {
-    const response = await fetch(`http://localhost:4000/foods/cart/delete/${id}`, {
+    const response = await fetch(`http://localhost:4000/cart/delete/${id}`, {
       method: 'DELETE',
     });
 
