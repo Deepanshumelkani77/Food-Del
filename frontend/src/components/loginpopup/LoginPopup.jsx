@@ -3,18 +3,30 @@ import React, { useState,useContext } from 'react'
 import "./LoginPopup.css"
 import { assets } from '../../assets/assets'
 import { StoreContext } from "../../context/StoreContext.jsx";
-
+import { useNavigate } from "react-router-dom";
 
 const LoginPopup = ({setShowLogin}) => {
 
 const [currState,setCurrState]=useState("Login")
 
+//signup
 const { signup } = useContext(StoreContext);
 const [formData, setFormData] = useState({ username: "", email: "", password: "" });
 const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 const handleSubmit = (e) => {
   e.preventDefault();
   signup(formData.name, formData.email, formData.password);
+};
+
+//login
+const { login } = useContext(StoreContext);
+const [formData2, setFormData2] = useState({ email: "", password: "" });
+const navigate = useNavigate();
+const handleChange2 = (e) => setFormData({ ...formData2, [e.target.name]: e.target.value });
+const handleSubmit2 = async (e) => {
+  e.preventDefault();
+  await login(formData.email, formData.password);
+  navigate("/"); // Redirect after login
 };
 
   return (
@@ -58,11 +70,11 @@ const handleSubmit = (e) => {
     
     <div className="login-popup-input">
        
-    <input type="text" placeholder='Your email' required />
-    <input type="password" placeholder='password' required/>
+    <input type="text" placeholder='Your email' name='email' onChange={handleChange2} required />
+    <input type="password" placeholder='password' name='password' onChange={handleChange2} required/>
     </div>
     
-    <button>{currState==='Signup'?"Create account":"Login"}</button>
+    <button onClick={handleSubmit2}>{currState==='Signup'?"Create account":"Login"}</button>
     
     <div className="login-popup-condition">
         <input type="checkbox" required/>
