@@ -22,10 +22,10 @@ const handleSubmit = (e) => {
 const { login } = useContext(StoreContext);
 const [formData2, setFormData2] = useState({ email: "", password: "" });
 const navigate = useNavigate();
-const handleChange2 = (e) => setFormData({ ...formData2, [e.target.name]: e.target.value });
+const handleChange2 = (e) => setFormData2({ ...formData2, [e.target.name]: e.target.value });
 const handleSubmit2 = async (e) => {
   e.preventDefault();
-  await login(formData.email, formData.password);
+  await login(formData2.email, formData2.password);
   navigate("/"); // Redirect after login
 };
 
@@ -69,9 +69,9 @@ const handleSubmit2 = async (e) => {
     </div>
     
     <div className="login-popup-input">
-       
-    <input type="text" placeholder='Your email' name='email' onChange={handleChange2} required />
-    <input type="password" placeholder='password' name='password' onChange={handleChange2} required/>
+      
+    <input type="text" placeholder='Your email' value={formData2.email}  name='email'  onChange={handleChange2} required />
+    <input type="password" placeholder='password' value={formData2.password}  name='password'  onChange={handleChange2} required/>
     </div>
     
     <button onClick={handleSubmit2}>{currState==='Signup'?"Create account":"Login"}</button>

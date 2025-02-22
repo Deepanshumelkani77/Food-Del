@@ -26,6 +26,7 @@ router.post("/signup", async (req, res) => {
   
     const token = jwt.sign({ id: user._id }, "secret", { expiresIn: "1h" });
     res.json({ token, user: { name: user.name, email: user.email } });
+    
   });
 
 module.exports=router;
