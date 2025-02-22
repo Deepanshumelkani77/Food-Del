@@ -1,11 +1,12 @@
-import { createContext,useState,useEffect } from "react";
+import { createContext,useState } from "react";
 export const StoreContext=createContext();
 import { food_list } from "../assets/assets";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 
 
-
-const StoreContextProvider=(children)=>{
+const StoreContextProvider=(props)=>{
 
     const [user, setUser] = useState(Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null);
 
@@ -58,7 +59,7 @@ const StoreContextProvider=(children)=>{
 
     return (
         <StoreContext.Provider value={contextValue}>
-            {children}
+            {props.children}
         </StoreContext.Provider>
     )
 }

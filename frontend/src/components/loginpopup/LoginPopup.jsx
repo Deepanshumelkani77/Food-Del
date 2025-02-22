@@ -1,19 +1,21 @@
 
-
-
-
-
-
-
-import React, { useState } from 'react'
+import React, { useState,useContext } from 'react'
 import "./LoginPopup.css"
 import { assets } from '../../assets/assets'
-
+import { StoreContext } from "../../context/StoreContext.jsx";
 
 
 const LoginPopup = ({setShowLogin}) => {
 
 const [currState,setCurrState]=useState("Login")
+
+const { signup } = useContext(StoreContext);
+const [formData, setFormData] = useState({ username: "", email: "", password: "" });
+const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+const handleSubmit = (e) => {
+  e.preventDefault();
+  signup(formData.name, formData.email, formData.password);
+};
 
   return (
 <>
@@ -28,12 +30,12 @@ const [currState,setCurrState]=useState("Login")
 </div>
 
 <div className="login-popup-input">
-    <input type="text" placeholder='Your name' required />
-<input type="text" placeholder='Your email' required />
-<input type="password" placeholder='password' required/>
+    <input type="text" placeholder='Your name' name="username" onChange={handleChange} required />
+<input type="text" placeholder='Your email' name="email" onChange={handleChange} required />
+<input type="password" placeholder='password' name="password" onChange={handleChange} required/>
 </div>
 
-<button>{currState==='Signup'?"Create account":"Login"}</button>
+<button onClick={handleSubmit}>{currState==='Signup'?"Create account":"Login"}</button>
 
 <div className="login-popup-condition">
     <input type="checkbox" required/>
