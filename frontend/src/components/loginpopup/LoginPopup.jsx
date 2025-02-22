@@ -26,6 +26,7 @@ const handleChange2 = (e) => setFormData2({ ...formData2, [e.target.name]: e.tar
 const handleSubmit2 = async (e) => {
   e.preventDefault();
   await login(formData2.email, formData2.password);
+  setShowLogin(false);
   navigate("/"); // Redirect after login
 };
 

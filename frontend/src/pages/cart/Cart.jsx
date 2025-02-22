@@ -5,8 +5,7 @@ import {useNavigate} from "react-router-dom"
 import axios from 'axios';
 
 const Cart = () => {
-  const { cartItem, food_list, removeFromCart} =
-    useContext(StoreContext);
+  
 
   const [cart, setCart] = useState([]);
 const navigate=useNavigate();
