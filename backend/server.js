@@ -42,3 +42,5 @@ const foods=require("./routes/foods.js");
 app.use("/foods",foods);
 const cart=require("./routes/cart.js");
 app.use("/cart",cart);
+const user=require("./routes.user.js");
+app.use=require("/user",user)
