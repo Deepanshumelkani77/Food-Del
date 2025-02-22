@@ -14,7 +14,7 @@ const StoreContextProvider=(props)=>{
     
     const login = async (email, password) => {
         try {
-          const response = await axios.post("http://localhost:4000/login", { email, password });
+          const response = await axios.post("http://localhost:4000/user/login", { email, password });
           Cookies.set("token", response.data.token, { expires: 1 });
           Cookies.set("user", JSON.stringify(response.data.user), { expires: 1 });
           setUser(response.data.user);
@@ -25,7 +25,7 @@ const StoreContextProvider=(props)=>{
     
       const signup = async (name, email, password) => {
         try {
-          await axios.post("http://localhost:4000/signup", { name, email, password });
+          await axios.post("http://localhost:4000/user/signup", { name, email, password });
           alert("Signup successful! Please login.");
         } catch (error) {
           alert(error.response?.data?.message || "Signup failed");
