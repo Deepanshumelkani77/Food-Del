@@ -5,6 +5,7 @@ import { assets } from '../../assets/assets'
 import { Link } from 'react-router-dom'
 
 
+import { StoreContext } from '../../context/StoreContext'
 
 //import { useContext } from 'react'
 //import { StoreContext } from '../../context/StoreContext'
@@ -12,6 +13,9 @@ import { Link } from 'react-router-dom'
 
 const Navbar = ({setShowLogin}) => {
  
+  //for logout
+  const { user, logout } = useContext(StoreContext);
+
 const [menu,setMenu]=useState("home");
 
   return (
@@ -36,8 +40,8 @@ const [menu,setMenu]=useState("home");
             </div>
         </div>
 
-<button onClick={()=>setShowLogin(true)}>sign in</button>
 
+{!user?<button onClick={()=>setShowLogin(true)}>sign in</button>:<button onClick={logout}>logout</button>}
       </div>
 
     </div>
