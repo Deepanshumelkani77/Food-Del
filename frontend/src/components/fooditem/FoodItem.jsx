@@ -102,7 +102,7 @@ const updateItemCountRemove = async (itemName) => {
       handleSubmit(updatedCartItem); // Pass the updated item
       return newCount;
     });
-  } : console.log("hello")}   src={assets.add_icon_white} alt></img>:<div className="food-item-counter">   <img onClick={() => {
+  } :()=>{setShowLogin(true)}}   src={assets.add_icon_white} alt></img>:<div className="food-item-counter">   <img onClick={() => {
     setitemCount((prevCount) => {
       const newCount = prevCount - 1;
       
