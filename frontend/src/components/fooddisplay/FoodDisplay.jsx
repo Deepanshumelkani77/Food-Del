@@ -41,7 +41,7 @@ if(category=="All")
 if(item.category===category)
 {
 
-  return <FoodItem key={index} id={item._id} name={item.name} description={item.description} price={item.price} image={item.image}/>
+  return <FoodItem key={index}  id={item._id} name={item.name} description={item.description} price={item.price} image={item.image}/>
 }
 
 

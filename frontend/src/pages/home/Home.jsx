@@ -6,7 +6,7 @@ import {useState} from "react"
 import FoodDisplay from '../../components/fooddisplay/FoodDisplay'
 import AppDownload from '../../components/footer/appdownload/AppDownload'
 
-const Home = () => {
+const Home = (setShowLogin) => {
   const[category ,setCategory]=useState("All");
 
   return (
@@ -14,7 +14,7 @@ const Home = () => {
       
 <Header/>
 <ExploreMenu category={category} setCategory={setCategory}/>
-<FoodDisplay category={category}/>
+<FoodDisplay  category={category}/>
 <AppDownload/>
 
     </div>

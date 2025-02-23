@@ -5,12 +5,12 @@ import { Link ,useNavigate} from 'react-router-dom'
 
 import { StoreContext } from "../../context/StoreContext.jsx";
 
-const FoodItem = ({id,name,description,price,image}) => {
+const FoodItem = ({ id,name,description,price,image}) => {
 
   //for cart item author
 const { user } = useContext(StoreContext);
 
-console.log("User ID:", user?._id);
+
 
   const [itemCount,setitemCount]=useState(0)
 const [cartItem,setCartItem]=useState({namee:'' ,imagee:'',pricee:'' ,count:'' ,})
@@ -88,7 +88,7 @@ const updateItemCountRemove = async (itemName) => {
 <Link to={`/${id}`}>
 <img className='food-item-image'  src={image} alt="" />
 </Link>
-{itemCount===0?<img className='add'   onClick={() => {
+{itemCount===0?<img className='add'   onClick={user?() => {
     setitemCount((prevCount) => {
       const newCount = prevCount + 1;
       const updatedCartItem = {
@@ -102,7 +102,7 @@ const updateItemCountRemove = async (itemName) => {
       handleSubmit(updatedCartItem); // Pass the updated item
       return newCount;
     });
-  }}   src={assets.add_icon_white} alt></img>:<div className="food-item-counter">   <img onClick={() => {
+  } : ""}   src={assets.add_icon_white} alt></img>:<div className="food-item-counter">   <img onClick={() => {
     setitemCount((prevCount) => {
       const newCount = prevCount - 1;
       
