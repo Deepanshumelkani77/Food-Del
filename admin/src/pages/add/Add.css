@@ -1,8 +1,13 @@
 .add{
     width:100%;
-    margin-top: 50px;
+    height: 90vh;
+    margin-top: 10vh;
+    margin-left: 18%;
     color:#6d6d6d;
     font-size: 16px;
+    display: flex;
+align-items: center;
+
     
 }
 
