@@ -11,10 +11,10 @@ import { StoreContext } from '../../context/StoreContext'
 //import { StoreContext } from '../../context/StoreContext'
 //const {getTotalCartAmmount}=useContext(StoreContext)
 
-const Navbar = ({setShowLogin}) => {
+const Navbar = ({}) => {
  
   //for logout
-  const { user, logout } = useContext(StoreContext);
+  const { user, logout,setShowLogin } = useContext(StoreContext);
 
 const [menu,setMenu]=useState("home");
 

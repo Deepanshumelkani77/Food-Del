@@ -8,7 +8,7 @@ import { StoreContext } from "../../context/StoreContext.jsx";
 const FoodItem = ({ id,name,description,price,image}) => {
 
   //for cart item author
-const { user } = useContext(StoreContext);
+const { user ,setShowLogin} = useContext(StoreContext);
 
 
 
@@ -102,7 +102,7 @@ const updateItemCountRemove = async (itemName) => {
       handleSubmit(updatedCartItem); // Pass the updated item
       return newCount;
     });
-  } : ""}   src={assets.add_icon_white} alt></img>:<div className="food-item-counter">   <img onClick={() => {
+  } : console.log("hello")}   src={assets.add_icon_white} alt></img>:<div className="food-item-counter">   <img onClick={() => {
     setitemCount((prevCount) => {
       const newCount = prevCount - 1;
       

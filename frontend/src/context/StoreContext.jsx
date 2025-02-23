@@ -11,7 +11,8 @@ const StoreContextProvider=(props)=>{
   //store current user than we use currentuser anywhere
     const [user, setUser] = useState(Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null);
 
-    const [showLogin,setShowLogin]=useState(false)
+    //state variable for login page
+  const [showLogin,setShowLogin]=useState(false)
     
     const login = async (email, password) => {
         try {

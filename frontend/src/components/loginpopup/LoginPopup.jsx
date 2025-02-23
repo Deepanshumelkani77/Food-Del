@@ -5,12 +5,12 @@ import { assets } from '../../assets/assets'
 import { StoreContext } from "../../context/StoreContext.jsx";
 import { useNavigate } from "react-router-dom";
 
-const LoginPopup = ({setShowLogin}) => {
+const LoginPopup = ({}) => {
 
 const [currState,setCurrState]=useState("Login")
 
 //signup
-const { signup } = useContext(StoreContext);
+const { signup,setShowLogin } = useContext(StoreContext);
 const [formData, setFormData] = useState({ username: "", email: "", password: "" });
 const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 const handleSubmit = (e) => {
