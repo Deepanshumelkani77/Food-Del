@@ -14,7 +14,12 @@ const Cart = (setShowLogin) => {
 const navigate=useNavigate();
 
 const getTotalCartAmount = () => {
-  return cart.reduce((total, item) => total + item.price * item.count, 0);
+  return cart.reduce((total, item) => {
+    if (user && item.author === user.id) {
+      return total + item.price * item.count;
+    }
+    return total;
+  }, 0); // Providing 0 as the initial value
 };
 
 useEffect(() => {

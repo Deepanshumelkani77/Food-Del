@@ -1,11 +1,33 @@
-import React, { useContext } from "react";
+import React, { useContext,useState,useEffect } from "react";
 import './Placeorder.css'
-
 import { StoreContext } from "../../context/StoreContext";
+import axios from 'axios';
+
 const Placeorder = () => {
 
-  const {  getTotalCartAmmount } =
-    useContext(StoreContext);
+  const { user } = useContext(StoreContext);
+  const [cart, setCart] = useState([]);
+  const getTotalCartAmount = () => {
+    return cart.reduce((total, item) => {
+      if (user && item.author === user.id) {
+        return total + item.price * item.count;
+      }
+      return total;
+    }, 0); // Providing 0 as the initial value
+  };
+
+  useEffect(() => {
+    // Fetch data from backend
+    axios.get('http://localhost:4000/cart')
+         // Backend API endpoint
+      .then(response => {
+       
+        setCart(response.data); // Store the data in state
+      })
+      .catch(error => {
+        console.error("Error fetching food data:", error);
+      });
+  }, []);
 
 
   return (
@@ -43,22 +65,23 @@ const Placeorder = () => {
           <div>
             <div className="cart-total-details">
               <p>Subtotal</p>
-              <p>${getTotalCartAmmount()}</p>
+              <p>${getTotalCartAmount()}</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <p>Delivery Fee</p>
-              <p>${getTotalCartAmmount()===0?0:2}</p>
+              <p>${getTotalCartAmount()===0?0:2}</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <p>Total</p>
-              <p>${getTotalCartAmmount()===0?0:getTotalCartAmmount() + 2}</p>
+              <p>${getTotalCartAmount()===0?0:getTotalCartAmount() + 2}</p>
             </div>
           </div>
 
-          <button >PROCEED THE PAYMENT</button>
+          <button onClick={()=>navigate('/order')}>PROCEED THE CHECKOUT</button>
         </div>
+
 
 </div>
 
