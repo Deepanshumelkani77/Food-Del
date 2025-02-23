@@ -30,7 +30,7 @@ router.post("/",async(req,res)=>{
         image: imagee,
         price: pricee,
         count: count,
-      
+      author:author
       });
   
       await cart1.save();

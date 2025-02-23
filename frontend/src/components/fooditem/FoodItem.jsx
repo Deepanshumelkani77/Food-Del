@@ -95,7 +95,7 @@ const updateItemCountRemove = async (itemName) => {
         imagee: image,
         pricee: price,
         count: newCount,
-        author:user._id
+        author:user.id
       };
       setCartItem(updatedCartItem);
       handleSubmit(updatedCartItem); // Pass the updated item
