@@ -1,9 +1,15 @@
-import React, {useState } from 'react'
+import React, {useState,useContext } from 'react'
 import "./FoodItem.css"
 import { assets } from '../../assets/assets'
 import { Link ,useNavigate} from 'react-router-dom'
 
+import { StoreContext } from "../../context/StoreContext.jsx";
+
 const FoodItem = ({id,name,description,price,image}) => {
+
+  //for cart item author
+const { user } = useContext(StoreContext);
+console.log(user);
 
   const [itemCount,setitemCount]=useState(0)
 const [cartItem,setCartItem]=useState({namee:'' ,imagee:'',pricee:'' ,count:'' ,})
@@ -89,6 +95,7 @@ const updateItemCountRemove = async (itemName) => {
         imagee: image,
         pricee: price,
         count: newCount,
+        author:user._id
       };
       setCartItem(updatedCartItem);
       handleSubmit(updatedCartItem); // Pass the updated item

@@ -8,6 +8,7 @@ import axios from "axios";
 
 const StoreContextProvider=(props)=>{
 
+  //store current user than we use currentuser anywhere
     const [user, setUser] = useState(Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null);
 
    

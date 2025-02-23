@@ -22,7 +22,7 @@ router.post("/",async(req,res)=>{
 
     console.log("Received request at /foods/cart:", req.body);
     
-    const { namee, imagee, pricee, count } = req.body;
+    const { namee, imagee, pricee, count,author } = req.body;
     
     try {
       const cart1 = new Cart({
@@ -30,6 +30,7 @@ router.post("/",async(req,res)=>{
         image: imagee,
         price: pricee,
         count: count,
+      
       });
   
       await cart1.save();
@@ -77,7 +78,7 @@ router.put("/edit/",async(req,res)=>{
 
 
   router.delete('/delete/:id', async (req, res) => {
-    console.log(req.params)
+   
     const { id } = req.params;
   
     try {
