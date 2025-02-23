@@ -6,7 +6,8 @@ import axios from 'axios';
 
 const Cart = () => {
   
-
+  const { user } = useContext(StoreContext);
+console.log(user.id)
   const [cart, setCart] = useState([]);
 const navigate=useNavigate();
 
@@ -69,7 +70,8 @@ const handleDelete = async (id) => {
 
         {cart.map((item, index) => {
           //iska matlv h cartItem obj m jo 1:"" value agar 0 sa badi h to uska name print kar do
-          
+          if(item.author===user.id)
+          {
             return (
               <>
                 <div className="cart-items-tittle cart-items-item">
@@ -87,7 +89,7 @@ const handleDelete = async (id) => {
                 </div>
                 <hr />
               </>
-            );
+            );}
           
         })}
       </div>
