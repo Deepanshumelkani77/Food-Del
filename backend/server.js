@@ -29,6 +29,7 @@ connectDB();
 const Food = require("./models/Food.js");
 const Cart =require('./models/cart.js');
 const User=require("./models/user.js");
+const Admin=require("./models/admin.js")
 
 //middleware
 app.use(express.json()); //we send request frontend to backend
@@ -44,3 +45,5 @@ const cart=require("./routes/cart.js");
 app.use("/cart",cart);
 const user=require("./routes/user.js");
 app.use("/user",user)
+const admin=require("./routes/admin.js");
+app.use("/admin",admin)
