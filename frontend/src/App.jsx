@@ -22,7 +22,7 @@ const App = () => {
       <Navbar setShowLogin={setShowLogin}/>
       <Routes>
 <Route path='/' element={<Home/>}></Route>
-<Route path='/cart' element={<Cart/>}></Route>
+<Route path='/cart' element={<Cart setShowLogin={setShowLogin}/>}></Route>
 <Route path='/order' element={<Placeorder/>}></Route>
 <Route path='/:id' element={<Item/>}></Route>
       </Routes>

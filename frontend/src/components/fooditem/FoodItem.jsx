@@ -10,6 +10,7 @@ const FoodItem = ({id,name,description,price,image}) => {
   //for cart item author
 const { user } = useContext(StoreContext);
 
+console.log("User ID:", user?._id);
 
   const [itemCount,setitemCount]=useState(0)
 const [cartItem,setCartItem]=useState({namee:'' ,imagee:'',pricee:'' ,count:'' ,})

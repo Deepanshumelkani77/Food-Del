@@ -4,10 +4,12 @@ import { StoreContext } from "../../context/StoreContext";
 import {useNavigate} from "react-router-dom"
 import axios from 'axios';
 
-const Cart = () => {
+const Cart = (setShowLogin) => {
   
   const { user } = useContext(StoreContext);
-console.log(user.id)
+
+
+
   const [cart, setCart] = useState([]);
 const navigate=useNavigate();
 
@@ -70,10 +72,11 @@ const handleDelete = async (id) => {
 
         {cart.map((item, index) => {
           //iska matlv h cartItem obj m jo 1:"" value agar 0 sa badi h to uska name print kar do
-          if(item.author===user.id)
+          if( user && item.author===user.id)
           {
             return (
-              <>
+             
+                  <>
                 <div className="cart-items-tittle cart-items-item">
                   <img src={item.image} alt="" />
                   <p>{item.name}</p>
@@ -88,8 +91,11 @@ const handleDelete = async (id) => {
                   </p>
                 </div>
                 <hr />
+             
               </>
             );}
+
+        
           
         })}
       </div>
