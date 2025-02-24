@@ -10,9 +10,9 @@ const StoreContextProvider=(props)=>{
   const [showLogin,setShowLogin]=useState(false)
   
   //store current user in cookie than we use currentuser anywhere
-  const userCookie = Cookies.get("user");
-const initialUser = userCookie && userCookie !== "undefined" 
-  ? JSON.parse(userCookie) 
+  const adminCookie = Cookies.get("admin");
+const initialUser = adminCookie && adminCookie !== "undefined" 
+  ? JSON.parse(adminCookie) 
   : null;
 
 const [user, setUser] = useState(initialUser);
