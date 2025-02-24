@@ -4,16 +4,19 @@ import "./Sidebar.css";
 import { assets } from "../../assets/assets";
 import { NavLink } from "react-router-dom";
 import { StoreContext } from "../../context/StoreContext";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
 
   const {user,setShowLogin} =useContext(StoreContext)
-
+const navigate = useNavigate();
   const handleClick = (e) => {
     if (!user) {
       e.preventDefault(); // Prevent navigation
       setShowLogin(true);
+     
     }
+  
   };
 
 

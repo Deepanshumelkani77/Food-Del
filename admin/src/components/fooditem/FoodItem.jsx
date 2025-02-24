@@ -2,11 +2,12 @@ import React, { useContext } from 'react'
 import "./FoodItem.css"
 import { assets } from '../../assets/assets'
 import { useNavigate } from 'react-router-dom'
-
+import { StoreContext } from '../../context/StoreContext'
 
 const FoodItem = ({id,name,description,price,image}) => {
 
 
+  const {user,setShowLogin}=useContext(StoreContext)
 const navigate=useNavigate();
 
 
@@ -54,8 +55,8 @@ const handleDelete = async () => {
 </div>
 
 <div className="food-item-btns">
-  <button onClick={()=>navigate(`/edit/${id}`)}>Edit</button>
-  <button onClick={handleDelete}>Delete</button>
+  <button onClick={user?()=>navigate(`/edit/${id}`):()=>{setShowLogin(true)}}>Edit</button>
+  <button onClick={user?handleDelete:()=>{setShowLogin(true)}}>Delete</button>
 </div>
 
     </div>
