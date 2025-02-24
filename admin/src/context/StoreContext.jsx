@@ -9,7 +9,7 @@ const StoreContextProvider=(props)=>{
   //state variable for login page
   const [showLogin,setShowLogin]=useState(false)
   
-  //store current user than we use currentuser anywhere
+  //store current user in cookie than we use currentuser anywhere
   const userCookie = Cookies.get("user");
 const initialUser = userCookie && userCookie !== "undefined" 
   ? JSON.parse(userCookie) 
@@ -22,13 +22,14 @@ console.log(user)
   const login = async (email, password) => {
       try {
         const response = await axios.post("http://localhost:4000/admin/login", { email, password });
+        console.log("Login response:", response.data);
         Cookies.set("token", response.data.token, { expires: 1 });
-        Cookies.set("user", JSON.stringify(response.data.user), { expires: 1 });
-        setUser(response.data.user);
+        Cookies.set("admin", JSON.stringify(response.data.admin), { expires: 1 });
+        setUser(response.data.admin);
       } catch (error) {
         alert(error.response?.data?.message || "Login failed");
       }
-    };
+    }
   
     const signup = async (name, email, password) => {
       try {
