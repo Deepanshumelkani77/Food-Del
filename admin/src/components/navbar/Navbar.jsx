@@ -6,7 +6,7 @@ import { StoreContext } from '../../context/StoreContext'
 
 const Navbar = () => {
 
-  const {user}=useContext(StoreContext)
+  const {user,logout}=useContext(StoreContext)
  
  //signup
 const { setShowLogin } = useContext(StoreContext);
@@ -15,7 +15,7 @@ const { setShowLogin } = useContext(StoreContext);
     <div className='navbar'>
       <img className='logo' src={assets.logo} alt="" />
       
-     {user?<img></img>:<img className='profile' onClick={()=>{setShowLogin(true)}} src={assets.profile_image} alt="" />} 
+     {user?<button onClick={logout}>logout</button>:<img className='profile' onClick={()=>{setShowLogin(true)}} src={assets.profile_image} alt="" />} 
     </div>
   )
 }
