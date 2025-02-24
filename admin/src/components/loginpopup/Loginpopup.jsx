@@ -60,6 +60,8 @@ const handleSubmit2 = async (e) => {
 
       </form>
 
+    
+    
     </div>:<div className='login-popup'>
     
           <form  className='login-popup-container'>
@@ -81,8 +83,9 @@ const handleSubmit2 = async (e) => {
         <input type="checkbox" required/>
         <p>By continuting, i agree to the terms of use & privacy policy.</p>
     </div>
-    
-    {currState==="Login"?<p>Create a new account?<span onClick={()=>setCurrState("Signup")}>Click here</span></p>:<p>Already have an account?<span onClick={()=>{setCurrState("Login")}}>Login here</span></p>}
+    {//hide signup page
+    }
+    {currState==="Login"?<p>Create a new account?<span onClick={()=>setCurrState("Login")}>Click here</span></p>:<p>Already have an account?<span onClick={()=>{setCurrState("Login")}}>Login here</span></p>}
     
     
           </form>
