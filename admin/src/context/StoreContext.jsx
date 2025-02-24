@@ -17,7 +17,7 @@ const initialUser = userCookie && userCookie !== "undefined"
 
 const [user, setUser] = useState(initialUser);
 
-
+console.log(user)
   
   const login = async (email, password) => {
       try {

@@ -7,7 +7,7 @@ import { StoreContext } from '../../context/StoreContext'
 const Navbar = () => {
 
   const {user}=useContext(StoreContext)
-  
+ 
  //signup
 const { setShowLogin } = useContext(StoreContext);
 

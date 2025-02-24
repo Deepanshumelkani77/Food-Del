@@ -14,7 +14,7 @@ router.post("/signup", async (req, res) => {
     await admin.save();
     res.status(201).json({ message: "User registered successfully" });
   });
-  
+
   
   // Login Route
   router.post("/login", async (req, res) => {
@@ -28,7 +28,8 @@ router.post("/signup", async (req, res) => {
   
     const token = jwt.sign({ id: admin._id }, "secret", { expiresIn: "1h" });
     res.json({ token, admin: {id:admin._id, name: admin.username, email: admin.email } });
-    
+
+
   });
 
 
