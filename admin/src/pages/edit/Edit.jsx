@@ -5,6 +5,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 const Edit = () => {
 
+//file upload
+const [file, setFile] = useState(null);
+
     const { id } = useParams(); // Get the dynamic ID from the URL
     const [foodItem, setFoodItem] = useState({});
   
