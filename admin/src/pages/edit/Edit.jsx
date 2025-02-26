@@ -11,7 +11,7 @@ const Edit = () => {
     //fetch data from database
     const [foodItem, setFoodItem] = useState({});
     //for sending data
-  const [formData, setFormData] = useState({ name: '',image:'', description: '',category:'', price: '' });
+  const [formData, setFormData] = useState({ name: '', description: '',category:'', price: '' });
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -74,11 +74,11 @@ const [uploadedUrl, setUploadedUrl] = useState('');
       formDataa
     );
     //link come from cloudinary
-    const imageUrl = res.data.secure_url;
-    setUploadedUrl(imageUrl);
+    const image = res.data.secure_url;
+    setUploadedUrl(image);
 
     // Send the URL to your backend to store in MongoDB
-    await axios.post(`http://localhost:4000/foods/edit/${id}`, { imageUrl });
+    await axios.post(`http://localhost:4000/foods/edited/${id}`, { image });
     alert("Photo uploaded and saved successfully!");
   } catch (error) {
     console.error("Upload error:", error);

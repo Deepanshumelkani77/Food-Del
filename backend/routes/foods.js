@@ -43,8 +43,9 @@ router.get("/", async (req, res) => {
 
 //add new item
 router.post("/", async(req, res) => {
+
     const { name,image, description,category, price } = req.body;
-  
+  console.log(req.body)
 const food1=new Food({name:name,image:image,description:description,category:category,price:price})
 food1.save();  
 
@@ -57,14 +58,14 @@ food1.save();
 
   router.put('/edit/:id', async (req, res) => {
     const { id } = req.params;
-    const { name, image, description, category, price } = req.body;
-  
+    const { name , description, category, price} = req.body;
+ 
     // Perform update logic here
     try {
       // Assume updateFood is a function that updates the food item in the database
       const updatedFood = await Food.findByIdAndUpdate(
         id, 
-        { name, image, description, category, price },
+        { name, description, category, price },
         { new: true } // Return the updated document
       );
       res.status(200).json({ message: 'Food item updated successfully', updatedFood });
@@ -73,6 +74,27 @@ food1.save();
       res.status(500).json({ message: 'Internal server error' });
     }
   });
+
+  //upload image for edit
+  router.put('/edited/:id', async (req, res) => {
+    const { id } = req.params;
+    const {image} = req.body;
+    console.log(req.body)
+    // Perform update logic here
+    try {
+      // Assume updateFood is a function that updates the food item in the database
+      const updatedFood = await Food.findByIdAndUpdate(
+        id, 
+        { image},
+        { new: true } // Return the updated document
+      );
+     
+    } catch (error) {
+      console.error(error);
+     
+    }
+  });
+
 
 
 
