@@ -8,10 +8,14 @@ const Edit = () => {
 
 
     const { id } = useParams(); // Get the dynamic ID from the URL
+    //fetch data from database
     const [foodItem, setFoodItem] = useState({});
-  
-    const [formData, setFormData] = useState({ name: '',image:'', description: '',category:'', price: '' });
+    //for sending data
+  const [formData, setFormData] = useState({ name: '',image:'', description: '',category:'', price: '' });
     const navigate = useNavigate();
+
+//for upload image
+
 
 
     useEffect(() => {
@@ -65,7 +69,7 @@ const Edit = () => {
 
 <div className="add-img-upload ">
   <p>Upload Image</p>
-<input  type="text" id='image' name='image' placeholder={foodItem.image} value={formData.image}  onChange={handleChange}   required/>
+<input  type="text" id='image' name='image' placeholder={foodItem.image} value={formData.image}    required/>
 </div>
 
 
