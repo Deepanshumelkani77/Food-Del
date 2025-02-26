@@ -65,12 +65,12 @@ const [uploadedUrl, setUploadedUrl] = useState('');
   const formDataa = new FormDataa();
   formDataa.append('file', file);
   // Replace with your Cloudinary unsigned upload preset
-  formDataa.append('upload_preset', 'YOUR_UPLOAD_PRESET');
+  formDataa.append('upload_preset', 'Food-Del');
 
   try {
     // Upload to Cloudinary
     const res = await axios.post(
-      'https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload',
+      'https://api.cloudinary.com/v1_1/drx3wkg1h/image/upload',
       formDataa
     );
     //link come from cloudinary
@@ -78,7 +78,7 @@ const [uploadedUrl, setUploadedUrl] = useState('');
     setUploadedUrl(imageUrl);
 
     // Send the URL to your backend to store in MongoDB
-    await axios.post('http://localhost:4000/save-photo', { imageUrl });
+    await axios.post(`http://localhost:4000/foods/edit/${id}`, { imageUrl });
     alert("Photo uploaded and saved successfully!");
   } catch (error) {
     console.error("Upload error:", error);
