@@ -59,6 +59,34 @@ const [uploadedUrl, setUploadedUrl] = useState('');
     setFile(e.target.files[0]);
   };
 
+ // Upload file to Cloudinary and send URL to backend
+ const handleUpload = async () => {
+  if (!file) return;
+  const formDataa = new FormDataa();
+  formDataa.append('file', file);
+  // Replace with your Cloudinary unsigned upload preset
+  formDataa.append('upload_preset', 'YOUR_UPLOAD_PRESET');
+
+  try {
+    // Upload to Cloudinary
+    const res = await axios.post(
+      'https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload',
+      formDataa
+    );
+    //link come from cloudinary
+    const imageUrl = res.data.secure_url;
+    setUploadedUrl(imageUrl);
+
+    // Send the URL to your backend to store in MongoDB
+    await axios.post('http://localhost:4000/save-photo', { imageUrl });
+    alert("Photo uploaded and saved successfully!");
+  } catch (error) {
+    console.error("Upload error:", error);
+    alert("Upload failed");
+  }
+};
+
+
 
 
   return (
@@ -74,7 +102,7 @@ const [uploadedUrl, setUploadedUrl] = useState('');
 
 <div className="add-img-upload ">
   <p>Upload Image</p>
-<input  type="text" id='image' name='image' placeholder={foodItem.image} value={formData.image}    required/>
+<input  type="file" onChange={handleFileChange} accept="image/*"  id='image' name='image' placeholder={foodItem.image} value={formData.image}    required/>
 </div>
 
 
@@ -103,7 +131,7 @@ const [uploadedUrl, setUploadedUrl] = useState('');
   </div>
 </div>
 
-<button type='submit' className='add-btn' onClick={handleSubmit}>Update</button>
+<button type='submit' className='add-btn' onClick={()=>{handleSubmit,handleUpload}}>Update</button>
 
       </form>
       
