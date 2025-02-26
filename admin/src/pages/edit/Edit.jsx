@@ -5,11 +5,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 const Edit = () => {
 
-//file upload
-const [file, setFile] = useState(null);
-  const handleFileChange = (e) => {
-  setFile(e.target.files[0]);
-};
 
 
     const { id } = useParams(); // Get the dynamic ID from the URL
