@@ -14,10 +14,6 @@ const Edit = () => {
   const [formData, setFormData] = useState({ name: '',image:'', description: '',category:'', price: '' });
     const navigate = useNavigate();
 
-//for upload image
-
-
-
     useEffect(() => {
       // Fetch the food item's details from the backend
       fetch(`http://localhost:4000/foods/${id}`)
@@ -54,6 +50,12 @@ const Edit = () => {
       }
     };
   
+
+//upload iamge using form
+const [file, setFile] = useState(null);
+const [uploadedUrl, setUploadedUrl] = useState('');
+
+
 
 
   return (
