@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import "../add/Add.css"
 import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 
 const Edit = () => {
@@ -62,7 +63,7 @@ const [uploadedUrl, setUploadedUrl] = useState('');
  // Upload file to Cloudinary and send URL to backend
  const handleUpload = async () => {
   if (!file) return;
-  const formDataa = new FormDataa();
+  const formDataa = new FormData();
   formDataa.append('file', file);
   // Replace with your Cloudinary unsigned upload preset
   formDataa.append('upload_preset', 'Food-Del');
@@ -78,7 +79,7 @@ const [uploadedUrl, setUploadedUrl] = useState('');
     setUploadedUrl(image);
 
     // Send the URL to your backend to store in MongoDB
-    await axios.post(`http://localhost:4000/foods/edited/${id}`, { image });
+    await axios.post(`http://localhost:4000/foods/edit/${id}`, { image });
     alert("Photo uploaded and saved successfully!");
   } catch (error) {
     console.error("Upload error:", error);
@@ -131,7 +132,7 @@ const [uploadedUrl, setUploadedUrl] = useState('');
   </div>
 </div>
 
-<button type='submit' className='add-btn' onClick={()=>{handleSubmit,handleUpload}}>Update</button>
+<button type='submit' className='add-btn' onClick={()=>{handleSubmit(),handleUpload()}}>Update</button>
 
       </form>
       

@@ -58,6 +58,7 @@ food1.save();
 
   router.put('/edit/:id', async (req, res) => {
     const { id } = req.params;
+    console.log(req.body)
     const { name , description, category, price} = req.body;
  
     // Perform update logic here
@@ -65,7 +66,7 @@ food1.save();
       // Assume updateFood is a function that updates the food item in the database
       const updatedFood = await Food.findByIdAndUpdate(
         id, 
-        { name, description, category, price },
+        { name:name, description:description, category:category, price:price },
         { new: true } // Return the updated document
       );
       res.status(200).json({ message: 'Food item updated successfully', updatedFood });
@@ -75,25 +76,6 @@ food1.save();
     }
   });
 
-  //upload image for edit
-  router.put('/edited/:id', async (req, res) => {
-    const { id } = req.params;
-    const {image} = req.body;
-    console.log(req.body)
-    // Perform update logic here
-    try {
-      // Assume updateFood is a function that updates the food item in the database
-      const updatedFood = await Food.findByIdAndUpdate(
-        id, 
-        { image},
-        { new: true } // Return the updated document
-      );
-     
-    } catch (error) {
-      console.error(error);
-     
-    }
-  });
 
 
 
