@@ -54,7 +54,10 @@ const Edit = () => {
 //upload iamge using form
 const [file, setFile] = useState(null);
 const [uploadedUrl, setUploadedUrl] = useState('');
-
+  // When a file is selected
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
 
 
 
