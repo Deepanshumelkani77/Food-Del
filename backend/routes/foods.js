@@ -44,7 +44,7 @@ router.get("/", async (req, res) => {
 //add new item
 router.post("/", async(req, res) => {
 
-    const { name,image, description,category, price } = req.body;
+    const { name, description,category, price,image } = req.body;
   console.log(req.body)
 const food1=new Food({name:name,image:image,description:description,category:category,price:price})
 food1.save();  
