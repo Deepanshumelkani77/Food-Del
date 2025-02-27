@@ -79,7 +79,9 @@ const Add = () => {
 
 <div className="add-img-upload ">
   <p>Upload Image</p>
+  
 <input  type="file" id='image' placeholder="upload" name='image'   onChange={handleFileChange} accept="image/*" required/>
+
 </div>
 
 
