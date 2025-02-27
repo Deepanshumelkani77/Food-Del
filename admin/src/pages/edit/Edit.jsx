@@ -103,7 +103,7 @@ const [uploadedUrl, setUploadedUrl] = useState('');
 
 <div className="add-img-upload ">
   <p>Upload Image</p>
-<input  type="file" onChange={handleFileChange} accept="image/*"  id='image' name='image' placeholder={foodItem.image} value={formData.image}    required/>
+<input  type="file" onChange={handleFileChange} accept="image/*"  id='image' name='image' placeholder={foodItem.image}     required/>
 </div>
 
 
