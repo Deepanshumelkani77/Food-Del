@@ -59,14 +59,14 @@ food1.save();
   router.put('/edit/:id', async (req, res) => {
     const { id } = req.params;
     console.log(req.body)
-    const { name , description, category, price} = req.body;
+    const { name , description, category, price,image} = req.body;
  
     // Perform update logic here
     try {
       // Assume updateFood is a function that updates the food item in the database
       const updatedFood = await Food.findByIdAndUpdate(
         id, 
-        { name:name, description:description, category:category, price:price },
+        { name:name, description:description, category:category, price:price,image },
         { new: true } // Return the updated document
       );
       res.status(200).json({ message: 'Food item updated successfully', updatedFood });

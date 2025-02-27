@@ -22,7 +22,7 @@ const Edit = () => {
   useEffect(() => {
     // Fetch the food item details from the backend
     fetch(`http://localhost:4000/foods/${id}`)
-      .then(response => response.json())
+      .then(response => response.json())                                     
       .then(data => {
         setFoodItem(data);
         // Optionally prefill the form with existing data
