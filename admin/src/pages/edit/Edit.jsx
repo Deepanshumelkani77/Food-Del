@@ -63,6 +63,7 @@ const [uploadedUrl, setUploadedUrl] = useState('');
  // Upload file to Cloudinary and send URL to backend
  const handleUpload = async () => {
   if (!file) return;
+  console.log(file)
   const formDataa = new FormData();
   formDataa.append('file', file);
   // Replace with your Cloudinary unsigned upload preset
