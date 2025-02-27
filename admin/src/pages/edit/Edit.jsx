@@ -124,7 +124,7 @@ const Edit = () => {
           <p>Product description</p>
           <textarea
             name="description"
-            rows="5"
+            rows="2"
             placeholder={foodItem.description}
             value={formData.description}
             onChange={handleChange}

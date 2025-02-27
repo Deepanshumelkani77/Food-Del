@@ -21,7 +21,7 @@ align-items: center;
 }
 
 
-.add-img-upload input,.add-product-name input,.add-product-discription textarea{
+.add-product-name input,.add-product-discription textarea{
     width:100%;
     padding:10px;
     outline-color: tomato;
@@ -65,4 +65,9 @@ outline-color: tomato;
     .add-category,.add-price{
         width:50%;
     }
+}
+
+
+.add-img-upload input{
+    
 }
