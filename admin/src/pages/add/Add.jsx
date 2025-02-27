@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import "./Add.css"
 import {useNavigate} from 'react-router-dom'
+import axios from 'axios'; 
 
 const Add = () => {
 
@@ -78,7 +79,7 @@ const Add = () => {
 
 <div className="add-img-upload ">
   <p>Upload Image</p>
-<input  type="text" id='image' placeholder="Type here" name='image'  value={formData.image} onChange={handleChange} required/>
+<input  type="file" id='image' placeholder="upload" name='image'  value={formData.image} onChange={handleFileChange} accept="image/*" required/>
 </div>
 
 
