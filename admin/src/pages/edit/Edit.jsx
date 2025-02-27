@@ -58,12 +58,13 @@ const [uploadedUrl, setUploadedUrl] = useState('');
   // When a file is selected
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
+    console.log(file);
   };
 
  // Upload file to Cloudinary and send URL to backend
  const handleUpload = async () => {
   if (!file) return;
-  console.log(file)
+  console.log("hello")
   const formDataa = new FormData();
   formDataa.append('file', file);
   // Replace with your Cloudinary unsigned upload preset
@@ -133,7 +134,7 @@ const [uploadedUrl, setUploadedUrl] = useState('');
   </div>
 </div>
 
-<button type='submit' className='add-btn' onClick={()=>{handleSubmit(),handleUpload()}}>Update</button>
+<button type='submit' className='add-btn'  onClick={()=>{handleSubmit(),handleUpload()}}>Update</button>
 
       </form>
       
