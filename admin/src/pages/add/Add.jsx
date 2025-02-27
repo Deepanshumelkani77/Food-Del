@@ -4,7 +4,8 @@ import {useNavigate} from 'react-router-dom'
 
 const Add = () => {
 
-  const [formData, setFormData] = useState({ name: '',image:'', description: '',category:'', price: '' });
+  const [foodItem, setFoodItem] = useState({});
+  const [formData, setFormData] = useState({ name: '', description: '',category:'', price: '' });
   const navigate = useNavigate();
 
 
