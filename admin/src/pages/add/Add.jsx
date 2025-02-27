@@ -36,7 +36,7 @@ const Add = () => {
           'https://api.cloudinary.com/v1_1/drx3wkg1h/image/upload',
           uploadData
         );
-        imageUrl = res.data.secure_url;
+        imageUrl = res.data.secure_url; 
       } catch (error) {
         console.error("Image upload error:", error.response?.data || error);
         alert("Image upload failed");
