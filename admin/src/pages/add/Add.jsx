@@ -55,7 +55,7 @@ const Add = () => {
       });
 
       if (response.ok) {
-        alert('Food item edited successfully!');
+        alert('Food item created successfully!');
         navigate('/');
       } else {
         console.error('Failed to edit food item');
@@ -73,25 +73,25 @@ const Add = () => {
 
       <div className="add-product-name ">
 <p>Product name</p>
-<input type="text" name='name' value={formData.name} onChange={handleChange}  placeholder='Type here' />
+<input type="text" name='name'  onChange={handleChange}  placeholder='Type here' />
 </div>
 
 
 <div className="add-img-upload ">
   <p>Upload Image</p>
-<input  type="file" id='image' placeholder="upload" name='image'  value={formData.image} onChange={handleFileChange} accept="image/*" required/>
+<input  type="file" id='image' placeholder="upload" name='image'   onChange={handleFileChange} accept="image/*" required/>
 </div>
 
 
 <div className="add-product-discription ">
   <p>Product description</p>
-  <textarea name="description" row='5' placeholder='write content here'  value={formData.description} onChange={handleChange} required></textarea>
+  <textarea name="description" row='5' placeholder='write content here'  onChange={handleChange} required></textarea>
 </div>
 
 <div className="add-category-price">
   <div className="add-category ">
 <p>Product category</p>
-<select name="category"  value={formData.category} onChange={handleChange} >
+<select name="category"  onChange={handleChange} >
   <option value="Salad">Salad</option>
   <option value="Rolls">Rolls</option>
   <option value="Deserts">Deserts</option>
@@ -104,7 +104,7 @@ const Add = () => {
   </div>
   <div className="add-price ">
     <p>Product price</p>
-    <input type="number" name="price"  value={formData.price} onChange={handleChange} placeholder='$20'/>
+    <input type="number" name="price"   onChange={handleChange} placeholder='Type here'/>
   </div>
 </div>
 
