@@ -3,6 +3,7 @@
     margin-bottom:0px ;
     display: flex;
     font-family:"Outfit",sans-serif;
+    
  
     
 }
@@ -15,9 +16,11 @@
 .forreview{
     width:100%;
     padding-top:40px ;
-    overflow-y: auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
+    height: 500px;
 
 }
 .create-review{
@@ -48,6 +51,28 @@
 
     background-color: rgba(255, 99, 71, 0.119);
 }
+.show-review{
+width:100%;
+padding: 30px 20px;
+display: flex;
+flex-direction: column;
+gap:5vw;
+}
+.user-review{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap:1vw;
+}
+.user-review .username{
+    font-size: 25px;
+    font-weight: 500;
+}
+
+
+
+
+
 
 .item-card{
     width:70%;

@@ -48,6 +48,26 @@ const Item = () => {
 </div>
 
 
+<div className="show-review">
+
+<div className="user-review">
+  <p className='username'>username</p>
+  <p>content write here and give your all ideab about the product </p>
+</div>
+<div className="user-review">
+  <p className='username'>username</p>
+  <p>content write here and give your all ideab about the product </p>
+</div>
+<div className="user-review">
+  <p className='username'>username</p>
+  <p>content write here and give your all ideab about the product </p>
+</div>
+<div className="user-review">
+  <p className='username'>username</p>
+  <p>content write here and give your all ideab about the product </p>
+</div>
+</div>
+
 
       </div>
 
