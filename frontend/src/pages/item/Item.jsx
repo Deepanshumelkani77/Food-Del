@@ -21,9 +21,11 @@ const Item = () => {
 
   return (
 
-    <div className='item-containe'>
+    <div className='item-container'>
 
-       <div className="item-card">
+      <div className="forcard">
+        
+      <div className="item-card">
         <div className="item-card-image"><img src={foodItem.image} alt="" /></div>
         <div className="item-card-name">
         <h2>{foodItem.name}</h2>
@@ -33,9 +35,13 @@ const Item = () => {
         <p className="item-card-price">${foodItem.price}</p>
         </div> 
 
-        <div className="review">
 
-        </div>
+      </div>
+
+      <div className="forreview"></div>
+
+      
+       
       
     </div>
   )

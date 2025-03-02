@@ -1,12 +1,22 @@
-.item-containe{
+.item-container{
 
     margin-bottom:0px ;
-  
+    display: flex;
+ 
+    
+}
+.forcard{
+    width:100%;
     
 }
 
+.forreview{
+    width:100%;
+    overflow-y: auto;
+}
+
 .item-card{
-    width:30vw;
+    width:70%;
     margin-top: 30px;
     font-family: "Outfit",sans-serif;
     display: flex;
@@ -17,10 +27,10 @@
    border-radius: 10px;
 }
 .item-card-image{
-    width:30vw;
+    width:100%;
 }
 .item-card-image img{
-    width:30vw;
+    width:100%;
     height:25vw;
     border-radius: 10px;
 }
