@@ -35,10 +35,23 @@ const Item = () => {
         <p className="item-card-price">${foodItem.price}</p>
         </div> 
 
+ </div>
+
+
+
+      <div className="forreview">
+
+<div className="create-review">
+  <h1></h1>
+<form>
+  <texarea></texarea>
+  <button></button>
+</form>
+</div>
+
+
 
       </div>
-
-      <div className="forreview"></div>
 
       
        
