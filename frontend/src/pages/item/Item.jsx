@@ -42,11 +42,9 @@ const Item = () => {
       <div className="forreview">
 
 <div className="create-review">
-  <h1>REVIEW</h1>
-<form>
-  <texarea></texarea>
+  <p>Review</p>
+  <textarea placeholder='Type your review' row='5'></textarea>
   <button>submit</button>
-</form>
 </div>
 
 

@@ -14,12 +14,39 @@
 
 .forreview{
     width:100%;
-    padding-top:50px ;
+    padding-top:40px ;
     overflow-y: auto;
-    background-color: aqua;
     display: flex;
     flex-direction: column;
 
+}
+.create-review{
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+}
+.create-review p{
+    font-size: 35px;
+    font-weight: 500;
+}
+.create-review textarea{
+    padding:10px;
+    outline-color: tomato;
+    font-family: "Outfit",sans-serif;
+    border-radius: 5px;
+}
+.create-review button{
+    width:100px;
+    padding: 10px 10px;
+    border-radius: 20px;
+    border: 2px solid tomato;
+    background-color:white ;
+    transition: 1s;
+}
+.create-review button:hover{
+
+    background-color: rgba(255, 99, 71, 0.119);
 }
 
 .item-card{
