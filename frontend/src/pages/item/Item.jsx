@@ -31,10 +31,11 @@ const Item = () => {
         </div>
         <p>{foodItem.description}</p>
         <p className="item-card-price">${foodItem.price}</p>
-      
-        
-
         </div> 
+
+        <div className="review">
+
+        </div>
       
     </div>
   )
