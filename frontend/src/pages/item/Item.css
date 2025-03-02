@@ -1,10 +1,9 @@
 .item-container{
+margin-top: 50px;
 
     margin-bottom:0px ;
     display: flex;
     font-family:"Outfit",sans-serif;
-    
- 
     
 }
 .forcard{
@@ -15,14 +14,14 @@
 
 .forreview{
     width:100%;
-    padding-top:40px ;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    
+  overflow-y:scroll;
+  overflow-x: hidden;
     display: flex;
     flex-direction: column;
     height: 500px;
+   }
 
-}
 .create-review{
     padding: 10px 20px;
     display: flex;
@@ -70,13 +69,8 @@ gap:5vw;
 }
 
 
-
-
-
-
 .item-card{
     width:70%;
-    margin-top: 50px;
     font-family: "Outfit",sans-serif;
     display: flex;
     flex-direction: column;
@@ -90,7 +84,7 @@ gap:5vw;
 }
 .item-card-image img{
     width:100%;
-    height:25vw;
+    height:350px;
     border-radius: 10px;
 }
 .item-card-name{
@@ -114,6 +108,7 @@ height:20px
         width:90%;
     }
 
+
 }
 
 
@@ -129,5 +124,20 @@ height:20px
         width:75vw;
         height:70vw;
     }
+    .item-container{
+        flex-direction: column;
+        gap:10vw;
+        margin-bottom: 50px;
+    }
+    .forreview{
+        overflow: visible;
+    }
+    .create-review{
+        padding: 10px 0px;
+        gap:20px;
+    }
+    .show-review{
+        padding: 30px 0px;
+        }
 
 }
