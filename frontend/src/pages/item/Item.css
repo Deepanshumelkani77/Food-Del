@@ -13,6 +13,7 @@
 .forreview{
     width:100%;
     overflow-y: auto;
+    background-color: aqua;
 }
 
 .item-card{
@@ -52,14 +53,7 @@ height:20px
 @media (max-width:1200px){
 
     .item-card{
-        width:50vw;
-    }
-    .item-card-image{
-        width:50vw;
-    }
-    .item-card-image img{
-        width:50vw;
-        height:40vw;
+        width:90%;
     }
 
 }
