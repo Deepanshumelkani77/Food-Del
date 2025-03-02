@@ -14,6 +14,7 @@ const Item = () => {
         .then((response) => response.json())
         .then((data) => setFoodItem(data))
         .catch((error) => console.error('Error fetching food item:', error));
+        window.scrollTo(0, 0);
     }, [id]);
 
 

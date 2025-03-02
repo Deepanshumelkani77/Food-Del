@@ -21,6 +21,7 @@ const FoodDisplay = ({category}) => {
       .catch(error => {
         console.error("Error fetching food data:", error);
       });
+      
   }, []);
 
 
