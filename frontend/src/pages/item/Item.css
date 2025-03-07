@@ -74,16 +74,18 @@ gap:3vw;
 }
 .user-review .username{
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 700;
 }
 .user-review .comment{
-    color:rgba(0, 0, 0, 0.708);
+    color:rgb(0, 0, 0);
+    font-size: 15px;
+    font-weight: 500;
 }
 .user-review button{
     width:70px;
     padding: 5px 10px;
     border-radius: 20px;
-    border: 2px solid tomato;
+    border: 1px solid rgba(255, 99, 71, 0.992);
     background-color:white ;
     transition: 1s;
 }
@@ -164,8 +166,15 @@ height:20px
     .show-review{
         padding: 30px 0px;
         }
+        .create-review textarea{
+            width: 100%;
+        }
         .user-review{
             width: 100%;
+        }
+        .forreview{
+            
+           margin-bottom: 50px;
         }
 
 }

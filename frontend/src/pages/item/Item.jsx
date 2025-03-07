@@ -147,6 +147,7 @@ const handleDelete = async (id) => {
             reviews.map((review, index) => (
               <div key={index} className='user-review'>
                 <p className='username'>{review.author.username || 'Anonymous'}</p>
+                <hr></hr>
                 <p className='comment'>{review.comment}</p>
                
                 {user?.id && review?.author?._id && user.id === review.author._id ? (
