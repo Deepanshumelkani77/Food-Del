@@ -99,7 +99,7 @@ const handleDelete = async (id) => {
 
     if (response.ok) {
       alert('Review deleted successfully!');
-     
+      fetchFoodItem();
       // Redirect to the home page
     } else {
       alert('Failed to delete the review.');
