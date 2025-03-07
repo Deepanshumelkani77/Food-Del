@@ -46,6 +46,24 @@ useEffect(() => {
   }
 }, [user]);
 
+
+
+//this function for redirect into this page without any problem
+//for smooth redirect
+const fetchFoodItem = async () => {
+  try {
+    const response = await fetch(`http://localhost:4000/foods/${id}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch food data');
+    }
+    const data = await response.json();
+    setFoodItem(data);
+    setReviews(data.review || []);
+  } catch (error) {
+    console.error('Error fetching food item:', error);
+  }
+};
+
 const handleSubmit = async (e) => {
   e.preventDefault();
   try {
@@ -57,7 +75,7 @@ const handleSubmit = async (e) => {
 
     if (response.ok) {
       alert('your review added successfully ');
-      navigate(`/:${id}`); // Redirect to home page
+      fetchFoodItem();  // Redirect to home page
     } else {
       console.error('Failed to add review');
     }
