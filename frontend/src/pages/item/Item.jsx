@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import "./Item.css"
 import { assets } from '../../assets/assets';
 import { StoreContext } from '../../context/StoreContext';
+import { useNavigate} from 'react-router-dom'
 
 const Item = () => {
 
@@ -21,17 +22,22 @@ const Item = () => {
 //send review
 const [formData ,setFormData]=useState({comment:"",author:""});
 const { user } = useContext(StoreContext);
+const navigate=useNavigate();
 
 const handleChange = (e) => {
   const { name, value } = e.target;
   setFormData({ ...formData, [name]: value });
 };
-setFormData({...formData,author:user._id})
+useEffect(() => {
+  if (user) {
+    setFormData((prevData) => ({ ...prevData, author: user.id }));
+  }
+}, [user]);
 
-const handleSubmit = async () => {
+const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    const response = await fetch(`http://localhost:4000/review/:${id}`, {
+    const response = await fetch(`http://localhost:4000/review/${id}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData), // Use the updated cart item
@@ -76,7 +82,7 @@ const handleSubmit = async () => {
 <div className="create-review">
   <p>Review</p>
   <textarea placeholder='Type your review' name="comment" row='5' onChange={handleChange}></textarea>
-  <button>submit</button>
+  <button onClick={handleSubmit}>submit</button>
 </div>
 
 
