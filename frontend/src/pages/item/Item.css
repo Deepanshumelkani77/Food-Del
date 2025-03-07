@@ -37,6 +37,7 @@ margin-top: 50px;
     outline-color: tomato;
     font-family: "Outfit",sans-serif;
     border-radius: 5px;
+    width: 93%;
 }
 .create-review button{
     width:100px;
@@ -53,15 +54,18 @@ margin-top: 50px;
 .show-review{
 width:100%;
 padding: 30px 20px;
+
 display: flex;
 flex-direction: column;
 gap:5vw;
+
 }
 .user-review{
-    width: 100%;
+  
     display: flex;
     flex-direction: column;
     gap:1vw;
+    border: 1px solid black;
 }
 .user-review .username{
     font-size: 25px;
