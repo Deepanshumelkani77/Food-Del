@@ -85,6 +85,33 @@ const handleSubmit = async (e) => {
 };
 
 
+//delete review
+
+const handleDelete = async (id) => {
+
+  const confirmDelete = window.confirm('Are you sure you want to delete this review?');
+  if (!confirmDelete) return;
+
+  try {
+    const response = await fetch(`http://localhost:4000/review/delete/${id}`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      alert('Review deleted successfully!');
+     
+      // Redirect to the home page
+    } else {
+      alert('Failed to delete the review.');
+    }
+  } catch (error) {
+    console.error('Error deleting review:', error);
+    alert('An error occurred while deleting the review.');
+  }
+};
+
+
+
 
 
   return (
@@ -122,7 +149,7 @@ const handleSubmit = async (e) => {
                 <p className='username'>{review.author.username || 'Anonymous'}</p>
                 <p className='comment'>{review.comment}</p>
                
-                {user && user.id===review.author._id?<button>delete</button>:""}
+                {user && user.id===review.author._id?<button onClick={()=>{handleDelete(review._id)}}>delete</button>:""}
               </div>
             ))
           ) : (
