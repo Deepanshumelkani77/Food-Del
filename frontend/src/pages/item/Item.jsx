@@ -10,14 +10,23 @@ const Item = () => {
     const { id } = useParams(); // Get the dynamic ID from the URL
     const [foodItem, setFoodItem] = useState({});
   
-    useEffect(() => {
-      // Fetch the food item's details from the backend
-      fetch(`http://localhost:4000/foods/${id}`)
-        .then((response) => response.json())
-        .then((data) => setFoodItem(data))
-        .catch((error) => console.error('Error fetching food item:', error));
-        window.scrollTo(0, 0);
-    }, [id]);
+  // Fetch food details
+  useEffect(() => {
+    const fetchFoodItem = async () => {
+      try {
+        const response = await fetch(`http://localhost:4000/foods/${id}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch food data');
+        }
+        const data = await response.json();
+        setFoodItem(data);
+      } catch (error) {
+        console.error('Error fetching food item:', error);
+      }
+    };
+    fetchFoodItem();
+    window.scrollTo(0, 0);
+  }, [id]);
 
 //send review
 const [formData ,setFormData]=useState({comment:"",author:""});
