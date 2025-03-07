@@ -22,7 +22,7 @@ router.post("/:id",async(req,res)=>{
         await newReview.save();
     
         // Push the review's ID to the food's review array
-        food.review.push(newReview._id);
+        food.review.push(newReview);
     
         // Save the updated food item
         await food.save();

@@ -13,7 +13,11 @@ router.get("/:id", async (req, res) => {
         return res.status(400).json({ message: 'Invalid food ID' });
       }
   
-      const foodItem = await Food.findById(id);  // Use 'id' directly
+      //to get review
+      const foodItem = await Food.findById(id).populate({
+        path: "review",
+        populate: { path: "author" }, // Optional: to get full user details
+      });;  // Use 'id' directly
   
       if (!foodItem) {
         return res.status(404).json({ message: 'Food item not found' });
