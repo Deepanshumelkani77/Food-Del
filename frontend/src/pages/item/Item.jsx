@@ -26,6 +26,28 @@ const handleChange = (e) => {
   const { name, value } = e.target;
   setFormData({ ...formData, [name]: value });
 };
+setFormData({...FormDataEvent,[author]:user._id})
+
+const handleSubmit = async () => {
+  e.preventDefault();
+  try {
+    const response = await fetch(`http://localhost:4000/review/:${id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData), // Use the updated cart item
+    });
+
+    if (response.ok) {
+      alert('your review added successfully ');
+      navigate(`/:${id}`); // Redirect to home page
+    } else {
+      console.error('Failed to add review');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
 
 
 
