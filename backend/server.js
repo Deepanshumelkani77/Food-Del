@@ -47,3 +47,5 @@ const user=require("./routes/user.js");
 app.use("/user",user)
 const admin=require("./routes/admin.js");
 app.use("/admin",admin)
+const review=require("./routes/review.js");
+app.use("/review",review)
