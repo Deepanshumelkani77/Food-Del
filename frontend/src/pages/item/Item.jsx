@@ -121,7 +121,8 @@ const handleSubmit = async (e) => {
               <div key={index} className='user-review'>
                 <p className='username'>{review.author.username || 'Anonymous'}</p>
                 <p className='comment'>{review.comment}</p>
-                {user && user._id===review.author.id?<button>delete</button>:""}
+               
+                {user && user.id===review.author._id?<button>delete</button>:""}
               </div>
             ))
           ) : (
