@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import "./Item.css"
 import { assets } from '../../assets/assets';
+import { StoreContext } from '../../context/StoreContext';
 
 const Item = () => {
 
@@ -19,6 +20,10 @@ const Item = () => {
 
 //send review
 const [formData ,setFormData]=useState({comment:"",author:""});
+const { user } = useContext(StoreContext);
+
+
+
 
   return (
 
