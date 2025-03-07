@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import "./Item.css"
 import { assets } from '../../assets/assets';
@@ -22,6 +22,10 @@ const Item = () => {
 const [formData ,setFormData]=useState({comment:"",author:""});
 const { user } = useContext(StoreContext);
 
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setFormData({ ...formData, [name]: value });
+};
 
 
 
@@ -49,7 +53,7 @@ const { user } = useContext(StoreContext);
 
 <div className="create-review">
   <p>Review</p>
-  <textarea placeholder='Type your review' row='5'></textarea>
+  <textarea placeholder='Type your review' name="comment" row='5' onChange={handleChange}></textarea>
   <button>submit</button>
 </div>
 
