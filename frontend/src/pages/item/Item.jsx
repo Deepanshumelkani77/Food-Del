@@ -101,7 +101,7 @@ const handleSubmit = async (e) => {
           {reviews.length > 0 ? (
             reviews.map((review, index) => (
               <div key={index} className='user-review'>
-                <p className='username'>{review.author || 'Anonymous'}</p>
+                <p className='username'>{review.author.username || 'Anonymous'}</p>
                 <p className=''>{review.comment}</p>
               </div>
             ))
