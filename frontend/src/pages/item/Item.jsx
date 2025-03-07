@@ -149,7 +149,10 @@ const handleDelete = async (id) => {
                 <p className='username'>{review.author.username || 'Anonymous'}</p>
                 <p className='comment'>{review.comment}</p>
                
-                {user && user.id===review.author._id?<button onClick={()=>{handleDelete(review._id)}}>delete</button>:""}
+                {user?.id && review?.author?._id && user.id === review.author._id ? (
+  <button onClick={() => handleDelete(review._id)}>delete</button>
+) : null}
+
               </div>
             ))
           ) : (
