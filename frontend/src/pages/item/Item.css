@@ -79,6 +79,18 @@ gap:3vw;
 .user-review .comment{
     color:rgba(0, 0, 0, 0.708);
 }
+.user-review button{
+    width:70px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 2px solid tomato;
+    background-color:white ;
+    transition: 1s;
+}
+.user-review button:hover{
+
+    background-color: rgba(255, 99, 71, 0.119);
+}
 
 
 .item-card{
