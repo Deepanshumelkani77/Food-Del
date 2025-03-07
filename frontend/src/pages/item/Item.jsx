@@ -17,7 +17,8 @@ const Item = () => {
         window.scrollTo(0, 0);
     }, [id]);
 
-
+//send review
+const [formData ,setFormData]=useState({comment:"",author:""});
 
   return (
 
