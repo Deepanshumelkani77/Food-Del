@@ -9,7 +9,9 @@ const Item = () => {
 
     const { id } = useParams(); // Get the dynamic ID from the URL
     const [foodItem, setFoodItem] = useState({});
-  
+    const [reviews, setReviews] = useState([]);
+
+
   // Fetch food details
   useEffect(() => {
     const fetchFoodItem = async () => {
@@ -20,6 +22,7 @@ const Item = () => {
         }
         const data = await response.json();
         setFoodItem(data);
+        setReviews(data.review || []); // Ensure reviews are set properly
       } catch (error) {
         console.error('Error fetching food item:', error);
       }
@@ -94,27 +97,18 @@ const handleSubmit = async (e) => {
   <button onClick={handleSubmit}>submit</button>
 </div>
 
-
-<div className="show-review">
-
-<div className="user-review">
-  <p className='username'>username</p>
-  <p>content write here and give your all ideab about the product </p>
-</div>
-<div className="user-review">
-  <p className='username'>username</p>
-  <p>content write here and give your all ideab about the product </p>
-</div>
-<div className="user-review">
-  <p className='username'>username</p>
-  <p>content write here and give your all ideab about the product </p>
-</div>
-<div className="user-review">
-  <p className='username'>username</p>
-  <p>content write here and give your all ideab about the product </p>
-</div>
-</div>
-
+<div className='show-review'>
+          {reviews.length > 0 ? (
+            reviews.map((review, index) => (
+              <div key={index} className='user-review'>
+                <p className='username'>{review.author || 'Anonymous'}</p>
+                <p className=''>{review.comment}</p>
+              </div>
+            ))
+          ) : (
+            <p>No reviews yet. Be the first to review!</p>
+          )}
+        </div>
 
       </div>
 
