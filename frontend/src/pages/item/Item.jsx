@@ -26,7 +26,7 @@ const handleChange = (e) => {
   const { name, value } = e.target;
   setFormData({ ...formData, [name]: value });
 };
-setFormData({...FormDataEvent,[author]:user._id})
+setFormData({...formData,author:user._id})
 
 const handleSubmit = async () => {
   e.preventDefault();
