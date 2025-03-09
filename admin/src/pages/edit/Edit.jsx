@@ -116,6 +116,7 @@ const Edit = () => {
             id="image"
             name="image"
             placeholder={foodItem.image}
+           
             required
           />
         </div>
