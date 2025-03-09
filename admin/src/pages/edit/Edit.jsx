@@ -107,6 +107,8 @@ const Edit = () => {
         </div>
 
         <div className="add-img-upload">
+        {foodItem.image && <img src={foodItem.image} alt="Current food item" style={{ width: '100px', height: '100px', objectFit: 'cover' }} />}
+
           <p>Upload Image</p>
           {/* Note: Do not set a value for file inputs */}
           <input
@@ -117,7 +119,7 @@ const Edit = () => {
             name="image"
             placeholder={foodItem.image}
            
-            required
+         
           />
         </div>
 
@@ -135,7 +137,8 @@ const Edit = () => {
 
         <div className="add-category-price">
           <div className="add-category">
-            <p>Product category</p>
+            <p className='p1'>Product category</p>
+            <p className='p2'>category</p>
             <select
               name="category"
               onChange={handleChange}
@@ -153,7 +156,9 @@ const Edit = () => {
             </select>
           </div>
           <div className="add-price">
-            <p>Product price</p>
+            <p className='p1'>Product price</p>
+            <p2 className="p2">price</p2>
+
             <input
               type="number"
               name="price"
