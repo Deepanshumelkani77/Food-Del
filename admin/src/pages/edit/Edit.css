@@ -1,0 +1,8 @@
+.add-img-upload{
+    display: flex;
+    gap:5vw;
+    
+}
+.add-img-upload p{
+    display: none;
+}

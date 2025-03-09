@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "../add/Add.css";
+import "./Edit.css"
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
@@ -107,7 +108,7 @@ const Edit = () => {
         </div>
 
         <div className="add-img-upload">
-        {foodItem.image && <img src={foodItem.image} alt="Current food item" style={{ width: '100px', height: '100px', objectFit: 'cover' }} />}
+       
 
           <p>Upload Image</p>
           {/* Note: Do not set a value for file inputs */}
@@ -121,6 +122,8 @@ const Edit = () => {
            
          
           />
+
+{foodItem.image && <img src={foodItem.image} alt="Current food item" style={{ width: '70px', height: '60px', objectFit: 'cover' }} />}
         </div>
 
         <div className="add-product-discription">
