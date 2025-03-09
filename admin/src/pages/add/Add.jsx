@@ -92,7 +92,8 @@ const Add = () => {
 
 <div className="add-category-price">
   <div className="add-category ">
-<p>Product category</p>
+<p className='p1'>Product category</p>
+<p className='p2'>category</p>
 <select name="category"  onChange={handleChange} >
   <option value="Salad">Salad</option>
   <option value="Rolls">Rolls</option>
@@ -105,7 +106,8 @@ const Add = () => {
 </select>
   </div>
   <div className="add-price ">
-    <p>Product price</p>
+    <p className='p1'>Product price</p>
+    <p className='p2'>price</p>
     <input type="number" name="price"   onChange={handleChange} placeholder='Type here'/>
   </div>
 </div>

@@ -67,6 +67,12 @@ border:1px solid black;
     width:100%;
  
 }
+.add-price .p2{
+    display: none;
+}
+.add-category .p2{
+display: none;
+}
 
 
 @media (max-width:700px){
@@ -78,12 +84,24 @@ border:1px solid black;
 
 }
 
-@media (max-width:380px){
+@media (max-width:473px){
 
     .add-category,.add-price{
-        width:50%;
+        width:45%;
+    }
+    .add-price .p1 , .add-category .p1
+    {
+        display: none;
+    }
+    .add-price .p2 , .add-category .p2
+    {
+        display: flex;
     }
 }
+
+
+
+
 
 
 .custom-file-upload {
