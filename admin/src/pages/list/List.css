@@ -1,9 +1,11 @@
 .list{
-    margin-top: 10vh;
+   
     margin-left: 18%;
     width:82%;
 }
 .list-content{
+   padding-top: 40px;
     width:80%;
     margin: auto;
+    
 }
