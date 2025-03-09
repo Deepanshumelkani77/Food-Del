@@ -11,6 +11,7 @@ const Item = () => {
     const [foodItem, setFoodItem] = useState({});
     const [reviews, setReviews] = useState([]);
 
+   
 
   // Fetch food details
   useEffect(() => {
