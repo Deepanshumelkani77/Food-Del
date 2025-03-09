@@ -6,6 +6,7 @@
     font-size: 16px;
     display: flex;
 align-items: center;
+background-image: url("https://imgs.search.brave.com/ifhjaLM9-zDJ84yTW41Mikygcdsto_ueBSRgaoHoBQQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9j/b2xvcmVkLXZlZ2V0/YWJsZXMtZnJlc2gt/cmlwZS1zbGljZWQt/ZGFyay1kZXNrXzE3/OTY2Ni0zNS5qcGc_/c2VtdD1haXNfaHli/cmlk");
 
     
 }
@@ -17,7 +18,19 @@ align-items: center;
     display: flex;
     flex-direction: column;
     gap:25px;
+    border: 1px solid black;
+    padding: 30px 30px;
+    border-radius: 10px;
+  background-color: #fff;
 }
+
+
+ .add-img-upload input{
+    padding: 10px 10px;
+    border-radius: 5px;
+    border:1px solid black;
+ }
+  
 
 
 .add-product-name input,.add-product-discription textarea{
