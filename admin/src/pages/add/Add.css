@@ -6,9 +6,7 @@
     font-size: 16px;
     display: flex;
 align-items: center;
-background-image: url("https://imgs.search.brave.com/ifhjaLM9-zDJ84yTW41Mikygcdsto_ueBSRgaoHoBQQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9j/b2xvcmVkLXZlZ2V0/YWJsZXMtZnJlc2gt/cmlwZS1zbGljZWQt/ZGFyay1kZXNrXzE3/OTY2Ni0zNS5qcGc_/c2VtdD1haXNfaHli/cmlk");
 
-    
 }
 
 
@@ -21,7 +19,8 @@ background-image: url("https://imgs.search.brave.com/ifhjaLM9-zDJ84yTW41Mikygcds
     border: 1px solid black;
     padding: 30px 30px;
     border-radius: 10px;
-  background-color: #fff;
+  z-index: 999;
+box-shadow: 0 0 2px 2px rgba(128, 128, 128, 0.157);
 }
 
 
