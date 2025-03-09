@@ -23,12 +23,12 @@ console.log(showLogin)
      
      <div className='app'>
 
-<Navbar />
+
 
     {
        showLogin?<LoginPopup  />:<></>
      }
-      
+      <Navbar />
       <hr/>
       <div className="app-content">
 <Sidebar/>    
