@@ -68,6 +68,7 @@ border:1px solid black;
     color: white;
     cursor: pointer;
   font-weight: bold;
+  border-radius: 5px;
 }
 .add-img-upload input{
     width:100%;
