@@ -5,9 +5,10 @@
     justify-content: space-between;
     align-items: center;
     padding: 8px 4%;
-    position: fixed;
-    z-index: 999;
-    border-bottom: 1px solid #a9a9a9;
+   
+ 
+   z-index: 999;
+  
     background-color: white;
 }
 .navbar .logo{

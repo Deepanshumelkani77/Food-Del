@@ -1,7 +1,10 @@
 .list{
    
-    margin-left: 18%;
+   
     width:82%;
+    height: 90vh;
+    overflow-y: scroll;
+    
     
 }
 .list-content{

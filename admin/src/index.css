@@ -21,8 +21,13 @@ hr{
   height: 1px;
   background-color: #a9a9a9;
 }
+.app{
+  width:100%;
+}
 
 .app-content{
-  margin-top: 10vh;
+
+display: flex;
+height: 90vh;
   
 }

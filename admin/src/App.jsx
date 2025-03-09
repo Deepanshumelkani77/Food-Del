@@ -21,14 +21,14 @@ console.log(showLogin)
 
   return (
      
-     <>
+     <div className='app'>
 
-     
+<Navbar />
 
     {
        showLogin?<LoginPopup  />:<></>
      }
-      <Navbar />
+      
       <hr/>
       <div className="app-content">
 <Sidebar/>    
@@ -38,11 +38,12 @@ console.log(showLogin)
   <Route path='/edit/:id' element={<Edit/>}></Route>
 
   </Routes>  
+
       </div>
       
 
 
-    </>
+    </div>
   )
 }
 
