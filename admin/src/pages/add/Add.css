@@ -65,6 +65,7 @@ border:1px solid black;
 }
 .add-img-upload input{
     width:100%;
+    outline-color: tomato;
  
 }
 .add-price .p2{
