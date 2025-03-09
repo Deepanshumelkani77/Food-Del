@@ -1,5 +1,5 @@
 import React from 'react'
-import  { useState,useContext } from 'react'
+import  { useState,useContext,useEffect } from 'react'
 import Navbar from './components/navbar/Navbar'
 import Sidebar from "./components/sidebar/Sidebar"
 import {Route, Routes} from "react-router-dom"
@@ -8,8 +8,12 @@ import List from "./pages/list/List.jsx"
 import Edit from './pages/edit/Edit.jsx'
 import { StoreContext } from './context/StoreContext'
 import LoginPopup from './components/loginpopup/LoginPopup.jsx'
+import { useLocation } from 'react-router-dom';
 
 const App = () => {
+
+  
+
 
   //signup
 const { showLogin } = useContext(StoreContext);
@@ -20,7 +24,7 @@ console.log(showLogin)
      <>
 
      
-    <div>
+
     {
        showLogin?<LoginPopup  />:<></>
      }
@@ -36,7 +40,7 @@ console.log(showLogin)
   </Routes>  
       </div>
       
-    </div>
+
 
     </>
   )
