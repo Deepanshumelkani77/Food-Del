@@ -30,6 +30,14 @@ const Placeorder = () => {
   }, []);
 
 
+//send data into database 
+
+const {formData,setFormData}=useState({firstname:"",lastname:"",email:"",street:"",city:"",state:"",pin_code:"",country:"",phone_no:"",users:""})
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setFormData({ ...formData, [name]: value });
+};
+
   return (
     <>
      <form className='place-order'>

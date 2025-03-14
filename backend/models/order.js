@@ -9,7 +9,7 @@ const orderSchema=new mongoose.Schema({
     lastname:String,
     email:String,
     street:String,
-    cachesity:String,
+    city:String,
     state:String,
 pin_code:Number,
 country:String,
