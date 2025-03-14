@@ -65,7 +65,7 @@ const handleDelete = async (id) => {
 
 const [order, setOrder] = useState([]);
 
-//insert item id into order array
+//insert item id into order array while data fatch
 useEffect(() => {
   if (cart.length > 0 && user) {
     const userCartItems = cart
@@ -163,7 +163,7 @@ const handleSubmit = async () => {
             </div>
           </div>
 
-          <button onClick={()=>navigate('/order')}>PROCEED THE CHECKOUT</button>
+          <button onClick={() => {  handleSubmit();  navigate('/order'); }}>PROCEED THE CHECKOUT</button>
         </div>
 
         <div className="cart-promocode">
