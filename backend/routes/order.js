@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 router.post("/",async(req,res)=>{
 
 
-
+console.log(res.send)
 
 })
 

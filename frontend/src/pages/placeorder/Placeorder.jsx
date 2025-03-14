@@ -32,11 +32,32 @@ const Placeorder = () => {
 
 //send data into database 
 
-const {formData,setFormData}=useState({firstname:"",lastname:"",email:"",street:"",city:"",state:"",pin_code:"",country:"",phone_no:"",users:""})
+const [formData,setFormData]=useState({firstname:"",lastname:"",email:"",street:"",city:"",state:"",pin_code:"",country:"",phone_no:""})
 const handleChange = (e) => {
   const { name, value } = e.target;
   setFormData({ ...formData, [name]: value });
 };
+
+const handleSubmit=async(e)=>{
+  e.preventDefault();
+  try {
+    const response = await fetch(`http://localhost:4000/order`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...formData, userId: user?.id }),
+    });
+
+    if (response.ok) {
+      alert('information saved ');
+      navigate('/');
+    } else {
+      console.error('Failed ');
+    }
+  } catch (error) {
+    console.error('Error ', error);
+  }
+}
+
 
   return (
     <>
@@ -45,23 +66,23 @@ const handleChange = (e) => {
 <div className="place-order-left">
   <p className='tittle'>Delivery Information</p>
   <div className="multi-fields">
-    <input type="text" placeholder="  First-name" />
-    <input type="text" placeholder="  Last-name" />
+    <input type="text" placeholder="  First-name" name="firstname" onChange={handleChange} />
+    <input type="text" placeholder="  Last-name" name="lastname" onChange={handleChange}  />
 </div>
 
-  <input type="email" placeholder='  Email address'/>
-<input type="text" placeholder='  Street'/>
+  <input type="email" placeholder='  Email address' name='email' onChange={handleChange} />
+<input type="text" placeholder='  Street'  name='street' onChange={handleChange} />
 
 
 <div className="multi-fields">
-    <input type="text" placeholder="  City" />
-    <input type="text" placeholder="  State" />
+    <input type="text" placeholder="  City" name='city' onChange={handleChange}  />
+    <input type="text" placeholder="  State" name='state' onChange={handleChange}  />
 </div>
 <div className="multi-fields">
-    <input type="text" placeholder="  Zip code" />
-    <input type="text" placeholder="  Country" />
+    <input type="text" placeholder="  Zip code" name='pin_code' onChange={handleChange}  />
+    <input type="text" placeholder="  Country" name='country' onChange={handleChange} />
 </div>
-<input type="text" placeholder='  Phone.no' />
+<input type="text" placeholder='  Phone.no' name='phone_no' onChange={handleChange}  />
 </div>
 
 
@@ -87,7 +108,7 @@ const handleChange = (e) => {
             </div>
           </div>
 
-          <button onClick={()=>navigate('/order')}>PROCEED THE CHECKOUT</button>
+          <button onClick={()=>{handleSubmit();navigate('/order')}}>PROCEED THE CHECKOUT</button>
         </div>
 
 
