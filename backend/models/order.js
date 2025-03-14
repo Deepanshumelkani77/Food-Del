@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const {Schema}=mongoose;
 const Cart=require("./cart.js")
 
-const foodSchema=new mongoose.Schema({
+const orderSchema=new mongoose.Schema({
 
     firstname:String,
     lastname:String,
@@ -22,3 +22,6 @@ phone_no:Number,
     ref:"Cart"
     }
 })
+
+const Order=mongoose.model("Order",orderSchema);
+module.exports=Order;
