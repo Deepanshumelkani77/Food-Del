@@ -61,6 +61,32 @@ const handleDelete = async (id) => {
 };
 
 
+//insert cartItems into order collection using array to send item id
+
+const {order,setOrder}=useState([]);
+
+const handleSubmit = async () => {
+  try {
+    const response = await fetch('http://localhost:4000/order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(order), // Use the updated cart item
+    });
+
+    if (response.ok) {
+      alert(' item  successfully placed!');
+      navigate('/'); // Redirect to home page
+    } else {
+      console.error('Failed to placed items');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
+
+
+
   return (
     <div className="cart">
       <div className="cart-items">
@@ -83,6 +109,7 @@ const handleDelete = async (id) => {
             return (
              
                   <>
+                  {setOrder((prevOrder) => [...prevOrder, item._id])}
                 <div className="cart-items-tittle cart-items-item">
                   <img src={item.image} alt="" />
                   <p>{item.name}</p>
