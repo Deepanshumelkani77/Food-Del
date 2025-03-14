@@ -63,7 +63,17 @@ const handleDelete = async (id) => {
 
 //insert cartItems into order collection using array to send item id
 
-const {order,setOrder}=useState([]);
+const [order, setOrder] = useState([]);
+
+//insert item id into order array
+useEffect(() => {
+  if (cart.length > 0 && user) {
+    const userCartItems = cart
+      .filter((item) => item.author === user.id)
+      .map((item) => item._id);
+    setOrder(userCartItems); // Update order only once
+  }
+}, [cart, user]);
 
 const handleSubmit = async () => {
   try {
@@ -109,7 +119,7 @@ const handleSubmit = async () => {
             return (
              
                   <>
-                  {setOrder((prevOrder) => [...prevOrder, item._id])}
+                
                 <div className="cart-items-tittle cart-items-item">
                   <img src={item.image} alt="" />
                   <p>{item.name}</p>
