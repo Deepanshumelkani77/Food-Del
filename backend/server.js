@@ -49,3 +49,5 @@ const admin=require("./routes/admin.js");
 app.use("/admin",admin)
 const review=require("./routes/review.js");
 app.use("/review",review)
+const order=require("./routes/order.js");
+app.use("/order",order)
