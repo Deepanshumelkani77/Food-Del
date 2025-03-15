@@ -1,0 +1,18 @@
+.orders{
+    width:82%;
+    height: 90vh;
+    background-color: aqua;
+    overflow-y: scroll;
+    display: flex;
+   flex-direction: column;
+   gap:5vw;
+   align-items: center;
+   padding-top: 60px;
+   padding-bottom: 60px;
+
+}
+.order{
+  height:60vh;
+    width:80%;
+    background-color: blueviolet;
+}
