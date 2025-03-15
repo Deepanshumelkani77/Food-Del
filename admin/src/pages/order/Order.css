@@ -9,10 +9,32 @@
    align-items: center;
    padding-top: 60px;
    padding-bottom: 60px;
+   font-family: "Outfit",sans-serif;
 
 }
 .order{
   height:60vh;
     width:80%;
-    background-color: blueviolet;
+   background-color: white;
+   padding: 20px 20px;
+   display: flex;
+   flex-direction: column;
+   gap:3vw;
+}
+.order-info{
+    display: flex;
+    flex-direction: column;
+    gap:1vw;
+}
+.order-info p{
+    color:gray;
+}
+.order-info hr{
+    height:2px;
+    background-color: #e2e2e2;
+    border: none;
+}
+.item{
+    display: flex;
+    justify-content: space-between;
 }
