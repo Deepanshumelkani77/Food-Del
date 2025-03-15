@@ -15,12 +15,19 @@ const Order = () => {
         </div>
         <div className="customer-info">
           <h2>Customer information</h2>
+          <div className="customer">
+            <p>Name</p>
+            <p>Phone-no</p>
+            <p>City</p>
+            <p>State</p>
+            <p>Country</p>
+            <p>Pin_code</p>
+          </div>
+          <hr></hr>
         </div>
       </div>
 
-      <div className="order"></div>
-
-      <div className="order"></div>
+  
 
     </div>
   )

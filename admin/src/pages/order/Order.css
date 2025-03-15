@@ -38,3 +38,22 @@
     display: flex;
     justify-content: space-between;
 }
+
+
+.customer-info{
+    display: flex;
+    flex-direction: column;
+    gap:1vw;
+}
+.customer{
+    display: flex;
+    justify-content: space-between; 
+}
+.customer-info hr{
+    height:2px;
+    background-color: #e2e2e2;
+    border: none;
+}
+.customer-info p{
+    color:gray;
+}
