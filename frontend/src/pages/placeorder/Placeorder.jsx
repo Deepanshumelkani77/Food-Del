@@ -39,27 +39,30 @@ const handleChange = (e) => {
   const { name, value } = e.target;
   setFormData({ ...formData, [name]: value });
 };
-
-const handleSubmit=async(e)=>{
-  console.log("handle submit work");
+const handleSubmit = async (e) => {
   e.preventDefault();
+  console.log("Submitting form data:", formData); // Debugging log
+
   try {
     const response = await fetch(`http://localhost:4000/order`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...formData, userId: user?.id }),
+      body: JSON.stringify({ ...formData}),
     });
 
+    console.log("Response status:", response.status); // Debugging log
+
     if (response.ok) {
-      alert('information saved ');
-      
+      alert('Information saved!');
+      navigate('/order');
     } else {
-      console.error('Failed ');
+      const errorData = await response.json();
+      console.error('Failed to save:', errorData);
     }
   } catch (error) {
-    console.error('Error ', error);
+    console.error('Error:', error);
   }
-}
+};
 
 
   return (
@@ -111,7 +114,7 @@ const handleSubmit=async(e)=>{
             </div>
           </div>
 
-          <button onClick={()=>{handleSubmit();  }}>PROCEED THE CHECKOUT</button>
+          <button onClick={(e) => handleSubmit(e)}>PROCEED THE CHECKOUT</button>
         </div>
 
 
