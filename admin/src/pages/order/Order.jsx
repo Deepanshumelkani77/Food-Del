@@ -1,6 +1,23 @@
 import React from 'react'
+import {useState,useEffect} from "recat"
 import "./Order.css"
 const Order = () => {
+
+const {order,setOrder}=useState("")
+
+useEffect(() => {
+  // Fetch data from backend
+  axios.get('http://localhost:4000/order')
+       // Backend API endpoint
+    .then(response => {
+     
+      setOrder(response.data); // Store the data in state
+    })
+    .catch(error => {
+      console.error("Error fetching food data:", error);
+    });
+}, []);
+
   return (
     <div className='orders'>
 
