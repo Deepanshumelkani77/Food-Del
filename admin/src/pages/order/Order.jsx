@@ -1,6 +1,7 @@
 import React from 'react'
-import {useState,useEffect} from "recat"
+import {useState,useEffect} from "react"
 import "./Order.css"
+import axios from "axios"
 const Order = () => {
 
 const {order,setOrder}=useState("")

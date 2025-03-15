@@ -38,7 +38,7 @@ const navigate = useNavigate();
         </NavLink>
 
         <NavLink to="/order" onClick={handleClick} className="sidebar-option">
-        <span class="material-symbols-outlined">
+        <span className="material-symbols-outlined">
 order_approve
 </span>
           <p>Orders</p>
