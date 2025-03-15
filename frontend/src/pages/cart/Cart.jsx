@@ -74,7 +74,6 @@ useEffect(() => {
     setOrder(userCartItems); // Update order only once
   }
 }, [cart, user]);
-
 const handleSubmit = async () => {
   if (!user) {
     alert("Please log in to place an order.");
@@ -85,19 +84,25 @@ const handleSubmit = async () => {
     const response = await fetch('http://localhost:4000/order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(order), // Use the updated cart item
+      body: JSON.stringify({ 
+        userId: user.id, 
+        //sidha array nahi bhaj sakta usa object bana ka bhajta h
+        items: order
+      }), 
     });
 
     if (response.ok) {
-      alert(' item  successfully placed!');
-      navigate('/'); // Redirect to home page
+      alert('Order successfully placed!');
+      navigate('/order');  // Redirect to order page
     } else {
-      console.error('Failed to placed items');
+      const errorData = await response.json();
+      console.error('Failed to place order:', errorData);
     }
   } catch (error) {
     console.error('Error:', error);
   }
 };
+
 
 
 
@@ -127,7 +132,7 @@ const handleSubmit = async () => {
                 
                 <div className="cart-items-tittle cart-items-item">
                   <img src={item.image} alt="" />
-                  <p>{item.name}</p>
+                  <p >{item.name}</p>
                   <p>${item.price}</p>
                   <p>{item.count}</p>
                   <p>${item.price * item.count}</p>
@@ -168,7 +173,7 @@ const handleSubmit = async () => {
             </div>
           </div>
 
-          <button onClick={() => {  handleSubmit();  navigate('/order'); }}>PROCEED THE CHECKOUT</button>
+          <button onClick={() => {  handleSubmit();  }}>PROCEED THE CHECKOUT</button>
         </div>
 
         <div className="cart-promocode">

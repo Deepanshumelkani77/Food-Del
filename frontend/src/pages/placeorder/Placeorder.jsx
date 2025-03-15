@@ -2,9 +2,11 @@ import React, { useContext,useState,useEffect } from "react";
 import './Placeorder.css'
 import { StoreContext } from "../../context/StoreContext";
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 const Placeorder = () => {
 
+  const navigate=useNavigate();
   const { user } = useContext(StoreContext);
   const [cart, setCart] = useState([]);
   const getTotalCartAmount = () => {
@@ -49,7 +51,7 @@ const handleSubmit=async(e)=>{
 
     if (response.ok) {
       alert('information saved ');
-      navigate('/order');
+      
     } else {
       console.error('Failed ');
     }
@@ -108,7 +110,7 @@ const handleSubmit=async(e)=>{
             </div>
           </div>
 
-          <button onClick={()=>{handleSubmit();}}>PROCEED THE CHECKOUT</button>
+          <button onClick={()=>{handleSubmit();  navigate('/order');}}>PROCEED THE CHECKOUT</button>
         </div>
 
 
