@@ -8,8 +8,7 @@ import List from "./pages/list/List.jsx"
 import Edit from './pages/edit/Edit.jsx'
 import { StoreContext } from './context/StoreContext'
 import LoginPopup from './components/loginpopup/LoginPopup.jsx'
-import { useLocation } from 'react-router-dom';
-
+import Order from "./pages/order/Order.jsx"
 const App = () => {
 
   
@@ -36,7 +35,7 @@ console.log(showLogin)
   <Route path="/add" element={<Add/>}></Route>
   <Route path="/" element={<List/>}></Route>
   <Route path='/edit/:id' element={<Edit/>}></Route>
-
+  <Route path="/order" element={<Order/>}></Route>
   </Routes>  
 
       </div>

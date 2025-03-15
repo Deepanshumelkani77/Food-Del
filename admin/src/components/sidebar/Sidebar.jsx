@@ -37,6 +37,12 @@ const navigate = useNavigate();
           <p>Add Items</p>
         </NavLink>
 
+        <NavLink to="/order" onClick={handleClick} className="sidebar-option">
+        <span class="material-symbols-outlined">
+order_approve
+</span>
+          <p>Orders</p>
+        </NavLink>
         
 
       </div>
