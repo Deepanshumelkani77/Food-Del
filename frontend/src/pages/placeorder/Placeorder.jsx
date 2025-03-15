@@ -54,7 +54,7 @@ const handleSubmit = async (e) => {
 
     if (response.ok) {
       alert('Information saved!');
-      navigate('/order');
+      window.location.reload(); // Refresh the page
     } else {
       const errorData = await response.json();
       console.error('Failed to save:', errorData);
@@ -114,7 +114,7 @@ const handleSubmit = async (e) => {
             </div>
           </div>
 
-          <button onClick={(e) => handleSubmit(e)}>PROCEED THE CHECKOUT</button>
+          <button onClick={(e) => {handleSubmit(e);navigate("/order")}}>PROCEED THE CHECKOUT</button>
         </div>
 
 
