@@ -76,6 +76,11 @@ useEffect(() => {
 }, [cart, user]);
 
 const handleSubmit = async () => {
+  if (!user) {
+    alert("Please log in to place an order.");
+    return;
+  }
+
   try {
     const response = await fetch('http://localhost:4000/order', {
       method: 'POST',

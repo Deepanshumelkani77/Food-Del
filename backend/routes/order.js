@@ -6,9 +6,9 @@ const mongoose = require("mongoose");
 
 //for save data into database
 router.post("/",async(req,res)=>{
+ 
 
-
-console.log(res.send)
+console.log("hello",req.body)
 
 })
 

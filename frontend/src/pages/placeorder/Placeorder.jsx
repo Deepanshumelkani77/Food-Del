@@ -49,7 +49,7 @@ const handleSubmit=async(e)=>{
 
     if (response.ok) {
       alert('information saved ');
-      navigate('/');
+      navigate('/order');
     } else {
       console.error('Failed ');
     }
@@ -108,7 +108,7 @@ const handleSubmit=async(e)=>{
             </div>
           </div>
 
-          <button onClick={()=>{handleSubmit();navigate('/order')}}>PROCEED THE CHECKOUT</button>
+          <button onClick={()=>{handleSubmit();}}>PROCEED THE CHECKOUT</button>
         </div>
 
 
