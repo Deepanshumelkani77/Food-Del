@@ -41,6 +41,7 @@ const handleChange = (e) => {
 };
 
 const handleSubmit=async(e)=>{
+  console.log("handle submit work");
   e.preventDefault();
   try {
     const response = await fetch(`http://localhost:4000/order`, {
@@ -110,7 +111,7 @@ const handleSubmit=async(e)=>{
             </div>
           </div>
 
-          <button onClick={()=>{handleSubmit();  navigate('/order');}}>PROCEED THE CHECKOUT</button>
+          <button onClick={()=>{handleSubmit();  }}>PROCEED THE CHECKOUT</button>
         </div>
 
 

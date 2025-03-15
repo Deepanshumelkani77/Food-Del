@@ -173,7 +173,7 @@ const handleSubmit = async () => {
             </div>
           </div>
 
-          <button onClick={() => {  handleSubmit();  }}>PROCEED THE CHECKOUT</button>
+          <button onClick={() => {  handleSubmit(); navigate("/order") }}>PROCEED THE CHECKOUT</button>
         </div>
 
         <div className="cart-promocode">
