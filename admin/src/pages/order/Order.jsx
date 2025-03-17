@@ -26,6 +26,7 @@ useEffect(() => {
 
 
 <div className="order" key={index}>
+ 
 <div className="order-info">
   <h2>Order information</h2>
   <div className="item">
@@ -33,6 +34,12 @@ useEffect(() => {
     <p>Count</p>
   </div>
   <hr />
+  {item.cartsItem.map((cartitem,cartindex)=>(
+      <div className="item" key={cartindex}>
+      <p>{cartitem.name}</p>
+      <p>{cartitem.count}</p>
+    </div>
+  ))}
 </div>
 <div className="customer-info">
   <h2>Customer information</h2>
@@ -46,7 +53,7 @@ useEffect(() => {
   </div>
   <hr></hr>
   <div className="customer-detail">
-    <p>{item.firstname}</p>
+    <p>{item.firstname}  </p>
     <p>{item.phone_no}</p>
     <p>{item.city}</p>
     <p>{item.state}</p>
