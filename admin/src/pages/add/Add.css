@@ -6,7 +6,7 @@
     font-size: 16px;
     display: flex;
 align-items: center;
-background-image: url("");
+background-image: url("https://static.vecteezy.com/system/resources/previews/050/679/260/non_2x/fresh-vegetables-and-fruits-arranged-on-a-vibrant-orange-backdrop-creating-a-colorful-culinary-display-in-a-kitchen-setting-photo.jpg");
 background-size: cover;
 
 
@@ -26,24 +26,36 @@ background-size: cover;
 box-shadow: 0 0 10px 10px #a9a9a919;
 background-image: url("");
 background-size: cover;
-
+background-color:rgba(0, 0, 0, 0.159);
 }
-
+.flex-col p{
+    color: white;
+}
 
  .add-img-upload input{
     padding: 10px 10px;
     border-radius: 5px;
-    border: 1px solid #c9c9c9;
+    border: 2px solid #c9c9c9;
+    background-color: transparent;
+    color: white;
+    outline: white;
  }
-  
+ .add-img-upload input::placeholder{
+    color: white;
+ }
 
 
 .add-product-name input,.add-product-discription textarea{
     width:100%;
     padding:10px;
-    outline-color: tomato;
+    outline-color: white;
     border-radius: 5px;
-    border: 1px solid #c9c9c9;
+    border: 2px solid #c9c9c9;
+    background-color: transparent;
+    color: white;
+}
+.add-product-name input::placeholder,.add-product-discription textarea::placeholder{
+    color: white;
 }
 .add-category-price{
 display: flex;
@@ -56,16 +68,21 @@ justify-content: space-between;
 .add-category-price select,.add-category-price input{
 width:100%;
 padding: 10px;
-outline-color: tomato;
+outline-color: white;
 border-radius: 5px;
-border: 1px solid #c9c9c9;
+border: 2px solid #c9c9c9;
+background-color: transparent;
+color: white;
+}
+.add-category-price select::placeholder,.add-category-price input::placeholder{
+    color:white;
 }
 .add-btn{
     max-width: 120px;
     border: none;
     padding: 10px;
-    background-color:tomato;
-    color: white;
+    background-color:white;
+    color: black;
     cursor: pointer;
   font-weight: bold;
   border-radius: 5px;
@@ -73,8 +90,9 @@ border: 1px solid #c9c9c9;
 }
 .add-img-upload input{
     width:100%;
-    outline-color: tomato;
-    border: 1px solid #c9c9c9;
+    outline-color:white;
+    border: 2px solid #c9c9c9;
+   
  
 }
 .add-price .p2{
