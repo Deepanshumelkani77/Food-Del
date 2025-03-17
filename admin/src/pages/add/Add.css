@@ -23,7 +23,7 @@ background-size: cover;
     padding: 30px 30px;
     border-radius: 10px;
   z-index: 999;
-box-shadow: 0 0 10px 10px rgba(128, 128, 128, 0.188);
+box-shadow: 0 0 10px 10px #a9a9a919;
 background-image: url("");
 background-size: cover;
 
