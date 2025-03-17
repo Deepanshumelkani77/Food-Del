@@ -1,9 +1,11 @@
 .header{
     height:34vw;
-    margin: 30px auto;
+    
+    margin:  auto;
     background: url("https://static.vecteezy.com/system/resources/previews/056/346/512/non_2x/refreshing-mango-smoothie-with-ice-and-mint-on-an-orange-background-during-a-sunny-day-photo.jpeg") no-repeat;
     background-size: contain;
     position: relative;
+    border-radius: 20px;
 }
 
 .header-content{
