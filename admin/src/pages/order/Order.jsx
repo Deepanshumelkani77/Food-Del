@@ -65,6 +65,7 @@ useEffect(() => {
   </div>
 
 </div>
+<button>Order completed</button>
 </div>
 
 
