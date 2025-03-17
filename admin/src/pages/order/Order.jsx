@@ -4,7 +4,7 @@ import "./Order.css"
 import axios from "axios"
 const Order = () => {
 
-const {order,setOrder}=useState("")
+const [order,setOrder]=useState([])
 
 useEffect(() => {
   // Fetch data from backend
@@ -19,32 +19,42 @@ useEffect(() => {
     });
 }, []);
 
+
   return (
     <div className='orders'>
+      {order.map((item,index)=>{
+console.log(item.firstname);
 
-      <div className="order">
-        <div className="order-info">
-          <h2>Order information</h2>
-          <div className="item">
-            <p>Item</p>
-            <p>Count</p>
-          </div>
-          <hr />
-        </div>
-        <div className="customer-info">
-          <h2>Customer information</h2>
-          <div className="customer">
-            <p>Name</p>
-            <p>Phone-no</p>
-            <p>City</p>
-            <p>State</p>
-            <p>Country</p>
-            <p>Pin_code</p>
-          </div>
-          <hr></hr>
-        </div>
-      </div>
+<div className="order" key={index}>
+<div className="order-info">
+  <h2>Order information</h2>
+  <div className="item">
+    <p>Item</p>
+    <p>Count</p>
+  </div>
+  <hr />
+</div>
+<div className="customer-info">
+  <h2>Customer information</h2>
+  <div className="customer">
+    <p>name</p>
+    <p>Phone-no</p>
+    <p>City</p>
+    <p>State</p>
+    <p>Country</p>
+    <p>Pin_code</p>
+  </div>
+  <hr></hr>
+</div>
+</div>
 
+
+
+
+
+      })}
+
+     
   
 
     </div>

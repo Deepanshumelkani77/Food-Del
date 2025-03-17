@@ -7,7 +7,8 @@ const mongoose = require("mongoose");
 router.get("/", async (req, res) => {
   try {
     const order = await Order.find(); // Fetch all documents from the Food collection
-    res.status(200).json(foods);    // Send the data as a JSON response
+    console.log(order)
+    res.status(200).json(order);    // Send the data as a JSON response
   } catch (error) {
     res.status(500).json({ message: "Error fetching data", error });
   }
