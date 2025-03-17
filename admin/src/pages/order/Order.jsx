@@ -19,6 +19,29 @@ useEffect(() => {
     });
 }, []);
 
+const handleDelete = async (id) => {
+
+  const confirmDelete = window.confirm('Are you sure your order is completed');
+  if (!confirmDelete) return;
+
+  try {
+    const response = await fetch(`http://localhost:4000/order/delete/${id}`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      alert('order completed successfully!');
+     
+      setOrder(prevCart => prevCart.filter(item => item._id !== id)); // Redirect to the home page
+    } else {
+      alert('Failed to complete order.');
+    }
+  } catch (error) {
+    console.error('Error deleting food item:', error);
+    alert('An error occurred while deleting the food item.');
+  }
+};
+
 
   return (
     <div className='orders'>
@@ -65,7 +88,7 @@ useEffect(() => {
   </div>
 
 </div>
-<button>Order completed</button>
+<button onClick={()=>{ handleDelete(item._id)}}>Order completed</button>
 </div>
 
 
