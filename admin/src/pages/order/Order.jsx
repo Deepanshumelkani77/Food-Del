@@ -36,6 +36,7 @@ useEffect(() => {
   <hr />
   {item.cartsItem.map((cartitem,cartindex)=>(
       <div className="item" key={cartindex}>
+        {console.log(cartitem.name)}
       <p>{cartitem.name}</p>
       <p>{cartitem.count}</p>
     </div>
