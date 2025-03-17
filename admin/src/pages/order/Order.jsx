@@ -69,13 +69,16 @@ const handleDelete = async (id) => {
 </div>
 <div className="customer-info">
   <h2>Customer information</h2>
+  <div className="flex">
+
   <div className="customer">
     <p>Name</p>
-    <p>Phone-no</p>
+    <p>Phone_no</p>
     <p>City</p>
     <p>State</p>
     <p>Country</p>
     <p>Pin_code</p>
+
   </div>
   <hr></hr>
   <div className="customer-detail">
@@ -87,6 +90,9 @@ const handleDelete = async (id) => {
     <p>{item.pin_code}</p>
   </div>
 
+
+  </div>
+  
 </div>
 <button onClick={()=>{ handleDelete(item._id)}}>Order Completed</button>
 </div>

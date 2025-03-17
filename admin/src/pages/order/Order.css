@@ -12,7 +12,7 @@
 
 }
 .order{
-  height:60vh;
+ 
     width:80%;
    background-color: white;
    padding: 20px 20px;
@@ -83,4 +83,52 @@
     background-color: tomato;
     color:white;
     border: none;
+}
+.flex{
+    display: flex;
+    flex-direction: column;
+    gap:1vw;
+}
+
+@media (max-width:1000px){
+
+    .flex{
+
+        flex-direction: row;
+        justify-content: space-between;
+
+    }
+    .customer{
+        flex-direction: column;
+        gap:1vw;
+    }
+    .customer-detail{
+        flex-direction: column;
+       
+    }
+    .customer-info hr{
+display: none;
+    }
+    .order button{
+        width: 30%;
+    }
+}
+
+@media (max-width:1000px){
+    .order button{
+        width: 40%;
+    }
+
+}
+@media (max-width:550px){
+    .order button{
+        width: 50%;
+    }
+
+}
+@media (max-width:450px){
+    .order button{
+        width: 70%;
+    }
+
 }
