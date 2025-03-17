@@ -22,8 +22,8 @@ useEffect(() => {
 
   return (
     <div className='orders'>
-      {order.map((item,index)=>{
-console.log(item.firstname);
+      {order.map((item,index)=>(
+
 
 <div className="order" key={index}>
 <div className="order-info">
@@ -37,12 +37,21 @@ console.log(item.firstname);
 <div className="customer-info">
   <h2>Customer information</h2>
   <div className="customer">
-    <p>name</p>
+    <p>Name</p>
     <p>Phone-no</p>
     <p>City</p>
     <p>State</p>
     <p>Country</p>
     <p>Pin_code</p>
+  </div>
+  <hr></hr>
+  <div className="customer-detail">
+    <p>{item.firstname}</p>
+    <p>{item.phone_no}</p>
+    <p>{item.city}</p>
+    <p>{item.state}</p>
+  <p>{item.country}</p>
+    <p>{item.pin_code}</p>
   </div>
   <hr></hr>
 </div>
@@ -52,7 +61,7 @@ console.log(item.firstname);
 
 
 
-      })}
+      ))}
 
      
   
