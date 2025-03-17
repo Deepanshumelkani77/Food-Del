@@ -49,6 +49,12 @@
     display: flex;
     justify-content: space-between; 
 }
+.customer-detail{
+    display: flex;
+    justify-content: space-between;
+    
+}
+
 .customer-info hr{
     height:2px;
     background-color: #e2e2e2;
