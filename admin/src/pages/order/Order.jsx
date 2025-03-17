@@ -30,16 +30,18 @@ useEffect(() => {
 <div className="order-info">
   <h2>Order information</h2>
   <div className="item">
-    <p>Item</p>
+    <p>Items</p>
     <p>Count</p>
   </div>
   <hr />
   {item.cartsItem.map((cartitem,cartindex)=>(
-      <div className="item" key={cartindex}>
-        {console.log(cartitem.name)}
-      <p>{cartitem.name}</p>
-      <p>{cartitem.count}</p>
-    </div>
+    <><div className="item" key={cartindex}>
+    {console.log(cartitem.name)}
+  <p>{cartitem.name}</p>
+  <p>{cartitem.count}</p>
+</div>
+
+</>  
   ))}
 </div>
 <div className="customer-info">
@@ -61,7 +63,7 @@ useEffect(() => {
   <p>{item.country}</p>
     <p>{item.pin_code}</p>
   </div>
-  <hr></hr>
+
 </div>
 </div>
 
