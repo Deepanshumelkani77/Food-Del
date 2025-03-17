@@ -88,7 +88,7 @@ const handleDelete = async (id) => {
   </div>
 
 </div>
-<button onClick={()=>{ handleDelete(item._id)}}>Order completed</button>
+<button onClick={()=>{ handleDelete(item._id)}}>Order Completed</button>
 </div>
 
 

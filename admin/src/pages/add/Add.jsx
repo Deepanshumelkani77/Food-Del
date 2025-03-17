@@ -112,7 +112,7 @@ const Add = () => {
   </div>
 </div>
 
-<button type='submit' className='add-btn' onClick={handleSubmit}>ADD</button>
+<button type='submit' className='add-btn' onClick={handleSubmit}>Add</button>
 
       </form>
       

@@ -33,7 +33,7 @@ background-size: cover;
  .add-img-upload input{
     padding: 10px 10px;
     border-radius: 5px;
-    border:1px solid black;
+    border: 1px solid #c9c9c9;
  }
   
 
@@ -43,7 +43,7 @@ background-size: cover;
     padding:10px;
     outline-color: tomato;
     border-radius: 5px;
-    border: 1px solid black;
+    border: 1px solid #c9c9c9;
 }
 .add-category-price{
 display: flex;
@@ -58,21 +58,23 @@ width:100%;
 padding: 10px;
 outline-color: tomato;
 border-radius: 5px;
-border:1px solid black;
+border: 1px solid #c9c9c9;
 }
 .add-btn{
     max-width: 120px;
     border: none;
     padding: 10px;
-    background-color:black;
+    background-color:tomato;
     color: white;
     cursor: pointer;
   font-weight: bold;
   border-radius: 5px;
+  font-size: 15px;;
 }
 .add-img-upload input{
     width:100%;
     outline-color: tomato;
+    border: 1px solid #c9c9c9;
  
 }
 .add-price .p2{
