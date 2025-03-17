@@ -28,6 +28,9 @@
 }
 .order-info p{
     color:gray;
+   
+   
+    
 }
 .order-info hr{
     height:5px;
@@ -63,6 +66,8 @@
 }
 .customer-info p{
     color:gray;
+    width:15%;
+  
 }
 
 .order button{
