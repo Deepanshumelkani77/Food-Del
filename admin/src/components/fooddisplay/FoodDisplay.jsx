@@ -12,7 +12,7 @@ const FoodDisplay = ({category}) => {
 
    useEffect(() => {
     // Fetch data from backend
-    axios.get('http://localhost:4000/foods')
+    axios.get('https://food-del-0kcf.onrender.com/foods')
          // Backend API endpoint
       .then(response => {
        

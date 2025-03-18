@@ -18,7 +18,7 @@ const handleDelete = async () => {
   if (!confirmDelete) return;
 
   try {
-    const response = await fetch(`http://localhost:4000/foods/delete/${id}`, {
+    const response = await fetch(`https://food-del-0kcf.onrender.com/foods/delete/${id}`, {
       method: 'DELETE',
     });
 

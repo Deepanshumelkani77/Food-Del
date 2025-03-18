@@ -18,7 +18,7 @@ const navigate = useNavigate();
 
 const handleSubmit = async (updatedCartItem) => {
   try {
-    const response = await fetch('http://localhost:4000/cart', {
+    const response = await fetch('https://food-del-0kcf.onrender.com/cart', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedCartItem), // Use the updated cart item
@@ -39,7 +39,7 @@ const handleSubmit = async (updatedCartItem) => {
 
 const updateItemCountAdd = async (itemName) => {
   try {
-    const response = await fetch("http://localhost:4000/cart/edit", {
+    const response = await fetch("https://food-del-0kcf.onrender.com/cart/edit", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: itemName, newCount: itemCount+1}),
@@ -60,7 +60,7 @@ const updateItemCountAdd = async (itemName) => {
 
 const updateItemCountRemove = async (itemName) => {
   try {
-    const response = await fetch("http://localhost:4000/cart/edit", {
+    const response = await fetch("https://food-del-0kcf.onrender.com/cart/edit", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: itemName, newCount: itemCount-1}),

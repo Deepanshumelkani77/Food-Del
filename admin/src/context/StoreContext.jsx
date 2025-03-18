@@ -21,7 +21,7 @@ console.log(user)
   
   const login = async (email, password) => {
       try {
-        const response = await axios.post("http://localhost:4000/admin/login", { email, password });
+        const response = await axios.post("https://food-del-0kcf.onrender.com/admin/login", { email, password });
         console.log("Login response:", response.data);
         Cookies.set("token", response.data.token, { expires: 1 });
         Cookies.set("admin", JSON.stringify(response.data.admin), { expires: 1 });
@@ -33,7 +33,7 @@ console.log(user)
   
     const signup = async (name, email, password) => {
       try {
-        await axios.post("http://localhost:4000/admin/signup", { name, email, password });
+        await axios.post("https://food-del-0kcf.onrender.com/admin/signup", { name, email, password });
         alert("Signup successful! Please login.");
       } catch (error) {
         alert(error.response?.data?.message || "Signup failed");

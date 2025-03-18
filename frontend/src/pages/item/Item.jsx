@@ -68,7 +68,7 @@ const fetchFoodItem = async () => {
 const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    const response = await fetch(`http://localhost:4000/review/${id}`, {
+    const response = await fetch(`https://food-del-0kcf.onrender.com/review/${id}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData), // Use the updated cart item
@@ -94,7 +94,7 @@ const handleDelete = async (id) => {
   if (!confirmDelete) return;
 
   try {
-    const response = await fetch(`http://localhost:4000/review/delete/${id}`, {
+    const response = await fetch(`https://food-del-0kcf.onrender.com/review/delete/${id}`, {
       method: 'DELETE',
     });
 
