@@ -5,8 +5,9 @@ import axios from 'axios';
 
 const Add = () => {
 //from .env
-  const cloudinaryUrl = process.env.REACT_APP_CLOUDINARY_URL;
-  const uploadPreset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET;
+const cloudinaryUrl = import.meta.env.VITE_CLOUDINARY_URL;
+const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
 
   
   const [formData, setFormData] = useState({ name: '', description: '',category:'', price: '' });
