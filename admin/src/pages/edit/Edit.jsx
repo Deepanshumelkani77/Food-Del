@@ -67,10 +67,7 @@ const Edit = () => {
       uploadData.append('upload_preset', uploadPreset);
 
       try {
-        const res = await axios.post(
-        cloudinaryUrl,
-          uploadData
-        );
+        const res = await axios.post(cloudinaryUrl, uploadData );
         imageUrl = res.data.secure_url;
       } catch (error) {
         console.error("Image upload error:", error.response?.data || error);
