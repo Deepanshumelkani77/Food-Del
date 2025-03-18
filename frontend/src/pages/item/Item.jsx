@@ -17,7 +17,7 @@ const Item = () => {
   useEffect(() => {
     const fetchFoodItem = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/foods/${id}`);
+        const response = await fetch(`https://food-del-0kcf.onrender.com/foods/${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch food data');
         }
@@ -53,7 +53,7 @@ useEffect(() => {
 //for smooth redirect
 const fetchFoodItem = async () => {
   try {
-    const response = await fetch(`http://localhost:4000/foods/${id}`);
+    const response = await fetch(`https://food-del-0kcf.onrender.com/foods/${id}`);
     if (!response.ok) {
       throw new Error('Failed to fetch food data');
     }
