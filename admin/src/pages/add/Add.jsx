@@ -4,6 +4,9 @@ import {useNavigate} from 'react-router-dom'
 import axios from 'axios'; 
 
 const Add = () => {
+//from .env
+  const cloudinaryUrl = process.env.REACT_APP_CLOUDINARY_URL;
+  const uploadPreset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET;
 
   
   const [formData, setFormData] = useState({ name: '', description: '',category:'', price: '' });
@@ -29,11 +32,11 @@ const Add = () => {
     if (file) {
       const uploadData = new FormData();
       uploadData.append('file', file);
-      uploadData.append('upload_preset', 'Food-Del'); // Use your unsigned preset name
+      uploadData.append('upload_preset', uploadPreset);//env variable
 
       try {
         const res = await axios.post(
-          'https://api.cloudinary.com/v1_1/drx3wkg1h/image/upload',
+          cloudinaryUrl,//env variable
           uploadData
         );
         imageUrl = res.data.secure_url; 
