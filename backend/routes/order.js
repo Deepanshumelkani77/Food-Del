@@ -1,7 +1,5 @@
 const express=require("express");
 const router=express.Router();
-const Order= require("../models/order.js");
-const mongoose = require("mongoose");
 const orderController=require("../controller/order.js")
 
 router.get("/", orderController.getData);
