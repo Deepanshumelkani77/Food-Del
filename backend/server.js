@@ -1,5 +1,9 @@
 const express=require("express")
 const cors=require("cors")  //it is use for fetch data from database in frontend 
+
+const dotenv = require("dotenv"); // Import dotenv
+dotenv.config(); // Load environment variables from .env
+
 //app config
 const app=express();
 const port=4000;
@@ -15,8 +19,10 @@ const mongoose = require("mongoose");
  const connectDB = async () => {
     try {
       await mongoose.connect(
-        //this url come from mongo atlas
-        "mongodb+srv://deepumelkani123:projects123@cluster0.yywca.mongodb.net/food-del?retryWrites=true&w=majority"
+        process.env.MONGO_URI, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+      }
       );
       console.log("database connected successfully");
     } catch (error) {
