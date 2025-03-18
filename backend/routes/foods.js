@@ -12,15 +12,7 @@ router.get("/:id", foodsController.showItem);
 
 
 // this router for home page
-router.get("/", async (req, res) => {
-    try {
-      const foods = await Food.find(); // Fetch all documents from the Food collection
-      res.status(200).json(foods);    // Send the data as a JSON response
-    } catch (error) {
-      res.status(500).json({ message: "Error fetching data", error });
-    }
-  }
-)
+router.get("/", foodsController.fetchItem)
 
 
 //add new item

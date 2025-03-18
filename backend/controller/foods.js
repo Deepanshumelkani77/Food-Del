@@ -28,4 +28,11 @@ module.exports.showItem=async (req, res) => {
   }
 
 
-  
+  module.exports.fetchItem=async (req, res) => {
+      try {
+        const foods = await Food.find(); // Fetch all documents from the Food collection
+        res.status(200).json(foods);    // Send the data as a JSON response
+      } catch (error) {
+        res.status(500).json({ message: "Error fetching data", error });
+      }
+    }
