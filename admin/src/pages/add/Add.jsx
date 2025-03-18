@@ -5,7 +5,10 @@ import axios from 'axios';
 
 const Add = () => {
 //from .env
+console.log("Vite Env Variables:", import.meta.env);
+
 const cloudinaryUrl = import.meta.env.VITE_CLOUDINARY_URL;
+console.log(cloudinaryUrl);
 const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
 
@@ -33,13 +36,10 @@ const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
     if (file) {
       const uploadData = new FormData();
       uploadData.append('file', file);
-      uploadData.append('upload_preset', uploadPreset);//env variable
+      uploadData.append('upload_preset', uploadPreset)
 
       try {
-        const res = await axios.post(
-          cloudinaryUrl,//env variable
-          uploadData
-        );
+        const res = await axios.post( cloudinaryUrl,uploadData);
         imageUrl = res.data.secure_url; 
       } catch (error) {
         console.error("Image upload error:", error.response?.data || error);

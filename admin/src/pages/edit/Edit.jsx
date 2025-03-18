@@ -10,7 +10,7 @@ const Edit = () => {
   const cloudinaryUrl = import.meta.env.VITE_CLOUDINARY_URL;
   const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
   
-
+      
 
   const { id } = useParams();
   const navigate = useNavigate();
