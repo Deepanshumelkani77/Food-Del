@@ -13,7 +13,10 @@ width:100%;
     font-weight: 500;
 
 }
-
+.explore-menu p{
+    max-width: 60%;
+    color: #808080;
+}
 .explore-menu-list{
 
     display: flex;
