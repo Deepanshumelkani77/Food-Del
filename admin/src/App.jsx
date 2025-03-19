@@ -1,5 +1,5 @@
 import React from 'react'
-import  { useState,useContext,useEffect } from 'react'
+import  { useContext} from 'react'
 import Navbar from './components/navbar/Navbar'
 import Sidebar from "./components/sidebar/Sidebar"
 import {Route, Routes} from "react-router-dom"
@@ -27,7 +27,7 @@ console.log(showLogin)
 
 
     {
-       showLogin?<LoginPopup  />:<></>
+       showLogin?<LoginPopup/>:<></>
      }
       <Navbar />
       <hr/>
