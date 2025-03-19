@@ -42,7 +42,7 @@ console.log(user)
   
     const logout = () => {
       Cookies.remove("token");
-      Cookies.remove("user");
+      Cookies.remove("admin");
       setUser(null);
     };
   
