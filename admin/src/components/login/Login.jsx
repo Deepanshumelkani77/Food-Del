@@ -1,11 +1,11 @@
 
 import React, { useState,useContext } from 'react'
-import "./LoginPopup.css"
-import { assets } from '../../assets/assets'
+import "./Login.css"
+import { assets } from '../../assets/assets.js'
 import { StoreContext } from "../../context/StoreContext.jsx";
 import { useNavigate } from "react-router-dom";
 
-const LoginPopup = ({}) => {
+const Login = ({}) => {
 
 const [currState,setCurrState]=useState("Login")
 //signup
@@ -98,4 +98,4 @@ const handleSubmit2 = async (e) => {
   )
 }
 
-export default LoginPopup
+export default Login

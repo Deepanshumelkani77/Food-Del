@@ -6,7 +6,7 @@ import {Route, Routes} from "react-router-dom"
 import Add from "./pages/add/Add.jsx"
 import List from "./pages/list/List.jsx"
 import Edit from './pages/edit/Edit.jsx'
-import LoginPopup from './components/loginpopup/LoginPopup.jsx'
+import Login from './components/login/Login.jsx'
 
 import { StoreContext } from './context/StoreContext'
 
@@ -27,7 +27,7 @@ console.log(showLogin)
 
 
     {
-       showLogin?<LoginPopup/>:<></>
+       showLogin?<Login/>:<></>
      }
       <Navbar />
       <hr/>
