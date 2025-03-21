@@ -7,10 +7,10 @@ import FoodDisplay from '../../components/fooddisplay/FoodDisplay'
 import AppDownload from '../../components/footer/appdownload/AppDownload'
 
 const Home = () => {
+
   const[category ,setCategory]=useState("All");
 
-  
-  
+
   return (
     <div>
       

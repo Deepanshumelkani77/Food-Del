@@ -8,7 +8,7 @@ const FoodDisplay = ({category}) => {
 
   const [foods, setFoods] = useState([]);
 
-  //useEffect(() => {window.scrollTo(900, 1000);});
+  useEffect(() => {window.scrollTo(1900, 1000);});
 
    useEffect(() => {
     // Fetch data from backend
