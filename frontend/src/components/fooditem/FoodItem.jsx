@@ -3,10 +3,10 @@ import "./FoodItem.css"
 import { assets } from '../../assets/assets'
 import { Link ,useNavigate} from 'react-router-dom'
 import { StoreContext } from "../../context/StoreContext.jsx";
-import { useNavigate } from 'react-router-dom';
+
 
 const FoodItem = ({ id,name,description,price,image}) => {
-
+  const navigate = useNavigate();
  
 
   const handleClick = () => {
@@ -23,7 +23,7 @@ const { user ,setShowLogin} = useContext(StoreContext);
 
   const [itemCount,setitemCount]=useState(0)
 const [cartItem,setCartItem]=useState({namee:'' ,imagee:'',pricee:'' ,count:'' ,})
-const navigate = useNavigate(); 
+ 
 
 const handleSubmit = async (updatedCartItem) => {
   try {
