@@ -29,7 +29,7 @@ const Item = () => {
       }
     };
     fetchFoodItem();
-   
+    window.scrollTo(0, 0);
   }, [id]);
 
 //send review

@@ -2,12 +2,18 @@ import React, {useState,useContext } from 'react'
 import "./FoodItem.css"
 import { assets } from '../../assets/assets'
 import { Link ,useNavigate} from 'react-router-dom'
-
 import { StoreContext } from "../../context/StoreContext.jsx";
+import { useNavigate } from 'react-router-dom';
 
 const FoodItem = ({ id,name,description,price,image}) => {
 
+ 
 
+  const handleClick = () => {
+    // Store current scroll position before navigating
+    sessionStorage.setItem("scrollPosition", window.scrollY);
+    navigate(`/${id}`);
+  };
 
 
   //for cart item author
@@ -86,7 +92,7 @@ const updateItemCountRemove = async (itemName) => {
 
   return (
     
-<div className='food-item'>
+<div className='food-item'  onClick={handleClick}>
 <div className="food-item-img-container">
 <Link to={`/${id}`}  >
 <img className='food-item-image'  src={image} alt="" />
