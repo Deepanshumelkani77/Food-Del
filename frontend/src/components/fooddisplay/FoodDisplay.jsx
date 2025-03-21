@@ -9,6 +9,7 @@ const FoodDisplay = ({category}) => {
   useEffect(() => {
     // Restore scroll position when returning to Home
     const savedPosition = sessionStorage.getItem("scrollPosition");
+    console.log("position:", savedPosition)
     if (savedPosition) {
       window.scrollTo(0, parseInt(savedPosition, 10));
       sessionStorage.removeItem("scrollPosition");
