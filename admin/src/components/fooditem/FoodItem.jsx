@@ -23,6 +23,7 @@ const handleDelete = async () => {
     });
 
     if (response.ok) {
+      window.location.reload(); // Refresh the page after deletion
       alert('Food item deleted successfully!');
      
       // Redirect to the home page
