@@ -1,4 +1,4 @@
-import React, {useState,useContext } from 'react'
+import React, {useState,useContext, useEffect } from 'react'
 import "./FoodItem.css"
 import { assets } from '../../assets/assets'
 import { Link ,useNavigate} from 'react-router-dom'
@@ -12,7 +12,9 @@ const FoodItem = ({ id,name,description,price,image}) => {
    // sessionStorage.setItem("scrollPosition", window.scrollY); // Save scroll position
    // navigate(`/${id}`);
   //};
-
+useEffect(()=>{
+   window.scrollTo(0, 1000);
+})
 
   //for cart item author
 const { user ,setShowLogin} = useContext(StoreContext);
