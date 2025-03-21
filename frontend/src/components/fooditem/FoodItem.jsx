@@ -12,9 +12,9 @@ const FoodItem = ({ id,name,description,price,image}) => {
    // sessionStorage.setItem("scrollPosition", window.scrollY); // Save scroll position
    // navigate(`/${id}`);
   //};
-useEffect(()=>{
-   window.scrollTo(0, 1000);
-})
+//useEffect(()=>{
+   //window.scrollTo(0, 1000);
+//})
 
   //for cart item author
 const { user ,setShowLogin} = useContext(StoreContext);
