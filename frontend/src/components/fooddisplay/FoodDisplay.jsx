@@ -8,15 +8,13 @@ const FoodDisplay = ({category}) => {
 
   useEffect(() => {
     // Restore scroll position when returning to Home
-    const savedPosition = sessionStorage.getItem("scrollPosition");
-    console.log("position:", savedPosition)
-    if (savedPosition) {
-      window.scrollTo(0, parseInt(savedPosition, 10));
-      sessionStorage.removeItem("scrollPosition");
-    } else {
-      window.scrollTo(0, 0); // Default to top if no saved position
-    }
-  }, []);
+   // const savedPosition = sessionStorage.getItem("scrollPosition");
+    //console.log(savedPosition)
+   // if(savedPosition)
+     // window.scrollTo(0, savedPosition); // Default to top if no saved position
+    
+    window.scrollTo(0, 0);
+  });
   
 
 

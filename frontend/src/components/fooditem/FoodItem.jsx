@@ -8,10 +8,10 @@ import { StoreContext } from "../../context/StoreContext.jsx";
 const FoodItem = ({ id,name,description,price,image}) => {
   const navigate = useNavigate();
  
-  const handleClick = () => {
-    sessionStorage.setItem("scrollPosition", window.scrollY); // Save scroll position
-    navigate(`/${id}`);
-  };
+ // const handleClick = () => {
+   // sessionStorage.setItem("scrollPosition", window.scrollY); // Save scroll position
+   // navigate(`/${id}`);
+  //};
 
 
   //for cart item author
@@ -91,7 +91,7 @@ const updateItemCountRemove = async (itemName) => {
   return (
     
 <div className='food-item' >
-<div className="food-item-img-container" onClick={handleClick}>
+<div className="food-item-img-container" >
 <Link to={`/${id}`}  >
 <img className='food-item-image'  src={image} alt="" />
 </Link>
