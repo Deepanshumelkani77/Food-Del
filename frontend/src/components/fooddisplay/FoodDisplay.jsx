@@ -6,7 +6,16 @@ import axios from 'axios';
 
 const FoodDisplay = ({category}) => {
 
- 
+  useEffect(() => {
+    // Restore scroll position when returning to Home
+    const savedPosition = sessionStorage.getItem("scrollPosition");
+    if (savedPosition) {
+      window.scrollTo(0, parseInt(savedPosition, 10));
+      sessionStorage.removeItem("scrollPosition");
+    } else {
+      window.scrollTo(0, 0); // Default to top if no saved position
+    }
+  }, []);
   
 
 

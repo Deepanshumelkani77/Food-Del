@@ -10,11 +10,6 @@ const Home = () => {
 
   const[category ,setCategory]=useState("All");
 
-//for scroll
-useEffect(() => {
-  window.scrollTo(0, 0);
-   
-});
 
 
 
