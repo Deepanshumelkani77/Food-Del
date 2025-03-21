@@ -23,7 +23,7 @@ const FoodDisplay = ({category}) => {
       .catch(error => {
         console.error("Error fetching food data:", error);
       });
-      window.scrollTo(0, 0);
+     
   }, []);
 
 

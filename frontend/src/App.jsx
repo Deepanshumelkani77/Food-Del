@@ -14,7 +14,11 @@ import { StoreContext } from './context/StoreContext'
 
 const App = () => {
 
-  
+  //for scroll
+  useEffect(() => {
+    window.scrollTo(0, 0);
+     
+  });
 
   const {showLogin,setShowLogin } = useContext(StoreContext);
 
