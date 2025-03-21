@@ -93,7 +93,7 @@ const updateItemCountRemove = async (itemName) => {
     
 <div className='food-item'>
 <div className="food-item-img-container">
-<Link to={`/${id}`} >
+<Link to={`/${id}`}  onClick={handleItemClick}>
 <img className='food-item-image'  src={image} alt="" />
 </Link>
 {itemCount===0?<img className='add'   onClick={user?() => {
