@@ -1,4 +1,4 @@
-import React, { useState,useContext } from 'react'
+import React, {useEffect, useState,useContext } from 'react'
 import Navbar from './components/navbar/Navbar'
 import { Route, Routes } from 'react-router-dom'
 import Home from './pages/home/Home.jsx'
@@ -8,8 +8,13 @@ import Footer from './components/footer/Footer.jsx'
 import LoginPopup from './components/loginpopup/LoginPopup.jsx'
 import Item from './pages/item/Item.jsx'
 import { StoreContext } from './context/StoreContext'
+import { useLocation } from "react-router-dom";
+
+
 
 const App = () => {
+
+  
 
   const {showLogin,setShowLogin } = useContext(StoreContext);
 

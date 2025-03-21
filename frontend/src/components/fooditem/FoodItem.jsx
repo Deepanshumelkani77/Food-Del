@@ -8,11 +8,6 @@ import { StoreContext } from "../../context/StoreContext.jsx";
 const FoodItem = ({ id,name,description,price,image}) => {
 
 
-//to solve redirect problem of item  
-const handleItemClick = () => {
-  sessionStorage.setItem("scrollPosition", window.scrollY); // Save scroll position
-  navigate(`/${id}`);
-};
 
 
   //for cart item author
@@ -93,7 +88,7 @@ const updateItemCountRemove = async (itemName) => {
     
 <div className='food-item'>
 <div className="food-item-img-container">
-<Link to={`/${id}`}  onClick={handleItemClick}>
+<Link to={`/${id}`}  >
 <img className='food-item-image'  src={image} alt="" />
 </Link>
 {itemCount===0?<img className='add'   onClick={user?() => {
