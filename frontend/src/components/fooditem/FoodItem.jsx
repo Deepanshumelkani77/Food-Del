@@ -9,12 +9,6 @@ const FoodItem = ({ id,name,description,price,image}) => {
   const navigate = useNavigate();
  
 
-  const handleClick = () => {
-    // Store current scroll position before navigating
-    sessionStorage.setItem("scrollPosition", window.scrollY);
-    navigate(`/${id}`);
-  };
-
 
   //for cart item author
 const { user ,setShowLogin} = useContext(StoreContext);
@@ -92,7 +86,7 @@ const updateItemCountRemove = async (itemName) => {
 
   return (
     
-<div className='food-item'  onClick={handleClick}>
+<div className='food-item' >
 <div className="food-item-img-container">
 <Link to={`/${id}`}  >
 <img className='food-item-image'  src={image} alt="" />
