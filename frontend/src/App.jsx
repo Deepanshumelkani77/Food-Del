@@ -14,7 +14,17 @@ import { useLocation } from "react-router-dom";
 
 const App = () => {
 
-  
+  const location = useLocation();
+  useEffect(() => {
+    // Restore scroll position on navigation
+    const savedPosition = sessionStorage.getItem("scrollPosition");
+    if (savedPosition && location.pathname === "/") {
+      window.scrollTo(0, parseInt(savedPosition, 10));
+      sessionStorage.removeItem("scrollPosition");
+    } else {
+      window.scrollTo(0, 0); // Scroll to top for other pages
+    }
+  }, [location]);
 
   const {showLogin,setShowLogin } = useContext(StoreContext);
 
