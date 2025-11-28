@@ -13,8 +13,11 @@ router.get("/", orderController.getData);
 
   //data come from placeorder component
 
-  router.post("/elements",orderController.saveData2);
-
+  // For backward compatibility
+  router.post("/elements", orderController.saveData2);
+  
+  // New shipping endpoint
+  router.post("/shipping", orderController.saveData2);
 
   router.delete('/delete/:id',orderController.deleteData);
   
