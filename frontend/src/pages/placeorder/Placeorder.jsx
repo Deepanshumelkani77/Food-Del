@@ -120,9 +120,12 @@ const Placeorder = () => {
 
       console.log('Creating order with items:', JSON.stringify(orderData, null, 2));
 
-      // First create the order - using the correct endpoint and data structure
-      const response = await axios.post('https://food-del-0kcf.onrender.com/api/v1/orders/elements', 
-        orderData.items, // Send just the items array as the request body
+      // First create the order - using the format the backend expects
+      const response = await axios.post('https://food-del-0kcf.onrender.com/api/v1/orders', 
+        {
+          userId,
+          items: orderData.items
+        },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -134,7 +137,7 @@ const Placeorder = () => {
 
       console.log('Order created, now adding shipping info');
       
-      // Then update the order with shipping information using the /elements endpoint
+      // Prepare shipping data
       const shippingData = {
         firstname: formData.name.split(' ')[0],
         lastname: formData.name.split(' ').slice(1).join(' ') || ' ',
@@ -147,6 +150,18 @@ const Placeorder = () => {
         phone_no: formData.phone,
         userId: userId
       };
+
+      // Update order with shipping information
+      await axios.post(`https://food-del-0kcf.onrender.com/api/v1/orders/elements`, 
+        shippingData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          withCredentials: true
+        }
+      );
       
       console.log('Submitting shipping info:', JSON.stringify(shippingData, null, 2));
       
@@ -188,6 +203,8 @@ const Placeorder = () => {
       setLoading(false);
     }
   };
+
+  
 
   if (!cartItems || cartItems.length === 0) {
     return (
