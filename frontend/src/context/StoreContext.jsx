@@ -11,9 +11,21 @@ const StoreContextProvider = (props) => {
   const initialUser = userCookie && userCookie !== "undefined" 
     ? JSON.parse(userCookie) 
     : null;
+    
+  // Get cart from localStorage or initialize as empty
+  const getInitialCart = () => {
+    try {
+      const savedCart = localStorage.getItem('cart');
+      return savedCart ? JSON.parse(savedCart) : {};
+    } catch (error) {
+      console.error('Error parsing cart from localStorage:', error);
+      return {};
+    }
+  };
 
   const [user, setUser] = useState(initialUser);
   const [showLogin, setShowLogin] = useState(false);
+  const [cart, setCart] = useState(getInitialCart());
     
   const login = async (email, password) => {
     try {
@@ -52,14 +64,42 @@ const StoreContextProvider = (props) => {
     setUser(null);
   };
 
+  const addToCart = (itemId) => {
+    setCart(prevCart => ({
+      ...prevCart,
+      [itemId]: (prevCart[itemId] || 0) + 1
+    }));
+  };
+
+  const removeFromCart = (itemId) => {
+    setCart(prevCart => {
+      const newCart = { ...prevCart };
+      if (newCart[itemId] > 1) {
+        newCart[itemId]--;
+      } else {
+        delete newCart[itemId];
+      }
+      return newCart;
+    });
+  };
+
+  const clearCart = () => {
+    setCart({});
+  };
+
   const contextValue = {
     food_list,
     login,
     signup,
     logout,
     user,
+    setUser,
     showLogin,
-    setShowLogin
+    setShowLogin,
+    cart,
+    addToCart,
+    removeFromCart,
+    clearCart
   };
 
   return (

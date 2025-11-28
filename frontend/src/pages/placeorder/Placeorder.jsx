@@ -9,8 +9,8 @@ const Placeorder = () => {
   // All hooks at the top level
   const location = useLocation();
   const navigate = useNavigate();
-  const { cartItems = [], totalAmount = 0, totalItems = 0, clearCart } = useContext(StoreContext);
-  const { user } = useContext(StoreContext);
+  const { cartItems = [], totalAmount = 0, totalItems = 0 } = location.state || {};
+  const { user, clearCart } = useContext(StoreContext);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
@@ -169,7 +169,7 @@ const Placeorder = () => {
       console.log('Shipping info updated:', shippingResponse.data);
 
       // Clear the cart and redirect to home page
-      if (typeof clearCart === 'function') {
+      if (clearCart) {
         clearCart();
       }
       navigate('/');
