@@ -18,7 +18,9 @@ module.exports.getData = async (req, res) => {
 // Create new order
 module.exports.saveData = async (req, res) => {
   try {
+    console.log('Request Body:', JSON.stringify(req.body, null, 2));
     const { userId, items, itemsPrice, taxPrice, shippingPrice, totalPrice } = req.body;
+    console.log('Parsed Values:', { userId, itemsPrice, taxPrice, shippingPrice, totalPrice });
 
     if (!userId) return res.status(400).json({ message: "User ID is required" });
     if (!items || items.length === 0) return res.status(400).json({ message: "Order items missing" });
