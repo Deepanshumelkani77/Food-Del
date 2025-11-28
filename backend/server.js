@@ -61,11 +61,13 @@ app.use(hpp({
   ]
 }));
 
-// Enable CORS
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true
-}));
+// Enable CORS with specific origin and credentials
+const corsOptions = {
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://your-production-domain.com'],
+  credentials: true,
+  optionsSuccessStatus: 200 // For legacy browser support
+};
+app.use(cors(corsOptions));
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
