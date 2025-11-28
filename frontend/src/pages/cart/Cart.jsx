@@ -1,191 +1,190 @@
-import React, {  useEffect,useState,useContext } from "react";
+import  { useEffect, useState, useContext } from "react";
 import "./Cart.css";
 import { StoreContext } from "../../context/StoreContext";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { FaTrash, FaPlus, FaMinus, FaShoppingCart, FaArrowLeft } from 'react-icons/fa';
 
-
-const Cart = (setShowLogin) => {
-  
-  const { user } = useContext(StoreContext);
-
-
-
+const Cart = () => {
+  const { user, setShowLogin } = useContext(StoreContext);
   const [cart, setCart] = useState([]);
-const navigate=useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-const getTotalCartAmount = () => {
-  return cart.reduce((total, item) => {
-    if (user && item.author === user.id) {
-      return total + item.price * item.count;
+  // Get cart items for the current user
+  const userCart = cart.filter(item => user && item.author === user.id);
+
+  const getTotalCartAmount = () => {
+    return userCart.reduce((total, item) => total + (item.price * item.count), 0);
+  };
+
+  const getTotalItems = () => {
+    return userCart.reduce((total, item) => total + item.count, 0);
+  };
+
+  const fetchCart = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('https://food-del-0kcf.onrender.com/cart');
+      setCart(response.data);
+      setError(null);
+    } catch (error) {
+      console.error("Error fetching cart:", error);
+      setError("Failed to load cart. Please try again later.");
+    } finally {
+      setLoading(false);
     }
-    return total;
-  }, 0); // Providing 0 as the initial value
-};
+  };
 
-useEffect(() => {
-  // Fetch data from backend
-  axios.get('https://food-del-0kcf.onrender.com/cart')
-       // Backend API endpoint
-    .then(response => {
-     
-      setCart(response.data); // Store the data in state
-    })
-    .catch(error => {
-      console.error("Error fetching food data:", error);
-    });
-}, []);
+  useEffect(() => {
+    fetchCart();
+  }, []);
 
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm('Are you sure you want to remove this item from your cart?');
+    if (!confirmDelete) return;
 
-const handleDelete = async (id) => {
-
-  const confirmDelete = window.confirm('Are you sure you want to delete this food item?');
-  if (!confirmDelete) return;
-
-  try {
-    const response = await fetch(`https://food-del-0kcf.onrender.com/cart/delete/${id}`, {
-      method: 'DELETE',
-    });
-
-    if (response.ok) {
-      alert('Food item deleted successfully!');
-     
-      setCart(prevCart => prevCart.filter(item => item._id !== id)); // Redirect to the home page
-    } else {
-      alert('Failed to delete the food item.');
+    try {
+      await axios.delete(`https://food-del-0kcf.onrender.com/cart/delete/${id}`);
+      await fetchCart(); // Refresh cart after deletion
+    } catch (error) {
+      console.error("Error deleting item:", error);
+      alert("Failed to remove item. Please try again.");
     }
-  } catch (error) {
-    console.error('Error deleting food item:', error);
-    alert('An error occurred while deleting the food item.');
-  }
-};
+  };
 
-
-//insert cartItems into order collection using array to send item id
-
-const [order, setOrder] = useState([]);
-
-//insert item id into order array while data fatch
-useEffect(() => {
-  if (cart.length > 0 && user) {
-    const userCartItems = cart
-      .filter((item) => item.author === user.id)
-      .map((item) => item._id);
-    setOrder(userCartItems); // Update order only once
-  }
-}, [cart, user]);
-const handleSubmit = async () => {
-  if (!user) {
-    alert("Please log in to place an order.");
-    return;
-  }
-
-  try {
-    const response = await fetch('https://food-del-0kcf.onrender.com/order', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        userId: user.id, 
-        //sidha array nahi bhaj sakta usa object bana ka bhajta h
-        items: order
-      }), 
-    });
-
-    if (response.ok) {
-      alert('Order successfully placed!');
-      navigate('/order');  // Redirect to order page
-    } else {
-      const errorData = await response.json();
-      console.error('Failed to place order:', errorData);
+  const handleQuantityChange = async (id, newCount) => {
+    if (newCount < 1) return;
+    
+    try {
+      await axios.put(`https://food-del-0kcf.onrender.com/cart/update/${id}`, { count: newCount });
+      await fetchCart(); // Refresh cart after update
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+      alert("Failed to update quantity. Please try again.");
     }
-  } catch (error) {
-    console.error('Error:', error);
+  };
+
+  const handleProceedToCheckout = () => {
+    if (!user) {
+      setShowLogin(true);
+      return;
+    }
+    
+    if (userCart.length === 0) {
+      alert("Your cart is empty. Add some items before proceeding to checkout.");
+      return;
+    }
+    
+    // Navigate to order page with cart items
+    navigate('/order', { 
+      state: { 
+        cartItems: userCart,
+        totalAmount: getTotalCartAmount(),
+        totalItems: getTotalItems()
+      } 
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="cart-container">
+        <div className="loading">Loading your cart...</div>
+      </div>
+    );
   }
-};
 
-
-
-
+  if (error) {
+    return (
+      <div className="cart-container">
+        <div className="error-message">{error}</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="cart">
-      <div className="cart-items">
-        <div className="cart-items-tittle">
-          <p>Items</p>
-          <p>Tittle</p>
-          <p>Price</p>
-          <p>Quantity</p>
-          <p>Total</p>
-          <p>Remove</p>
+    <div className="cart-container">
+      <h2><FaShoppingCart /> Your Cart ({getTotalItems()} items)</h2>
+      
+      {userCart.length === 0 ? (
+        <div className="empty-cart">
+          <p>Your cart is empty</p>
+          <button 
+            className="continue-shopping"
+            onClick={() => navigate('/')}
+          >
+            <FaArrowLeft /> Continue Shopping
+          </button>
         </div>
-
-        <br></br>
-        <hr></hr>
-
-        {cart.map((item, index) => {
-          //iska matlv h cartItem obj m jo 1:"" value agar 0 sa badi h to uska name print kar do
-          if( user && item.author===user.id)
-          {
-            return (
-             
-                  <>
-                
-                <div className="cart-items-tittle cart-items-item">
-                  <img src={item.image} alt="" />
-                  <p >{item.name}</p>
-                  <p>${item.price}</p>
-                  <p>{item.count}</p>
-                  <p>${item.price * item.count}</p>
-                  <p
-                    className="cross"
-                    onClick={()=>{ handleDelete(item._id)}}
-                  >
-                    X
-                  </p>
+      ) : (
+        <>
+          <div className="cart-items">
+            {userCart.map((item) => (
+              <div key={item._id} className="cart-item">
+                <div className="item-image">
+                  <img 
+                    src={item.image} 
+                    alt={item.name} 
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/images/placeholder-food.jpg';
+                    }}
+                  />
                 </div>
-                <hr />
-             
-              </>
-            );}
-
-        
+                <div className="item-details">
+                  <h3>{item.name}</h3>
+                  <p className="price">₹{item.price}</p>
+                  <div className="quantity-controls">
+                    <button 
+                      onClick={() => handleQuantityChange(item._id, item.count - 1)}
+                      disabled={item.count <= 1}
+                    >
+                      <FaMinus />
+                    </button>
+                    <span>{item.count}</span>
+                    <button onClick={() => handleQuantityChange(item._id, item.count + 1)}>
+                      <FaPlus />
+                    </button>
+                  </div>
+                </div>
+                <div className="item-total">
+                  ₹{(item.price * item.count).toFixed(2)}
+                </div>
+                <button 
+                  className="remove-item"
+                  onClick={() => handleDelete(item._id)}
+                >
+                  <FaTrash />
+                </button>
+              </div>
+            ))}
+          </div>
           
-        })}
-      </div>
-
-      <div className="cart-bottom">
-        <div className="cart-total">
-          <h2>Cart Totals</h2>
-          <div>
-            <div className="cart-total-details">
-              <p>Subtotal</p>
-              <p>${getTotalCartAmount()}</p>
+          <div className="cart-summary">
+            <div className="summary-row">
+              <span>Subtotal ({getTotalItems()} items):</span>
+              <span>₹{getTotalCartAmount().toFixed(2)}</span>
             </div>
-            <hr />
-            <div className="cart-total-details">
-              <p>Delivery Fee</p>
-              <p>${getTotalCartAmount()===0?0:2}</p>
+            <div className="summary-row">
+              <span>Delivery Fee:</span>
+              <span>₹{(getTotalCartAmount() > 0 ? 40 : 0).toFixed(2)}</span>
             </div>
-            <hr />
-            <div className="cart-total-details">
-              <p>Total</p>
-              <p>${getTotalCartAmount()===0?0:getTotalCartAmount() + 2}</p>
+            <div className="summary-row total">
+              <span>Total:</span>
+              <span>₹{(getTotalCartAmount() + (getTotalCartAmount() > 0 ? 40 : 0)).toFixed(2)}</span>
             </div>
+            
+            <button 
+              className="checkout-button"
+              onClick={handleProceedToCheckout}
+              disabled={userCart.length === 0}
+            >
+              Proceed to Checkout
+            </button>
           </div>
-
-          <button onClick={() => {  handleSubmit(); navigate("/order") }}>PROCEED THE CHECKOUT</button>
-        </div>
-
-        <div className="cart-promocode">
-          <div>
-            <p>If you have a promo code, Enter it here</p>
-            <div className="cart-promocode-input">
-              <input type="text" placeholder="promo code" />
-              <button>Submit</button>
-            </div>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };
