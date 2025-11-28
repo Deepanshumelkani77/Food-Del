@@ -32,7 +32,15 @@ module.exports.saveData = async (req, res) => {
         quantity: item.quantity,
         image: item.image
       })),
-      shippingAddress: {},  // will update after
+      // Temporary placeholder to satisfy validation
+      shippingAddress: {
+        address: "-",
+        city: "-",
+        state: "-",
+        postalCode: "-",
+        country: "India",
+        phone: "-"
+      },
       paymentMethod: "cod",
       itemsPrice,
       taxPrice,
