@@ -24,6 +24,9 @@ const reviewRoutes = require('./routes/review');
 // Initialize express app
 const app = express();
 
+// Trust first proxy (for rate limiting behind Render)
+app.set('trust proxy', 1);
+
 // Set security HTTP headers
 app.use(helmet());
 

@@ -1,7 +1,8 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api/v1';
+// Use environment variable if available, otherwise use production URL
+const API_URL = import.meta.env.VITE_API_URL || 'https://food-del-0kcf.onrender.com/api/v1';
 
 // Create axios instance
 const api = axios.create({
@@ -59,23 +60,23 @@ export const foodAPI = {
 
 // Cart API
 export const cartAPI = {
-  getCart: () => api.get('/cart'),
-  addToCart: (foodId, quantity = 1) => api.post('/cart', { foodId, quantity }),
-  updateCartItem: (foodId, quantity) => api.put(`/cart/${foodId}`, { quantity }),
-  removeFromCart: (foodId) => api.delete(`/cart/${foodId}`),
-  clearCart: () => api.delete('/cart'),
+  getCart: () => api.get('/api/v1/cart'),
+  addToCart: (foodId, quantity = 1) => api.post('/api/v1/cart', { foodId, quantity }),
+  updateCartItem: (foodId, quantity) => api.put(`/api/v1/cart/${foodId}`, { quantity }),
+  removeFromCart: (foodId) => api.delete(`/api/v1/cart/${foodId}`),
+  clearCart: () => api.delete('/api/v1/cart'),
 };
 
 // Order API
 export const orderAPI = {
-  createOrder: (orderData) => api.post('/orders', orderData),
-  getOrder: (id) => api.get(`/orders/${id}`),
-  getMyOrders: () => api.get('/orders/my-orders'),
-  getAllOrders: () => api.get('/orders'),
+  createOrder: (orderData) => api.post('/api/v1/orders', orderData),
+  getOrder: (id) => api.get(`/api/v1/orders/${id}`),
+  getMyOrders: () => api.get('/api/v1/orders/my-orders'),
+  getAllOrders: () => api.get('/api/v1/orders'),
   updateOrderToPaid: (id, paymentResult) => 
-    api.put(`/orders/${id}/pay`, paymentResult),
+    api.put(`/api/v1/orders/${id}/pay`, paymentResult),
   updateOrderToDelivered: (id) => 
-    api.put(`/orders/${id}/deliver`),
+    api.put(`/api/v1/orders/${id}/deliver`),
 };
 
 export default api;

@@ -1,9 +1,9 @@
-import  { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import "./Cart.css";
 import { StoreContext } from "../../context/StoreContext";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
 import { FaTrash, FaPlus, FaMinus, FaShoppingCart, FaArrowLeft } from 'react-icons/fa';
+import { cartAPI } from "../../services/api";
 
 const Cart = () => {
   const { user, setShowLogin } = useContext(StoreContext);
@@ -26,7 +26,7 @@ const Cart = () => {
   const fetchCart = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('https://food-del-0kcf.onrender.com/cart');
+      const response = await cartAPI.getCart();
       setCart(response.data);
       setError(null);
     } catch (error) {
@@ -46,7 +46,7 @@ const Cart = () => {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`https://food-del-0kcf.onrender.com/cart/delete/${id}`);
+      await cartAPI.removeFromCart(id);
       await fetchCart(); // Refresh cart after deletion
     } catch (error) {
       console.error("Error deleting item:", error);
@@ -58,7 +58,7 @@ const Cart = () => {
     if (newCount < 1) return;
     
     try {
-      await axios.put(`https://food-del-0kcf.onrender.com/cart/update/${id}`, { count: newCount });
+      await cartAPI.updateCartItem(id, newCount);
       await fetchCart(); // Refresh cart after update
     } catch (error) {
       console.error("Error updating quantity:", error);
