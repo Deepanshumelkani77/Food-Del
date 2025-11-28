@@ -19,22 +19,45 @@ module.exports.getData = async (req, res) => {
 module.exports.saveData = async (req, res) => {
   try {
     console.log('Request Body:', JSON.stringify(req.body, null, 2));
-    const { userId, items, itemsPrice, taxPrice, shippingPrice, totalPrice } = req.body;
-    console.log('Parsed Values:', { userId, itemsPrice, taxPrice, shippingPrice, totalPrice });
+    const { userId, items } = req.body;
+    let { itemsPrice, taxPrice, shippingPrice, totalPrice } = req.body;
+    
+    console.log('Initial Values:', { userId, itemsPrice, taxPrice, shippingPrice, totalPrice });
 
     if (!userId) return res.status(400).json({ message: "User ID is required" });
     if (!items || items.length === 0) return res.status(400).json({ message: "Order items missing" });
 
+    // Calculate itemsPrice if not provided
+    if (itemsPrice === null || itemsPrice === undefined) {
+      itemsPrice = items.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
+    }
+
+    // Set default shipping price if not provided
+    if (shippingPrice === null || shippingPrice === undefined) {
+      shippingPrice = 40; // Default shipping cost
+    }
+
+    // Calculate tax if not provided (10% of items price)
+    if (taxPrice === null || taxPrice === undefined) {
+      taxPrice = Math.round((itemsPrice * 0.1) * 100) / 100; // 10% tax
+    }
+
+    // Calculate total if not provided
+    if (totalPrice === null || totalPrice === undefined) {
+      totalPrice = itemsPrice + taxPrice + shippingPrice;
+    }
+
+    console.log('Calculated Values:', { itemsPrice, taxPrice, shippingPrice, totalPrice });
+
     const newOrder = new Order({
       user: userId,
       orderItems: items.map(item => ({
-        food: item.food,        // MUST BE A VALID FOOD ID
+        food: item.food,
         name: item.name,
         price: item.price,
-        quantity: item.quantity,
+        quantity: item.quantity || 1,
         image: item.image
       })),
-      // Temporary placeholder to satisfy validation
       shippingAddress: {
         address: "-",
         city: "-",
