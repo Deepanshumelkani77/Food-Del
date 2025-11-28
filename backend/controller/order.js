@@ -1,80 +1,114 @@
-const express=require("express");
-const Order= require("../models/order.js");
+const express = require("express");
+const Order = require("../models/order.js");
 
-
-module.exports.getData=async (req, res) => {
-    try {
-      const order = await Order.find()
-      .populate("cartsItem")  // Populate cart items
-      .populate("users");  // Fetch all documents from the Food collection
-      console.log(order)
-      res.status(200).json(order);    // Send the data as a JSON response
-    } catch (error) {
-      res.status(500).json({ message: "Error fetching data", error });
-    }
+// Get all orders
+module.exports.getData = async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate("user", "name email")  // Populate user details
+      .populate("orderItems.food", "name price image");  // Populate food items
+    
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ message: "Error fetching orders", error: error.message });
   }
+};
 
+// Create new order
+module.exports.saveData = async (req, res) => {
+  try {
+    const { userId, items, itemsPrice, taxPrice, shippingPrice, totalPrice } = req.body;
 
+    if (!userId) return res.status(400).json({ message: "User ID is required" });
+    if (!items || items.length === 0) return res.status(400).json({ message: "Order items missing" });
 
-  module.exports.saveData=async(req,res)=>{
-  
-      console.log("Received request at /order", req.body);
-      
-      const { userId,items} = req.body;
-      
-      try {
-        const order1 = new Order({
-         
-          cartsItem:items,
-          users:userId
-  
-  
-        });
-    
-        await order1.save();
-        res.status(201).json({ message: "Data added successfully into database" });
-      } catch (error) {
-        console.error("Error saving to database:", error);
-        res.status(500).json({ message: "Internal server error" });
-      }
-    
-    
+    const newOrder = new Order({
+      user: userId,
+      orderItems: items.map(item => ({
+        food: item.food,        // MUST BE A VALID FOOD ID
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image
+      })),
+      shippingAddress: {},  // will update after
+      paymentMethod: "cod",
+      itemsPrice,
+      taxPrice,
+      shippingPrice,
+      totalPrice,
+      isPaid: false,
+      isDelivered: false
+    });
+
+    const savedOrder = await newOrder.save();
+    res.status(201).json(savedOrder);
+
+  } catch (error) {
+    console.error("Order Creation Error:", error);
+    res.status(500).json({ 
+      message: "Error creating order", 
+      error: error.message 
+    });
+  }
+};
+
+// Update order with shipping information
+module.exports.saveData2 = async (req, res) => {
+  try {
+    const { userId, address, city, state, postalCode, phone } = req.body;
+
+    if (!userId) return res.status(400).json({ message: "User ID missing" });
+
+    const updatedOrder = await Order.findOneAndUpdate(
+      { user: userId },
+      {
+        shippingAddress: {
+          address,
+          city,
+          state,
+          postalCode,
+          phone,
+          country: "India"
+        }
+      },
+      { new: true }
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: "No order found to update" });
     }
 
+    res.status(200).json({
+      message: "Shipping information saved",
+      order: updatedOrder
+    });
 
+  } catch (error) {
+    console.error("Shipping Update Error:", error);
+    res.status(500).json({ 
+      message: "Internal server error", 
+      error: error.message 
+    });
+  }
+};
 
-    module.exports.saveData2=async(req,res)=>{
+// Delete order
+module.exports.deleteData = async (req, res) => {
+  const { id } = req.params;
 
-        const { firstname, lastname, email, street, city, state, pin_code, country, phone_no, userId } = req.body;
-    
-        try {
-          const updatedOrder = await Order.findOneAndUpdate(
-            { users:userId }, // Find order by userId
-            { firstname:firstname, lastname:lastname, email:email, street:street, city:city, state:state, pin_code:pin_code, country:country, phone_no:phone_no }, // Update fields
-            { new: true, upsert: true } // Return updated order & create if not found
-          );
-      
-          res.status(200).json({ message: "Order updated successfully", updatedOrder });
-        } catch (error) {
-          console.error("Error updating order:", error);
-          res.status(500).json({ message: "Internal server error" });
-        }
-    
-      }
-
-
-      module.exports.deleteData=async (req, res) => {
-         
-          const { id } = req.params;
-        
-          try {
-            const deletedOrder = await Order.findByIdAndDelete(id);
-            if (!deletedOrder) {
-              return res.status(404).json({ message: 'Order is not found' });
-            }
-            res.status(200).json({ message: 'Order deleted successfully' });
-          } catch (error) {
-            console.error('Error deleting food item:', error);
-            res.status(500).json({ message: 'Internal server error' });
-          }
-        }
+  try {
+    const deletedOrder = await Order.findByIdAndDelete(id);
+    if (!deletedOrder) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    res.status(200).json({ message: 'Order deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting order:', error);
+    res.status(500).json({ 
+      message: 'Internal server error',
+      error: error.message 
+    });
+  }
+};
