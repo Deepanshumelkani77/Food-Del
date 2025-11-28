@@ -9,7 +9,7 @@ const Placeorder = () => {
   // All hooks at the top level
   const location = useLocation();
   const navigate = useNavigate();
-  const { cartItems = [], totalAmount = 0, totalItems = 0 } = location.state || {};
+  const { cartItems = [], totalAmount = 0, totalItems = 0, clearCart } = useContext(StoreContext);
   const { user } = useContext(StoreContext);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [formData, setFormData] = useState({
@@ -168,13 +168,11 @@ const Placeorder = () => {
 
       console.log('Shipping info updated:', shippingResponse.data);
 
-      // Redirect to order confirmation page
-      navigate('/order-confirmation', { 
-        state: { 
-          order: response.data,
-          orderId: response.data._id
-        } 
-      });
+      // Clear the cart and redirect to home page
+      if (typeof clearCart === 'function') {
+        clearCart();
+      }
+      navigate('/');
 
     } catch (error) {
       console.error('Error placing order:', error);
