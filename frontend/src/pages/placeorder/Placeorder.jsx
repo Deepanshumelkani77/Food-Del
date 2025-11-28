@@ -1,13 +1,17 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Cookies from 'js-cookie';
+import { StoreContext } from '../../context/StoreContext';
 import './Placeorder.css';
 
 const Placeorder = () => {
+  // All hooks at the top level
   const location = useLocation();
   const navigate = useNavigate();
   const { cartItems = [], totalAmount = 0, totalItems = 0 } = location.state || {};
-
+  const { user, login } = useContext(StoreContext);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -19,6 +23,48 @@ const Placeorder = () => {
     paymentMethod: 'cash'
   });
 
+  // Handle form input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Check authentication status
+  const checkAuth = useCallback(() => {
+    const token = Cookies.get('token');
+    const userCookie = Cookies.get('user');
+    
+    if (token && userCookie && userCookie !== 'undefined') {
+      try {
+        // Parse user data from cookie instead of making an API call
+        const userData = JSON.parse(userCookie);
+        if (userData) {
+          // Update form data with user info from cookie
+          setFormData(prev => ({
+            ...prev,
+            name: userData.name || '',
+            email: userData.email || '',
+            phone: userData.phone || ''
+          }));
+        }
+      } catch (error) {
+        console.error('Error parsing user data from cookie:', error);
+      }
+    }
+    setIsCheckingAuth(false);
+  }, []);
+
+  // Debug: Log user state and cookies on mount
+  useEffect(() => {
+    console.log('User from context:', user);
+    console.log('User cookie:', Cookies.get('user'));
+    console.log('Token cookie:', Cookies.get('token'));
+    checkAuth();
+  }, [checkAuth, user]);
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -28,13 +74,10 @@ const Placeorder = () => {
     }
   }, [cartItems, navigate]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+  // Show loading state while checking auth
+  if (isCheckingAuth) {
+    return <div>Checking authentication status...</div>;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,34 +93,65 @@ const Placeorder = () => {
         throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
       }
 
-      // Create order data
-      const orderData = {
-        items: cartItems.map(item => ({
-          food: item._id,
-          name: item.name,
-          quantity: item.count,
-          price: item.price,
-          image: item.image
-        })),
-        shippingAddress: {
-          name: formData.name,
-          phone: formData.phone,
-          address: formData.address,
-          city: formData.city,
-          state: formData.state,
-          postalCode: formData.postalCode,
-          country: 'India'
-        },
-        paymentMethod: formData.paymentMethod,
-        itemsPrice: totalAmount,
-        taxPrice: totalAmount * 0.1, // 10% tax
-        shippingPrice: 40, // Fixed delivery fee
-        totalPrice: totalAmount + (totalAmount * 0.1) + 40
-      };
+      // Check user authentication with fallback to cookie
+      const userFromCookie = Cookies.get('user');
+      const currentUser = user?.id || user?._id ? user : (userFromCookie ? JSON.parse(userFromCookie) : null);
+      
+      // Handle both 'id' and '_id' properties
+      const userId = currentUser?.id || currentUser?._id;
+      
+      if (!userId) {
+        console.error('User not authenticated. User state:', user, 'Cookie:', userFromCookie);
+        throw new Error('Please login to place an order');
+      }
 
-      // Submit order
-      const response = await axios.post('https://food-del-0kcf.onrender.com/api/v1/orders', orderData, {
-        withCredentials: true
+      // Format cart items for the backend
+      const orderItems = cartItems.map(item => ({
+        food: item._id,
+        name: item.name,
+        price: item.price,
+        quantity: item.count || 1,
+        image: item.image
+      }));
+
+      // First, create the order with cart items
+      console.log('Creating order with items:', JSON.stringify({ userId, items: orderItems }, null, 2));
+      
+      const response = await axios.post('https://food-del-0kcf.onrender.com/api/v1/orders', {
+        userId: userId,
+        items: orderItems
+      }, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${Cookies.get('token')}`
+        }
+      });
+
+      console.log('Order created, now adding shipping info');
+      
+      // Then update the order with shipping information using the /elements endpoint
+      const shippingData = {
+        firstname: formData.name.split(' ')[0],
+        lastname: formData.name.split(' ').slice(1).join(' ') || ' ',
+        email: formData.email,
+        street: formData.address,
+        city: formData.city,
+        state: formData.state,
+        pin_code: formData.postalCode,
+        country: 'India',
+        phone_no: formData.phone,
+        userId: userId
+      };
+      
+      console.log('Submitting shipping info:', JSON.stringify(shippingData, null, 2));
+      
+      await axios.post('https://food-del-0kcf.onrender.com/api/v1/orders/elements', shippingData, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${Cookies.get('token')}`
+        }
       });
 
       // Redirect to order confirmation page
@@ -90,7 +164,22 @@ const Placeorder = () => {
 
     } catch (error) {
       console.error('Error placing order:', error);
-      setError(error.response?.data?.message || error.message || 'Failed to place order. Please try again.');
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error('Error response data:', error.response.data);
+        console.error('Error response status:', error.response.status);
+        console.error('Error response headers:', error.response.headers);
+        setError(error.response.data?.message || `Server error: ${error.response.status}`);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received:', error.request);
+        setError('No response from server. Please check your connection.');
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error setting up request:', error.message);
+        setError(error.message || 'Failed to place order. Please try again.');
+      }
     } finally {
       setLoading(false);
     }

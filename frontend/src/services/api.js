@@ -2,7 +2,8 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 // Use environment variable if available, otherwise use production URL
-const API_URL = import.meta.env.VITE_API_URL || 'https://food-del-0kcf.onrender.com/api/v1';
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://food-del-0kcf.onrender.com';
+const API_URL = `${BASE_URL}/api/v1`;
 
 // Create axios instance
 const api = axios.create({
@@ -44,7 +45,7 @@ api.interceptors.response.use(
 // Auth API
 export const authAPI = {
   login: (email, password) => api.post('/users/login', { email, password }),
-  register: (userData) => api.post('/users/register', userData),
+  register: (userData) => api.post('/users/signup', userData),
   getMe: () => api.get('/users/me'),
   updateProfile: (userData) => api.put('/users/profile', userData),
 };
