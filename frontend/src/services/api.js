@@ -60,23 +60,19 @@ export const foodAPI = {
 
 // Cart API
 export const cartAPI = {
-  getCart: () => api.get('/api/v1/cart'),
-  addToCart: (foodId, quantity = 1) => api.post('/api/v1/cart', { foodId, quantity }),
-  updateCartItem: (foodId, quantity) => api.put(`/api/v1/cart/${foodId}`, { quantity }),
-  removeFromCart: (foodId) => api.delete(`/api/v1/cart/${foodId}`),
-  clearCart: () => api.delete('/api/v1/cart'),
+  getCart: () => api.get('/cart'),
+  addToCart: (foodId, quantity = 1) => api.post('/cart', { foodId, quantity }),
+  updateCartItem: (foodId, quantity) => api.put(`/cart/${foodId}`, { quantity }),
+  removeFromCart: (foodId) => api.delete(`/cart/${foodId}`),
+  clearCart: () => api.delete('/cart'),
 };
 
 // Order API
 export const orderAPI = {
-  createOrder: (orderData) => api.post('/api/v1/orders', orderData),
-  getOrder: (id) => api.get(`/api/v1/orders/${id}`),
-  getMyOrders: () => api.get('/api/v1/orders/my-orders'),
-  getAllOrders: () => api.get('/api/v1/orders'),
-  updateOrderToPaid: (id, paymentResult) => 
-    api.put(`/api/v1/orders/${id}/pay`, paymentResult),
-  updateOrderToDelivered: (id) => 
-    api.put(`/api/v1/orders/${id}/deliver`),
+  createOrder: (orderData) => api.post('/orders', orderData),
+  getOrders: () => api.get('/orders'),
+  getOrder: (orderId) => api.get(`/orders/${orderId}`),
+  updateOrderStatus: (orderId, status) => api.patch(`/orders/${orderId}/status`, { status }),
 };
 
 export default api;

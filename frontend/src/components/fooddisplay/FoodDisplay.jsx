@@ -1,8 +1,8 @@
-import React, { useState,useEffect,useContext } from 'react'
-import "./FoodDisplay.css"
-import {StoreContext} from "../../context/StoreContext.jsx"
+import React, { useState, useEffect, useContext } from 'react';
+import "./FoodDisplay.css";
+import { StoreContext } from "../../context/StoreContext.jsx";
 import FoodItem from '../fooditem/FoodItem.jsx';
-import axios from 'axios';
+import { foodAPI } from '../../services/api';
 
 const FoodDisplay = ({category}) => {
 
@@ -19,19 +19,24 @@ const FoodDisplay = ({category}) => {
 
 
   const [foods, setFoods] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-   useEffect(() => {
-    // Fetch data from backend
-    axios.get('https://food-del-0kcf.onrender.com/foods')
-         // Backend API endpoint
-      .then(response => {
-       
-        setFoods(response.data); // Store the data in state
-      })
-      .catch(error => {
+  useEffect(() => {
+    const fetchFoods = async () => {
+      try {
+        setLoading(true);
+        const response = await foodAPI.getAllFoods();
+        setFoods(response.data);
+      } catch (error) {
         console.error("Error fetching food data:", error);
-      });
-     
+        setError("Failed to load food items. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFoods();
   }, []);
 
 
@@ -40,30 +45,29 @@ const FoodDisplay = ({category}) => {
 
         <h2>Top dishes near you</h2>
 
-        <div className="food-display-list">
-{foods.map((item,index)=>{
-
-//this condition=when we click salid only salid items show
-if(category=="All")
-  {
-  
-    return <FoodItem key={index} id={item._id} name={item.name} description={item.description} price={item.price} image={item.image}/>
-  }
-if(item.category===category)
-{
-
-  return <FoodItem key={index}  id={item._id} name={item.name} description={item.description} price={item.price} image={item.image}/>
-}
-
-
- 
-
-
-
- 
-
-})}
-        </div>
+        {loading ? (
+          <div>Loading food items...</div>
+        ) : error ? (
+          <div className="error-message">{error}</div>
+        ) : (
+          <div className="food-display-list">
+            {foods.map((item, index) => {
+              if (category === "All" || category === item.category) {
+                return (
+                  <FoodItem 
+                    key={index} 
+                    id={item._id} 
+                    name={item.name} 
+                    description={item.description} 
+                    price={item.price} 
+                    image={item.image}
+                  />
+                );
+              }
+              return null;
+            })}
+          </div>
+        )}
       
     </div>
   )
