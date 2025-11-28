@@ -10,7 +10,7 @@ const Placeorder = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { cartItems = [], totalAmount = 0, totalItems = 0 } = location.state || {};
-  const { user, login } = useContext(StoreContext);
+  const { user } = useContext(StoreContext);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
@@ -99,34 +99,38 @@ const Placeorder = () => {
       
       // Handle both 'id' and '_id' properties
       const userId = currentUser?.id || currentUser?._id;
+      const token = Cookies.get('token');
       
       if (!userId) {
         console.error('User not authenticated. User state:', user, 'Cookie:', userFromCookie);
         throw new Error('Please login to place an order');
       }
 
-      // Format cart items for the backend
-      const orderItems = cartItems.map(item => ({
-        food: item._id,
-        name: item.name,
-        price: item.price,
-        quantity: item.count || 1,
-        image: item.image
-      }));
+      // Create order data in the format expected by the backend
+      const orderData = {
+        userId,
+        items: cartItems.map(item => ({
+          food: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          image: item.image
+        }))
+      };
 
-      // First, create the order with cart items
-      console.log('Creating order with items:', JSON.stringify({ userId, items: orderItems }, null, 2));
-      
-      const response = await axios.post('https://food-del-0kcf.onrender.com/api/v1/orders', {
-        userId: userId,
-        items: orderItems
-      }, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${Cookies.get('token')}`
+      console.log('Creating order with items:', JSON.stringify(orderData, null, 2));
+
+      // First create the order - using the correct endpoint and data structure
+      const response = await axios.post('https://food-del-0kcf.onrender.com/api/v1/orders/elements', 
+        orderData.items, // Send just the items array as the request body
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          withCredentials: true
         }
-      });
+      );
 
       console.log('Order created, now adding shipping info');
       
