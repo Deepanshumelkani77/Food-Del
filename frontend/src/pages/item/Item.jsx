@@ -7,81 +7,70 @@ import { useNavigate} from 'react-router-dom'
 
 const Item = () => {
 
-    const { id } = useParams(); // Get the dynamic ID from the URL
-    const [foodItem, setFoodItem] = useState({});
-    const [reviews, setReviews] = useState([]);
-
-   
+  const { id } = useParams(); // Get the dynamic ID from the URL
+  const [foodItem, setFoodItem] = useState({});
+  const [reviews, setReviews] = useState([]);
 
   // Fetch food details
-  useEffect(() => {
-    const fetchFoodItem = async () => {
-      try {
-        const response = await fetch(`https://food-del-0kcf.onrender.com/foods/${id}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch food data');
-        }
-        const data = await response.json();
-        setFoodItem(data);
-        setReviews(data.review || []); // Ensure reviews are set properly
-      } catch (error) {
-        console.error('Error fetching food item:', error);
+  const fetchFoodItem = async () => {
+    try {
+      const response = await fetch(`https://food-del-0kcf.onrender.com/api/v1/foods/${id}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch food data');
       }
-    };
+      const data = await response.json();
+      setFoodItem(data);
+      setReviews(data.review || []);
+    } catch (error) {
+      console.error('Error fetching food item:', error);
+    }
+  };
+
+  useEffect(() => {
     fetchFoodItem();
     window.scrollTo(0, 0);
   }, [id]);
 
-//send review
-const [formData ,setFormData]=useState({comment:"",author:""});
-const { user } = useContext(StoreContext);
-const navigate=useNavigate();
+  // Review state and handlers
+  const [formData, setFormData] = useState({ comment: "", author: "" });
+  const { user } = useContext(StoreContext);
+  const navigate = useNavigate();
 
-const handleChange = (e) => {
-  const { name, value } = e.target;
-  setFormData({ ...formData, [name]: value });
-};
-useEffect(() => {
-  if (user) {
-    setFormData((prevData) => ({ ...prevData, author: user.id }));
-  }
-}, [user]);
-
-
-
-//this function for redirect into this page without any problem
-//for smooth redirect
-const fetchFoodItem = async () => {
-  try {
-    const response = await fetch(`https://food-del-0kcf.onrender.com/foods/${id}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch food data');
+  useEffect(() => {
+    if (user) {
+      setFormData(prevData => ({ ...prevData, author: user.id }));
     }
-    const data = await response.json();
-    setFoodItem(data);
-    setReviews(data.review || []);
-  } catch (error) {
-    console.error('Error fetching food item:', error);
-  }
-};
+  }, [user]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
 const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    const response = await fetch(`https://food-del-0kcf.onrender.com/review/${id}`, {
+    const response = await fetch(`https://food-del-0kcf.onrender.com/api/v1/review/${id}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData), // Use the updated cart item
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify(formData),
     });
 
     if (response.ok) {
-      alert('your review added successfully ');
-      fetchFoodItem();  // Redirect to home page
+      alert('Your review has been added successfully!');
+      fetchFoodItem();
+      setFormData({...formData, comment: ''}); // Clear the comment field
     } else {
-      console.error('Failed to add review');
+      const errorData = await response.json();
+      console.error('Failed to add review:', errorData);
+      alert('Failed to add review. Please try again.');
     }
   } catch (error) {
     console.error('Error:', error);
+    alert('An error occurred while submitting your review.');
   }
 };
 
@@ -94,8 +83,11 @@ const handleDelete = async (id) => {
   if (!confirmDelete) return;
 
   try {
-    const response = await fetch(`https://food-del-0kcf.onrender.com/review/delete/${id}`, {
+    const response = await fetch(`https://food-del-0kcf.onrender.com/api/v1/review/delete/${id}`, {
       method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     });
 
     if (response.ok) {
