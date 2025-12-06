@@ -41,39 +41,70 @@ module.exports.addItem = async (req, res) => {
     }
     
     try {
-        // First, check if the item already exists in the user's cart
-        const existingItem = await Cart.findOne({ 
-            'author': userId,
-            'name': namee
-        });
+        // First, check if user has an existing cart
+        let cart = await Cart.findOne({ user: userId });
 
-        if (existingItem) {
-            // Update quantity if item exists
-            existingItem.count += count;
-            await existingItem.save();
+        if (cart) {
+            // Check if item already exists in cart
+            const existingItemIndex = cart.items.findIndex(
+                item => item.food.name === namee
+            );
+
+            if (existingItemIndex > -1) {
+                // Update quantity if item exists
+                cart.items[existingItemIndex].quantity += count;
+                cart.items[existingItemIndex].total = 
+                    cart.items[existingItemIndex].quantity * cart.items[existingItemIndex].price;
+            } else {
+                // Add new item to existing cart
+                cart.items.push({
+                    food: {
+                        name: namee,
+                        image: imagee
+                    },
+                    quantity: count,
+                    price: pricee,
+                    total: pricee * count
+                });
+            }
+            
+            // Update subtotal and total
+            cart.subTotal = cart.items.reduce((sum, item) => sum + item.total, 0);
+            cart.total = cart.subTotal + (cart.tax || 0);
+            cart.updatedAt = Date.now();
+            
+            await cart.save();
             
             return res.status(200).json({
                 success: true,
-                message: "Cart item quantity updated successfully",
-                data: existingItem
+                message: "Cart updated successfully",
+                data: cart
             });
         }
         
-        // Create new cart item if it doesn't exist
-        const cartItem = new Cart({
-            name: namee,
-            image: imagee,
-            price: pricee,
-            count: count,
-            author: userId
+        // Create new cart with the item if no cart exists
+        const newCart = new Cart({
+            user: userId,
+            items: [{
+                food: {
+                    name: namee,
+                    image: imagee
+                },
+                quantity: count,
+                price: pricee,
+                total: pricee * count
+            }],
+            subTotal: pricee * count,
+            total: pricee * count,
+            updatedAt: Date.now()
         });
         
-        await cartItem.save();
+        await newCart.save();
         
         return res.status(201).json({
             success: true,
-            message: "Item added to cart successfully",
-            data: cartItem
+            message: "Cart created with item successfully",
+            data: newCart
         });
         
     } catch (error) {
