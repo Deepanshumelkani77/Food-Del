@@ -3,9 +3,14 @@ const Schema = mongoose.Schema;
 
 const cartItemSchema = new Schema({
     food: {
-        type: Schema.Types.ObjectId,
-        ref: 'Food',
-        required: true
+        name: {
+            type: String,
+            required: true
+        },
+        image: {
+            type: String,
+            required: true
+        }
     },
     quantity: {
         type: Number,
