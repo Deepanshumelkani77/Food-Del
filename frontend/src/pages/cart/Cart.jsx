@@ -13,25 +13,28 @@ const Cart = () => {
   const navigate = useNavigate();
 
   // Get cart items for the current user
-  const userCart = cart.filter(item => user && item.author === user.id);
+  const userCart = Array.isArray(cart) ? cart.filter(item => user && item.author === user.id) : [];
 
   const getTotalCartAmount = () => {
-    return userCart.reduce((total, item) => total + (item.price * item.count), 0);
+    return userCart.reduce((total, item) => total + (item.pricee * (item.count || 1)), 0);
   };
 
   const getTotalItems = () => {
-    return userCart.reduce((total, item) => total + item.count, 0);
+    return userCart.reduce((total, item) => total + (item.count || 1), 0);
   };
 
   const fetchCart = async () => {
     try {
       setLoading(true);
       const response = await cartAPI.getCart();
-      setCart(response.data);
+      // Ensure we have an array and handle the response structure
+      const cartData = Array.isArray(response.data) ? response.data : [];
+      setCart(cartData);
       setError(null);
     } catch (error) {
       console.error("Error fetching cart:", error);
       setError("Failed to load cart. Please try again later.");
+      setCart([]); // Ensure cart is always an array
     } finally {
       setLoading(false);
     }
@@ -124,8 +127,8 @@ const Cart = () => {
               <div key={item._id} className="cart-item">
                 <div className="item-image">
                   <img 
-                    src={item.image} 
-                    alt={item.name} 
+                    src={item.imagee} 
+                    alt={item.namee} 
                     onError={(e) => {
                       e.target.onerror = null;
                       e.target.src = '/images/placeholder-food.jpg';
@@ -133,8 +136,8 @@ const Cart = () => {
                   />
                 </div>
                 <div className="item-details">
-                  <h3>{item.name}</h3>
-                  <p className="price">₹{item.price}</p>
+                  <h3>{item.namee}</h3>
+                  <p className="price">₹{item.pricee}</p>
                   <div className="quantity-controls">
                     <button 
                       onClick={() => handleQuantityChange(item._id, item.count - 1)}

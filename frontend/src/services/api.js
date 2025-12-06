@@ -62,19 +62,19 @@ export const foodAPI = {
 // Cart API
 export const cartAPI = {
   // Get cart items
-  getCart: () => api.get('/cart'),
+  getCart: () => api.get('/api/v1/cart'),
   
   // Add item to cart
-  addToCart: (data) => api.post('/cart', data),
+  addToCart: (data) => api.post('/api/v1/cart', data),
   
   // Update item count
-  updateCartItem: (data) => api.put('/cart/edit', data),
+  updateCartItem: (data) => api.put('/api/v1/cart/edit', data),
   
   // Remove item from cart
-  removeFromCart: (id) => api.delete(`/cart/delete/${id}`),
+  removeFromCart: (id) => api.delete(`/api/v1/cart/delete/${id}`),
   
   // Clear cart
-  clearCart: () => api.delete('/cart')
+  clearCart: () => api.delete('/api/v1/cart')
 };
 
 // Order API

@@ -34,19 +34,26 @@ const handleSubmit = async (updatedCartItem) => {
   
   try {
     const cartItem = {
-      namee: updatedCartItem.name,
-      imagee: updatedCartItem.image,
-      pricee: updatedCartItem.price,
+      namee: updatedCartItem.namee || updatedCartItem.name || '',
+      imagee: updatedCartItem.imagee || updatedCartItem.image || '',
+      pricee: updatedCartItem.pricee || updatedCartItem.price || 0,
       count: updatedCartItem.count || 1,
       author: user.id
     };
     
-    await cartAPI.addToCart(cartItem);
+    console.log('Sending cart item:', cartItem); // Debug log
+    const response = await cartAPI.addToCart(cartItem);
+    console.log('Add to cart response:', response.data); // Debug log
+    
     alert('Food item added successfully to cart!');
-    // Optionally refresh the cart in parent components
+    // Refresh the cart
+    if (window.location.pathname === '/cart') {
+      window.location.reload();
+    }
   } catch (error) {
     console.error('Error adding to cart:', error);
-    alert('Failed to add item to cart. Please try again.');
+    console.error('Error response:', error.response?.data); // Log detailed error
+    alert(`Failed to add item to cart: ${error.response?.data?.message || error.message}`);
   }
 };
 
