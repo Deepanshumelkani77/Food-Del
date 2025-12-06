@@ -85,7 +85,11 @@ export const CartProvider = ({ children }) => {
   const fetchCart = async () => {
     try {
       dispatch({ type: 'SET_LOADING' });
-      const { data } = await cartAPI.getCart();
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!user || !user._id) {
+        throw new Error('User not authenticated');
+      }
+      const { data } = await cartAPI.getCart(user._id);
       dispatch({ type: 'SET_CART', payload: data });
     } catch (error) {
       dispatch({ 

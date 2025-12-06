@@ -61,7 +61,7 @@ export const foodAPI = {
 
 // Cart API
 export const cartAPI = {
-  getCart: () => api.get('/cart'),
+  getCart: (userId) => api.get('/cart', { params: { userId } }),
   addToCart: (foodId, quantity = 1) => api.post('/cart', { foodId, quantity }),
   updateCartItem: (foodId, quantity) => api.put(`/cart/${foodId}`, { quantity }),
   removeFromCart: (foodId) => api.delete(`/cart/${foodId}`),

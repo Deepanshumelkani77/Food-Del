@@ -1,24 +1,66 @@
 const express = require("express");
+const mongoose = require('mongoose');
 const Cart = require('../models/cart.js');
 
 // Get all cart items for a user
 module.exports.getData = async (req, res) => {
     try {
+        console.log('Request query:', req.query); // Log the incoming request
+        
         const { userId } = req.query;
         if (!userId) {
+            console.error('No userId provided in query');
             return res.status(400).json({
                 success: false,
-                message: "User ID is required"
+                message: "User ID is required",
+                error: "Missing userId query parameter"
             });
         }
 
-        const cartItems = await Cart.find({ author: userId });
+        // Validate userId format (MongoDB ObjectId)
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            console.error('Invalid userId format:', userId);
+            return res.status(400).json({
+                success: false,
+                message: "Invalid user ID format",
+                error: `Invalid userId format: ${userId}`
+            });
+        }
+
+        console.log('Fetching cart for userId:', userId);
+        const cartItems = await Cart.find({ user: userId }).lean();
+        
+        if (!cartItems || cartItems.length === 0) {
+            console.log('No cart found for userId:', userId);
+            return res.status(200).json({
+                success: true,
+                message: "No cart items found",
+                data: []
+            });
+        }
+
+        console.log('Found cart items:', cartItems.length);
         res.status(200).json({
             success: true,
             data: cartItems
         });
     } catch (error) {
-        console.error("Error fetching cart items:", error);
+        console.error("Error in getData:", {
+            message: error.message,
+            stack: error.stack,
+            name: error.name,
+            code: error.code
+        });
+        
+        // Handle specific error types
+        if (error.name === 'CastError') {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid data format",
+                error: error.message
+            });
+        }
+        
         res.status(500).json({
             success: false,
             message: "Error fetching cart items",
