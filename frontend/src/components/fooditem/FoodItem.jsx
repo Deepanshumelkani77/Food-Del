@@ -3,7 +3,6 @@ import "./FoodItem.css"
 import { assets } from '../../assets/assets'
 import { Link ,useNavigate} from 'react-router-dom'
 import { StoreContext } from "../../context/StoreContext.jsx";
-import { cartAPI } from "../../services/api";
 
 
 const FoodItem = ({ id,name,description,price,image}) => {
@@ -27,97 +26,64 @@ const [cartItem,setCartItem]=useState({namee:'' ,imagee:'',pricee:'' ,count:'' ,
  
 
 const handleSubmit = async (updatedCartItem) => {
-  if (!user) {
-    setShowLogin(true);
-    return;
-  }
-  
   try {
-    const cartItem = {
-      namee: updatedCartItem.namee || updatedCartItem.name || '',
-      imagee: updatedCartItem.imagee || updatedCartItem.image || '',
-      pricee: updatedCartItem.pricee || updatedCartItem.price || 0,
-      count: updatedCartItem.count || 1,
-      author: user.id
-    };
-    
-    console.log('Sending cart item:', cartItem); // Debug log
-    const response = await cartAPI.addToCart(cartItem);
-    console.log('Add to cart response:', response.data); // Debug log
-    
-    alert('Food item added successfully to cart!');
-    // Refresh the cart
-    if (window.location.pathname === '/cart') {
-      window.location.reload();
+    const response = await fetch('https://food-del-0kcf.onrender.com/cart', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedCartItem), // Use the updated cart item
+    });
+
+    if (response.ok) {
+      alert('Food item added successfully into cart!');
+      navigate('/'); // Redirect to home page
+    } else {
+      console.error('Failed to add food item into cart');
     }
   } catch (error) {
-    console.error('Error adding to cart:', error);
-    console.error('Error response:', error.response?.data); // Log detailed error
-    alert(`Failed to add item to cart: ${error.response?.data?.message || error.message}`);
+    console.error('Error:', error);
   }
 };
 
 
 
 const updateItemCountAdd = async (itemName) => {
-  if (!user) {
-    setShowLogin(true);
-    return;
-  }
-  
   try {
-    const response = await cartAPI.getCart();
-    const cartItems = response.data || [];
-    const item = cartItems.find((item) => item.namee === itemName);
-    
-    if (!item) return;
-    
-    const updatedItem = {
-      namee: item.namee,
-      imagee: item.imagee,
-      pricee: item.pricee,
-      count: (item.count || 1) + 1,
-      author: user.id
-    };
-    
-    await cartAPI.updateCartItem(updatedItem);
-    setitemCount(prevCount => prevCount + 1);
+    const response = await fetch("https://food-del-0kcf.onrender.com/cart/edit", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: itemName, newCount: itemCount+1}),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert("Count updated successfully!");
+      console.log(data);
+    } else {
+      alert("Failed to update count: " + data.message);
+    }
   } catch (error) {
-    console.error('Error updating cart item:', error);
-    alert('Failed to update item. Please try again.');
+    console.error("Error:", error);
   }
 };
 
 
 const updateItemCountRemove = async (itemName) => {
-  if (!user) {
-    setShowLogin(true);
-    return;
-  }
-  
   try {
-    const response = await cartAPI.getCart();
-    const cartItems = response.data || [];
-    const item = cartItems.find((item) => item.namee === itemName);
-    
-    if (!item) return;
-    
-    if (item.count > 1) {
-      const updatedItem = {
-        namee: item.namee,
-        imagee: item.imagee,
-        pricee: item.pricee,
-        count: item.count - 1,
-        author: user.id
-      };
-      await cartAPI.updateCartItem(updatedItem);
+    const response = await fetch("https://food-del-0kcf.onrender.com/cart/edit", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: itemName, newCount: itemCount-1}),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert("Count updated successfully!");
+      console.log(data);
     } else {
-      await cartAPI.removeFromCart(item._id);
+      alert("Failed to update count: " + data.message);
     }
-    setitemCount(prevCount => Math.max(0, prevCount - 1));
   } catch (error) {
-    console.error("Error updating cart item:", error);
-    alert('Failed to update item. Please try again.');
+    console.error("Error:", error);
   }
 };
 
