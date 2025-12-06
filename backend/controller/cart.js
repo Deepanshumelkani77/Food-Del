@@ -13,27 +13,67 @@ module.exports.getData=async (req, res) => {
   }
 
 
-  module.exports.addItem=async(req,res)=>{
-  
-      console.log("Received request at /foods/cart:", req.body);
-      
-      const { namee, imagee, pricee, count,author } = req.body;
-      
-      try {
-        const cart1 = new Cart({
-          name: namee,
-          image: imagee,
-          price: pricee,
-          count: count,
-        author:author
-        });
+  module.exports.addItem = async (req, res) => {
+    console.log("Received request at /foods/cart:", req.body);
     
-        await cart1.save();
-        res.status(201).json({ message: "Food item added successfully into cart" });
-      } catch (error) {
-        console.error("Error saving to database:", error);
-        res.status(500).json({ message: "Internal server error" });
+    const { foodId, price, quantity = 1, userId } = req.body;
+    
+    if (!foodId || !price || !userId) {
+      return res.status(400).json({ 
+        message: "Missing required fields: foodId, price, and userId are required" 
+      });
+    }
+    
+    try {
+      const total = price * quantity;
+      
+      // First, check if user already has a cart
+      let cart = await Cart.findOne({ user: userId });
+      
+      if (cart) {
+        // Check if item already exists in cart
+        const itemIndex = cart.items.findIndex(item => item.food.toString() === foodId);
+        
+        if (itemIndex > -1) {
+          // Update quantity if item exists
+          cart.items[itemIndex].quantity += quantity;
+          cart.items[itemIndex].total = cart.items[itemIndex].quantity * price;
+        } else {
+          // Add new item
+          cart.items.push({
+            food: foodId,
+            quantity,
+            price,
+            total
+          });
+        }
+      } else {
+        // Create new cart
+        cart = new Cart({
+          user: userId,
+          items: [{
+            food: foodId,
+            quantity,
+            price,
+            total
+          }]
+        });
       }
+      
+      await cart.save();
+      res.status(201).json({ 
+        success: true,
+        message: "Item added to cart successfully",
+        cart
+      });
+    } catch (error) {
+      console.error("Error saving to cart:", error);
+      res.status(500).json({ 
+        success: false,
+        message: "Failed to add item to cart",
+        error: error.message 
+      });
+    }
     
     
     }
