@@ -1,13 +1,22 @@
 const express = require("express");
 const Cart = require('../models/cart.js');
 
-// Get all cart items
+// Get all cart items for the current user
 module.exports.getData = async (req, res) => {
     try {
-        const cart = await Cart.find();
+        // Get user ID from request (assuming it's set by auth middleware)
+        const userId = req.user?._id;
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "User not authenticated"
+            });
+        }
+        
+        const cartItems = await Cart.find({ user: userId });
         res.status(200).json({
             success: true,
-            data: cart
+            data: cartItems
         });
     } catch (error) {
         console.error("Error fetching cart:", error);
@@ -28,13 +37,13 @@ module.exports.addItem = async (req, res) => {
     if (!namee || !author) {
         return res.status(400).json({
             success: false,
-            message: "Item name and author are required"
+            message: "Item name and user are required"
         });
     }
 
     try {
-        // Check if item already exists in cart
-        const existingItem = await Cart.findOne({ namee, author });
+        // Check if item already exists in user's cart
+        const existingItem = await Cart.findOne({ namee, user: author });
 
         if (existingItem) {
             // Update count if item exists
@@ -53,7 +62,7 @@ module.exports.addItem = async (req, res) => {
             imagee,
             pricee,
             count: count || 1,
-            author
+            user: author  // Map author to user field
         });
 
         await newItem.save();
@@ -81,13 +90,13 @@ module.exports.editItem = async (req, res) => {
     if (namee === undefined || count === undefined || !author) {
         return res.status(400).json({
             success: false,
-            message: "Item name, count, and author are required"
+            message: "Item name, count, and user are required"
         });
     }
 
     try {
         const updatedItem = await Cart.findOneAndUpdate(
-            { namee, author },
+            { namee, user: author },
             { $set: { count } },
             { new: true }
         );
@@ -117,21 +126,26 @@ module.exports.editItem = async (req, res) => {
 // Delete item from cart
 module.exports.deleteItem = async (req, res) => {
     const { id } = req.params;
+    const { userId } = req.body;
     
-    if (!id) {
+    if (!id || !userId) {
         return res.status(400).json({
             success: false,
-            message: "Item ID is required"
+            message: "Item ID and user ID are required"
         });
     }
 
     try {
-        const deletedItem = await Cart.findByIdAndDelete(id);
+        // Ensure the item belongs to the requesting user
+        const deletedItem = await Cart.findOneAndDelete({
+            _id: id,
+            user: userId
+        });
         
         if (!deletedItem) {
             return res.status(404).json({
                 success: false,
-                message: "Item not found in cart"
+                message: "Item not found in your cart"
             });
         }
         
