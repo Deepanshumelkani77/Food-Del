@@ -27,8 +27,23 @@ const app = express();
 // Trust first proxy (for rate limiting behind Render)
 app.set('trust proxy', 1);
 
+// Enable CORS
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://food-del-frontend-jl2g.onrender.com'], // Add your frontend URL here
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 // Set security HTTP headers
 app.use(helmet());
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,UPDATE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Authorization');
+  next();
+});
 
 // Development logging
 if (process.env.NODE_ENV === 'development') {
