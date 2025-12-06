@@ -3,6 +3,7 @@ import "./FoodItem.css"
 import { assets } from '../../assets/assets'
 import { Link ,useNavigate} from 'react-router-dom'
 import { StoreContext } from "../../context/StoreContext.jsx";
+import { cartAPI } from "../../services/api";
 
 
 const FoodItem = ({ id,name,description,price,image}) => {
@@ -26,64 +27,90 @@ const [cartItem,setCartItem]=useState({namee:'' ,imagee:'',pricee:'' ,count:'' ,
  
 
 const handleSubmit = async (updatedCartItem) => {
+  if (!user) {
+    setShowLogin(true);
+    return;
+  }
+  
   try {
-    const response = await fetch('https://food-del-0kcf.onrender.com/cart', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updatedCartItem), // Use the updated cart item
-    });
-
-    if (response.ok) {
-      alert('Food item added successfully into cart!');
-      navigate('/'); // Redirect to home page
-    } else {
-      console.error('Failed to add food item into cart');
-    }
+    const cartItem = {
+      namee: updatedCartItem.name,
+      imagee: updatedCartItem.image,
+      pricee: updatedCartItem.price,
+      count: updatedCartItem.count || 1,
+      author: user.id
+    };
+    
+    await cartAPI.addToCart(cartItem);
+    alert('Food item added successfully to cart!');
+    // Optionally refresh the cart in parent components
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error adding to cart:', error);
+    alert('Failed to add item to cart. Please try again.');
   }
 };
 
 
 
 const updateItemCountAdd = async (itemName) => {
+  if (!user) {
+    setShowLogin(true);
+    return;
+  }
+  
   try {
-    const response = await fetch("https://food-del-0kcf.onrender.com/cart/edit", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: itemName, newCount: itemCount+1}),
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      alert("Count updated successfully!");
-      console.log(data);
-    } else {
-      alert("Failed to update count: " + data.message);
-    }
+    const response = await cartAPI.getCart();
+    const cartItems = response.data || [];
+    const item = cartItems.find((item) => item.namee === itemName);
+    
+    if (!item) return;
+    
+    const updatedItem = {
+      namee: item.namee,
+      imagee: item.imagee,
+      pricee: item.pricee,
+      count: (item.count || 1) + 1,
+      author: user.id
+    };
+    
+    await cartAPI.updateCartItem(updatedItem);
+    setitemCount(prevCount => prevCount + 1);
   } catch (error) {
-    console.error("Error:", error);
+    console.error('Error updating cart item:', error);
+    alert('Failed to update item. Please try again.');
   }
 };
 
 
 const updateItemCountRemove = async (itemName) => {
+  if (!user) {
+    setShowLogin(true);
+    return;
+  }
+  
   try {
-    const response = await fetch("https://food-del-0kcf.onrender.com/cart/edit", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: itemName, newCount: itemCount-1}),
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      alert("Count updated successfully!");
-      console.log(data);
+    const response = await cartAPI.getCart();
+    const cartItems = response.data || [];
+    const item = cartItems.find((item) => item.namee === itemName);
+    
+    if (!item) return;
+    
+    if (item.count > 1) {
+      const updatedItem = {
+        namee: item.namee,
+        imagee: item.imagee,
+        pricee: item.pricee,
+        count: item.count - 1,
+        author: user.id
+      };
+      await cartAPI.updateCartItem(updatedItem);
     } else {
-      alert("Failed to update count: " + data.message);
+      await cartAPI.removeFromCart(item._id);
     }
+    setitemCount(prevCount => Math.max(0, prevCount - 1));
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error updating cart item:", error);
+    alert('Failed to update item. Please try again.');
   }
 };
 
