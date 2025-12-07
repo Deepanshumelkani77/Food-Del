@@ -14,14 +14,14 @@ const Cart = () => {
   const navigate = useNavigate();
 
   // Get cart items for the current user
-  const userCart = cart.length > 0 ? cart[0]?.items || [] : [];
+  const userCart = cart.filter(item => user && item.user === user._id);
 
   const getTotalCartAmount = () => {
-    return userCart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return userCart.reduce((total, item) => total + (item.price * item.count), 0);
   };
 
   const getTotalItems = () => {
-    return userCart.reduce((total, item) => total + item.quantity, 0);
+    return userCart.reduce((total, item) => total + item.count, 0);
   };
 
   const fetchCart = async () => {
@@ -29,23 +29,16 @@ const Cart = () => {
       setLoading(true);
       
       const userCookie = Cookies.get('user');
-      console.log("User cookie:", userCookie);
-
-      const currentUser = userCookie ? JSON.parse(userCookie) : null;
-
+      const currentUser = userCookie && userCookie !== 'undefined' ? JSON.parse(userCookie) : null;
+      
       if (!currentUser || !currentUser._id) {
         setCart([]);
-        setError("Please log in to view your cart");
+        setError('Please log in to view your cart');
         return;
       }
-
-      // Fetch cart from backend
+      
       const response = await cartAPI.getCart(currentUser._id);
-      console.log("Cart API response:", response);
-
-      // Backend returns: { success: true, data: cartData }
-      const cartData = Array.isArray(response.data) ? response.data : [];
-      setCart(cartData);
+      setCart(Array.isArray(response.data) ? response.data : []);
       setError(null);
     } catch (error) {
       console.error("Error fetching cart:", error);
