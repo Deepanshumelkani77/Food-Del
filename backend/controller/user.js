@@ -66,18 +66,29 @@ module.exports.signup = async (req, res) => {
 module.exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        
+        // Validate input
+        if (!email || !password) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Please provide email and password' 
+            });
+        }
+
+        // Check for user
         const user = await User.findOne({ email }).select('+password');
     
         if (!user) {
-            return res.status(400).json({ 
+            return res.status(401).json({ 
                 success: false, 
                 message: 'Invalid credentials' 
             });
         }
     
+        // Check if password matches
         const isMatch = await user.matchPassword(password);
         if (!isMatch) {
-            return res.status(400).json({ 
+            return res.status(401).json({ 
                 success: false, 
                 message: 'Invalid credentials' 
             });
@@ -91,21 +102,26 @@ module.exports.login = async (req, res) => {
             expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict'
+            sameSite: 'strict',
+            path: '/',
+            domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : 'localhost'
         };
 
         // Set token in cookie
         res.cookie('token', token, cookieOptions);
         
-        // Return user data (without sensitive information)
+        // Create user info object without password
+        const userInfo = {
+            id: user._id,
+            username: user.username,
+            email: user.email
+        };
+        
+        // Return success response
         res.status(200).json({
             success: true,
             token,
-            user: {
-                id: user._id,
-                username: user.username,
-                email: user.email
-            }
+            user: userInfo
         });
         
     } catch (error) {

@@ -11,8 +11,11 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,
+  withCredentials: true, // This is important for sending cookies
   timeout: 10000, // 10 seconds timeout
+  xsrfCookieName: 'csrftoken',
+  xsrfHeaderName: 'X-CSRFToken',
+  withXSRFToken: true
 });
 
 // Request interceptor

@@ -30,34 +30,43 @@ const StoreContextProvider = (props) => {
   const login = async (email, password) => {
     try {
       const response = await authAPI.login(email, password);
-      if (response.data && response.data.token) {
+      
+      if (response.data && response.data.success) {
+        const { token, user: userData } = response.data;
+        
         // Set token in cookies with secure and httpOnly flags in production
         const cookieOptions = {
           expires: 1, // 1 day
           secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict'
+          sameSite: 'strict',
+          path: '/'
         };
         
-        Cookies.set("token", response.data.token, cookieOptions);
+        // Store token in cookies
+        Cookies.set("token", token, cookieOptions);
         
-        // Store minimal user data in cookies
-        const userData = {
-          id: response.data.user._id,
-          username: response.data.user.username,
-          email: response.data.user.email
+        // Store user data in state and cookies
+        const userInfo = {
+          id: userData.id,
+          username: userData.username,
+          email: userData.email
         };
         
-        Cookies.set("user", JSON.stringify(userData), cookieOptions);
-        setUser(userData);
+        Cookies.set("user", JSON.stringify(userInfo), cookieOptions);
+        setUser(userInfo);
         
         // Update axios default headers
-        api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         
         return true;
+      } else {
+        throw new Error(response.data?.message || 'Login failed');
       }
     } catch (error) {
       console.error('Login error:', error);
-      const errorMessage = error.response?.data?.message || "Login failed. Please check your credentials and try again.";
+      const errorMessage = error.response?.data?.message || 
+                         error.message || 
+                         "Login failed. Please check your credentials and try again.";
       alert(errorMessage);
       return false;
     }

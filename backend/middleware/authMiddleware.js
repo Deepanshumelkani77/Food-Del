@@ -13,23 +13,23 @@ if (process.env.NODE_ENV !== 'production') {
 const protect = async (req, res, next) => {
     let token;
 
-    // Check for token in headers or cookies
-    if (
-        req.headers.authorization && 
-        req.headers.authorization.startsWith('Bearer')
-    ) {
+    // Check for token in Authorization header
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         // Set token from Bearer token in header
         token = req.headers.authorization.split(' ')[1];
-    } else if (req.cookies && req.cookies.token) {
-        // Set token from cookie
+    } 
+    // Check for token in cookies
+    else if (req.cookies && req.cookies.token) {
         token = req.cookies.token;
     }
 
     // Make sure token exists
     if (!token) {
-        return res.status(401).json({ 
+        console.log('No token found in request');
+        return res.status(401).json({
             success: false,
-            message: 'Not authorized to access this route - No token provided'
+            message: 'Not authorized to access this route',
+            error: 'No authentication token found. Please log in.'
         });
     }
 
