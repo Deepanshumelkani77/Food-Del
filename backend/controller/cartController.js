@@ -48,10 +48,15 @@ const addToCart = async (req, res) => {
                 user: req.user.id,
                 items: [{
                     food: food._id,
+                    name: food.name,
+                    image: food.image,
                     quantity,
                     price: food.price,
                     total: food.price * quantity
-                }]
+                }],
+                subTotal: food.price * quantity,
+                tax: (food.price * quantity) * 0.1, // 10% tax
+                total: (food.price * quantity) * 1.1 // Price + 10% tax
             });
         } else {
             // Check if item already exists in cart
@@ -65,11 +70,18 @@ const addToCart = async (req, res) => {
                 // Add new item
                 cart.items.push({
                     food: food._id,
+                    name: food.name,
+                    image: food.image,
                     quantity,
                     price: food.price,
                     total: food.price * quantity
                 });
             }
+            
+            // Update cart totals
+            cart.subTotal = cart.items.reduce((sum, item) => sum + item.total, 0);
+            cart.tax = cart.subTotal * 0.1; // 10% tax
+            cart.total = cart.subTotal + cart.tax;
         }
 
         await cart.save();

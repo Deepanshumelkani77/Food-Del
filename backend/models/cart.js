@@ -3,14 +3,9 @@ const Schema = mongoose.Schema;
 
 const cartItemSchema = new Schema({
     food: {
-        name: {
-            type: String,
-            required: true
-        },
-        image: {
-            type: String,
-            required: true
-        }
+        type: Schema.Types.ObjectId,
+        ref: 'Food',
+        required: true
     },
     quantity: {
         type: Number,
@@ -22,8 +17,12 @@ const cartItemSchema = new Schema({
         type: Number,
         required: true
     },
-    total: {
-        type: Number,
+    name: {
+        type: String,
+        required: true
+    },
+    image: {
+        type: String,
         required: true
     }
 }, { _id: false });
