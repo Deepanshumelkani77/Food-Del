@@ -268,4 +268,8 @@ export const orderAPI = {
   updateOrderStatus: (orderId, status) => api.patch(`/orders/${orderId}/status`, { status }),
 };
 
+// Export the api instance as a named export
+export { api };
+
+// Also keep the default export for backward compatibility
 export default api;

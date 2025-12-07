@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 import { food_list } from "../assets/assets";
 import Cookies from "js-cookie";
-import { authAPI } from "../services/api";
+import { authAPI, api } from "../services/api";
 
 export const StoreContext = createContext();
 
