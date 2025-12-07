@@ -130,10 +130,23 @@ const addToCart = async (req, res) => {
                 });
             }
             
-            // Update cart totals
-            cart.subTotal = cart.items.reduce((sum, item) => sum + item.total, 0);
-            cart.tax = cart.subTotal * 0.1; // 10% tax
-            cart.total = cart.subTotal + cart.tax;
+            // Ensure all item totals are valid numbers
+            const validItems = cart.items.filter(item => 
+                item && 
+                typeof item.price === 'number' && 
+                typeof item.quantity === 'number' &&
+                !isNaN(item.price) && 
+                !isNaN(item.quantity)
+            );
+            
+            // Update cart totals with valid items only
+            cart.subTotal = validItems.reduce((sum, item) => {
+                const itemTotal = item.price * item.quantity;
+                return sum + (isFinite(itemTotal) ? itemTotal : 0);
+            }, 0);
+            
+            cart.tax = Number((cart.subTotal * 0.1).toFixed(2)); // 10% tax, rounded to 2 decimal places
+            cart.total = Number((cart.subTotal + cart.tax).toFixed(2));
         }
 
         console.log('Saving cart...');
