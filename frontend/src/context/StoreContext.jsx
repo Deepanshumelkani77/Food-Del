@@ -29,15 +29,41 @@ const StoreContextProvider = (props) => {
     
   const login = async (email, password) => {
     try {
+      console.log('Attempting login with:', { email });
       const response = await authAPI.login(email, password);
-      if (response.data && response.data.token) {
-        Cookies.set("token", response.data.token, { expires: 1 });
-        Cookies.set("user", JSON.stringify(response.data.user), { expires: 1 });
-        setUser(response.data.user);
+      console.log('Login response:', response);
+      
+      if (response.data && response.data.success && response.data.token && response.data.user) {
+        const { user, token } = response.data;
+        console.log('Setting user cookie with:', { _id: user._id, email: user.email });
+        
+        // Set cookies with 7-day expiration
+        Cookies.set("token", token, { expires: 7, sameSite: 'lax' });
+        Cookies.set("user", JSON.stringify({
+          _id: user._id,
+          username: user.username,
+          email: user.email
+        }), { expires: 7, sameSite: 'lax' });
+        
+        setUser({
+          _id: user._id,
+          username: user.username,
+          email: user.email
+        });
+        
+        console.log('Login successful, user set:', user);
         return true;
       }
+      
+      console.error('Invalid login response format:', response);
+      alert(response.data?.message || "Invalid response from server. Please try again.");
+      return false;
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Login error:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
       alert(error.response?.data?.message || "Login failed. Please check your credentials and try again.");
       return false;
     }

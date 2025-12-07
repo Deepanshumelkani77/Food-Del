@@ -4,6 +4,7 @@ import { StoreContext } from "../../context/StoreContext";
 import { useNavigate } from "react-router-dom";
 import { FaTrash, FaPlus, FaMinus, FaShoppingCart, FaArrowLeft } from 'react-icons/fa';
 import { cartAPI } from "../../services/api";
+import Cookies from 'js-cookie';
 
 const Cart = () => {
   const { user, setShowLogin } = useContext(StoreContext);
@@ -13,28 +14,38 @@ const Cart = () => {
   const navigate = useNavigate();
 
   // Get cart items for the current user
-  const userCart = cart.filter(item => user && item.author === user.id);
+  const userCart = cart.length > 0 ? cart[0]?.items || [] : [];
 
   const getTotalCartAmount = () => {
-    return userCart.reduce((total, item) => total + (item.price * item.count), 0);
+    return userCart.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
 
   const getTotalItems = () => {
-    return userCart.reduce((total, item) => total + item.count, 0);
+    return userCart.reduce((total, item) => total + item.quantity, 0);
   };
 
   const fetchCart = async () => {
     try {
       setLoading(true);
       
-      if (!user || !user._id) {
+      const userCookie = Cookies.get('user');
+      console.log("User cookie:", userCookie);
+
+      const currentUser = userCookie ? JSON.parse(userCookie) : null;
+
+      if (!currentUser || !currentUser._id) {
         setCart([]);
-        setError('Please log in to view your cart');
+        setError("Please log in to view your cart");
         return;
       }
-      
-      const response = await cartAPI.getCart(user._id);
-      setCart(Array.isArray(response.data) ? response.data : []);
+
+      // Fetch cart from backend
+      const response = await cartAPI.getCart(currentUser._id);
+      console.log("Cart API response:", response);
+
+      // Backend returns: { success: true, data: cartData }
+      const cartData = Array.isArray(response.data) ? response.data : [];
+      setCart(cartData);
       setError(null);
     } catch (error) {
       console.error("Error fetching cart:", error);
