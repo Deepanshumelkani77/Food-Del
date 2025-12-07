@@ -120,18 +120,24 @@ module.exports.addItem = async (req, res) => {
 };
 
 
-      module.exports.deleteItem=async (req, res) => {
-         
-          const { id } = req.params;
-        
-          try {
-            const deletedFood = await Cart.findByIdAndDelete(id);
-            if (!deletedFood) {
-              return res.status(404).json({ message: 'Food item not found' });
-            }
-            res.status(200).json({ message: 'Food item deleted successfully' });
-          } catch (error) {
-            console.error('Error deleting food item:', error);
-            res.status(500).json({ message: 'Internal server error' });
-          }
-        }
+     module.exports.deleteItem = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const foodId = req.params.id;
+
+    const cart = await Cart.findOne({ user: userId });
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
+
+    // Remove item
+    cart.items = cart.items.filter(
+      (item) => item.food.toString() !== foodId
+    );
+
+    await cart.save();
+    res.status(200).json({ message: "Item removed", cart });
+
+  } catch (error) {
+    console.error("Error deleting item:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

@@ -3,7 +3,7 @@ const router=express.Router();
 const cartController=require("../controller/cart.js")
 
 // to get a data from a cart
-router.get('/',cartController.getData );
+router.get('/',cartController.getCart );
   
 
 
