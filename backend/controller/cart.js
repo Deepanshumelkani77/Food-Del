@@ -66,33 +66,37 @@ module.exports.addItem = async (req, res) => {
 
 
 
-    module.exports.editItem=async(req,res)=>{
-    
-     
-        try {
-          const { name, newCount } = req.body;
-      
-          if (!name || newCount === undefined) {
-            return res.status(400).json({ message: "Name and new count are required" });
-          }
-      
-          const updatedItem = await Cart.findOneAndUpdate(
-            { name: name }, 
-            { $set: { count: newCount } }, 
-            { new: true }
-          );
-      
-          if (!updatedItem) {
-            return res.status(404).json({ message: "Item not found" });
-          }
-      
-          res.status(200).json({ message: "Count updated successfully", updatedItem });
-        } catch (error) {
-          console.error("Error updating count:", error);
-          res.status(500).json({ message: "Internal server error" });
-        }
-      
-      }
+   module.exports.editItem = async (req, res) => {
+  try {
+    const { foodId, userId, newQuantity } = req.body;
+
+    if (!foodId || !userId || newQuantity < 1) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    // Get cart
+    const cart = await Cart.findOne({ user: userId }).populate("items.food");
+
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
+
+    // Find item
+    const item = cart.items.find((i) => i.food._id.toString() === foodId);
+
+    if (!item) return res.status(404).json({ message: "Item not found" });
+
+    // Update values
+    item.quantity = newQuantity;
+    item.total = item.price * newQuantity;
+
+    await cart.save();
+
+    res.status(200).json({ message: "Item updated", cart });
+
+  } catch (error) {
+    console.error("Error updating item:", error);
+    res.status(500).json({ message: "Error updating item" });
+  }
+};
 
 
       module.exports.deleteItem=async (req, res) => {
