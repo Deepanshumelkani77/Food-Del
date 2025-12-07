@@ -23,17 +23,15 @@ module.exports.addItem = async (req, res) => {
   }
 
   try {
-    // get the food details
     const food = await Food.findById(foodId);
     if (!food) return res.status(404).json({ message: "Food not found" });
 
     const price = food.price;
-    const total = price * quantity;
 
     let cart = await Cart.findOne({ user: userId });
 
+    // if no cart → create new cart
     if (!cart) {
-      // create new cart
       cart = new Cart({
         user: userId,
         items: [
@@ -41,17 +39,31 @@ module.exports.addItem = async (req, res) => {
             food: foodId,
             quantity,
             price,
-            total
+            total: price * quantity
           }
         ]
       });
+
+      await cart.save();
+      return res.status(200).json({ message: "Item added", cart });
+    }
+
+    // check if item already exists in cart
+    const existingItem = cart.items.find(
+      (item) => item.food.toString() === foodId
+    );
+
+    if (existingItem) {
+      // update quantity
+      existingItem.quantity += quantity;
+      existingItem.total = existingItem.quantity * existingItem.price;
     } else {
       // push new item
       cart.items.push({
         food: foodId,
         quantity,
         price,
-        total
+        total: price * quantity
       });
     }
 
@@ -59,10 +71,11 @@ module.exports.addItem = async (req, res) => {
     res.status(200).json({ message: "Item added", cart });
 
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error adding item:", error);
     res.status(500).json({ message: "Error adding item" });
   }
 };
+
 
 
 
