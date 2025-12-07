@@ -32,13 +32,30 @@ const getCart = async (req, res) => {
 
 // Add item to cart
 const addToCart = async (req, res) => {
-    const { foodId, quantity = 1 } = req.body;
-
     try {
+        const { foodId, quantity = 1 } = req.body;
+        
+        if (!foodId) {
+            return res.status(400).json({ 
+                success: false,
+                message: 'Food ID is required',
+                error: 'FOOD_ID_REQUIRED'
+            });
+        }
+
+        console.log('Attempting to find food with ID:', foodId);
         const food = await Food.findById(foodId);
         if (!food) {
-            return res.status(404).json({ message: 'Food item not found' });
+            console.error('Food not found with ID:', foodId);
+            return res.status(404).json({ 
+                success: false,
+                message: 'Food item not found',
+                error: 'FOOD_NOT_FOUND',
+                foodId
+            });
         }
+        
+        console.log('Found food item:', { id: food._id, name: food.name });
 
         let cart = await Cart.findOne({ user: req.user.id });
 
@@ -84,16 +101,61 @@ const addToCart = async (req, res) => {
             cart.total = cart.subTotal + cart.tax;
         }
 
+        console.log('Saving cart...');
         await cart.save();
+        console.log('Cart saved successfully');
+        
+        console.log('Populating cart with food details...');
         const populatedCart = await Cart.findById(cart._id).populate('items.food', 'name price image');
+        console.log('Cart populated successfully');
         
         res.status(200).json({
+            success: true,
             message: 'Item added to cart',
             cart: populatedCart
         });
 
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        console.error('Error in addToCart:', {
+            message: error.message,
+            stack: error.stack,
+            name: error.name,
+            code: error.code,
+            keyPattern: error.keyPattern,
+            keyValue: error.keyValue,
+            errors: error.errors
+        });
+        
+        // Handle specific MongoDB errors
+        if (error.name === 'ValidationError') {
+            const errors = {};
+            Object.keys(error.errors).forEach(key => {
+                errors[key] = error.errors[key].message;
+            });
+            return res.status(400).json({
+                success: false,
+                message: 'Validation error',
+                error: 'VALIDATION_ERROR',
+                errors
+            });
+        }
+        
+        if (error.code === 11000) {
+            return res.status(400).json({
+                success: false,
+                message: 'Duplicate key error',
+                error: 'DUPLICATE_KEY',
+                key: error.keyValue
+            });
+        }
+        
+        // Generic error response
+        res.status(500).json({ 
+            success: false,
+            message: 'Server error',
+            error: 'INTERNAL_SERVER_ERROR',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 };
 
