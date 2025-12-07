@@ -128,8 +128,75 @@ const connectDB = async () => {
 
 connectDB();
 
-// Routes
+// API Routes
 app.use('/api/v1/foods', foodRoutes);
+app.use('/api/v1/cart', cartRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/orders', orderRoutes);
+app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/reviews', reviewRoutes);
+
+// 404 handler for unhandled routes
+app.all('*', (req, res, next) => {
+    res.status(404).json({
+        success: false,
+        message: `Can't find ${req.originalUrl} on this server!`,
+        error: 'NOT_FOUND'
+    });
+});
+
+// Global error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Global error handler:', err);
+    
+    // Default error status and message
+    let statusCode = err.statusCode || 500;
+    let message = err.message || 'Internal Server Error';
+    let errorCode = err.code || 'INTERNAL_SERVER_ERROR';
+    let errors = err.errors;
+
+    // Handle validation errors
+    if (err.name === 'ValidationError') {
+        statusCode = 400;
+        message = 'Validation Error';
+        errorCode = 'VALIDATION_ERROR';
+        errors = {};
+        
+        Object.keys(err.errors).forEach(key => {
+            errors[key] = err.errors[key].message;
+        });
+    }
+
+    // Handle duplicate key errors
+    if (err.code === 11000) {
+        statusCode = 400;
+        message = 'Duplicate field value entered';
+        errorCode = 'DUPLICATE_KEY';
+        errors = { [Object.keys(err.keyPattern)[0]]: 'This value already exists' };
+    }
+
+    // Handle JWT errors
+    if (err.name === 'JsonWebTokenError') {
+        statusCode = 401;
+        message = 'Invalid token';
+        errorCode = 'INVALID_TOKEN';
+    }
+
+    if (err.name === 'TokenExpiredError') {
+        statusCode = 401;
+        message = 'Token expired';
+        errorCode = 'TOKEN_EXPIRED';
+    }
+
+    // Send error response
+    res.status(statusCode).json({
+        success: false,
+        message,
+        error: errorCode,
+        ...(errors && { errors }),
+        ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    });
+});
 app.use('/api/v1/cart', cartRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/orders', orderRoutes);

@@ -5,47 +5,78 @@ const cartItemSchema = new Schema({
     food: {
         type: Schema.Types.ObjectId,
         ref: 'Food',
-        required: true
+        required: [true, 'Food ID is required'],
+        validate: {
+            validator: async function(v) {
+                const food = await mongoose.model('Food').findById(v);
+                return !!food;
+            },
+            message: 'Food item does not exist'
+        }
     },
     quantity: {
         type: Number,
-        required: true,
-        min: 1,
-        default: 1
+        required: [true, 'Quantity is required'],
+        min: [1, 'Quantity must be at least 1'],
+        default: 1,
+        validate: {
+            validator: Number.isInteger,
+            message: 'Quantity must be a whole number'
+        }
     },
     price: {
         type: Number,
-        required: true
+        required: [true, 'Price is required'],
+        min: [0, 'Price cannot be negative']
     },
     name: {
         type: String,
-        required: true
+        required: [true, 'Food name is required']
     },
     image: {
         type: String,
-        required: true
+        required: [true, 'Image URL is required']
+    },
+    total: {
+        type: Number,
+        default: function() {
+            return this.price * this.quantity;
+        }
     }
-}, { _id: false });
+}, { _id: false, timestamps: false });
 
 const cartSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
-        unique: true
+        required: [true, 'User ID is required'],
+        unique: true,
+        validate: {
+            validator: async function(v) {
+                const user = await mongoose.model('User').findById(v);
+                return !!user;
+            },
+            message: 'User does not exist'
+        }
     },
-    items: [cartItemSchema],
+    items: {
+        type: [cartItemSchema],
+        default: []
+    },
     subTotal: {
         type: Number,
-        default: 0
+        default: 0,
+        min: 0
     },
     tax: {
         type: Number,
-        default: 0
+        default: 0,
+        min: 0
     },
     total: {
         type: Number,
-        default: 0
+        default: 0,
+        min: 0
     },
     createdAt: {
         type: Date,

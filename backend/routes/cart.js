@@ -1,30 +1,52 @@
 const express = require("express");
-const router = express.Router();
-const { 
-  getCart, 
-  addToCart, 
-  updateCartItem, 
-  removeFromCart, 
-  clearCart 
-} = require("../controller/cartController");
-const { protect } = require("../middleware/authMiddleware");
+const { check } = require('express-validator');
+const { protect } = require('../middleware/authMiddleware');
+const {
+    getCart,
+    addToCart,
+    updateCartItem,
+    removeFromCart,
+    clearCart
+} = require('../controllers/newCartController');
 
-// Apply auth middleware to all routes
+const router = express.Router();
+
+// Input validation middleware
+const validateAddToCart = [
+    check('foodId', 'Food ID is required').notEmpty().isMongoId(),
+    check('quantity', 'Quantity must be a positive integer').optional().isInt({ min: 1 })
+];
+
+const validateUpdateCart = [
+    check('quantity', 'Quantity is required and must be a positive integer').isInt({ min: 0 })
+];
+
+// Apply authentication middleware to all routes
 router.use(protect);
 
-// Get cart for current user
+// @route   GET /api/cart
+// @desc    Get user's cart
+// @access  Private
 router.get('/', getCart);
-  
-// Add item to cart
-router.post("/", addToCart);
 
-// Update item quantity in cart
-router.put("/:id", updateCartItem);
+// @route   POST /api/cart
+// @desc    Add item to cart
+// @access  Private
+router.post('/', validateAddToCart, addToCart);
 
-// Remove item from cart
-router.delete('/:id', removeFromCart);
+// @route   PUT /api/cart/:foodId
+// @desc    Update cart item quantity
+// @access  Private
+router.put('/:foodId', validateUpdateCart, updateCartItem);
 
-// Clear cart
+// @route   DELETE /api/cart/:foodId
+// @desc    Remove item from cart
+// @access  Private
+router.delete('/:foodId', removeFromCart);
+
+// @route   DELETE /api/cart
+// @desc    Clear cart
+// @access  Private
 router.delete('/', clearCart);
 
 module.exports = router;
