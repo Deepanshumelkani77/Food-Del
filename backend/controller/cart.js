@@ -13,30 +13,49 @@ module.exports.getData=async (req, res) => {
   }
 
 
-  module.exports.addItem=async(req,res)=>{
+ module.exports.addItem = async (req, res) => {
+  console.log("Received request at /api/v1/cart:", req.body);
   
-      console.log("Received request at /foods/cart:", req.body);
-      
-      const { namee, imagee, pricee, count,author } = req.body;
-      
-      try {
-        const cart1 = new Cart({
-          name: namee,
-          image: imagee,
+  const { namee, imagee, pricee, count, user } = req.body;
+
+  if (!user) {
+    return res.status(400).json({ message: "User ID is required" });
+  }
+
+  try {
+    const cart = await Cart.findOne({ user });
+
+    if (!cart) {
+      const newCart = new Cart({
+        user,
+        items: [{
+          food: namee,
+          quantity: count,
           price: pricee,
-          count: count,
-        author:author
-        });
-    
-        await cart1.save();
-        res.status(201).json({ message: "Food item added successfully into cart" });
-      } catch (error) {
-        console.error("Error saving to database:", error);
-        res.status(500).json({ message: "Internal server error" });
-      }
-    
-    
+          total: pricee * count
+        }]
+      });
+
+      await newCart.save();
+      return res.status(201).json({ message: "Cart created", cart: newCart });
     }
+
+    // add new item in existing cart
+    cart.items.push({
+      food: namee,
+      quantity: count,
+      price: pricee,
+      total: pricee * count
+    });
+
+    await cart.save();
+    res.status(200).json({ message: "Item added to cart", cart });
+
+  } catch (error) {
+    console.error("Error saving cart:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 
 
