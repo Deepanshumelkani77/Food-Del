@@ -25,24 +25,22 @@ const { user ,setShowLogin} = useContext(StoreContext);
 const [cartItem,setCartItem]=useState({namee:'' ,imagee:'',pricee:'' ,count:'' ,})
  
 
-const handleSubmit = async (updatedCartItem) => {
+const handleSubmit = async (item) => {
   try {
     const response = await fetch('https://food-del-0kcf.onrender.com/api/v1/cart', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updatedCartItem), // Use the updated cart item
+      body: JSON.stringify(item),
     });
 
     if (response.ok) {
-      alert('Food item added successfully into cart!');
-      navigate('/'); // Redirect to home page
-    } else {
-      console.error('Failed to add food item into cart');
+      alert('Item added to cart!');
     }
   } catch (error) {
     console.error('Error:', error);
   }
 };
+
 
 
 
@@ -100,13 +98,12 @@ const updateItemCountRemove = async (itemName) => {
 {itemCount===0?<img className='add'   onClick={user?() => {
     setitemCount((prevCount) => {
       const newCount = prevCount + 1;
-      const updatedCartItem = {
-        namee: name,
-        imagee: image,
-        pricee: price,
-        count: newCount,
-        author:user.id
-      };
+     const updatedCartItem = {
+  foodId: id,
+  quantity: newCount,
+  userId: user.id
+};
+
       setCartItem(updatedCartItem);
       handleSubmit(updatedCartItem); // Pass the updated item
       return newCount;

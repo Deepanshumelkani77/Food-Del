@@ -13,47 +13,41 @@ module.exports.getData=async (req, res) => {
   }
 
 
- module.exports.addItem = async (req, res) => {
-  console.log("Received request at /api/v1/cart:", req.body);
-  
-  const { namee, imagee, pricee, count, user } = req.body;
+module.exports.addItem = async (req, res) => {
+  const { foodId, quantity, userId } = req.body;
 
-  if (!user) {
-    return res.status(400).json({ message: "User ID is required" });
+  if (!foodId || !userId) {
+    return res.status(400).json({ message: "Food ID & User ID required" });
   }
 
   try {
-    const cart = await Cart.findOne({ user });
+    let cart = await Cart.findOne({ user: userId });
 
     if (!cart) {
-      const newCart = new Cart({
-        user,
+      cart = new Cart({
+        user: userId,
         items: [{
-          food: namee,
-          quantity: count,
-          price: pricee,
-          total: pricee * count
+          food: foodId,
+          quantity,
+          price: 0,   // optional if you fetch from Food
+          total: 0
         }]
       });
-
-      await newCart.save();
-      return res.status(201).json({ message: "Cart created", cart: newCart });
+    } else {
+      cart.items.push({
+        food: foodId,
+        quantity,
+        price: 0,
+        total: 0
+      });
     }
 
-    // add new item in existing cart
-    cart.items.push({
-      food: namee,
-      quantity: count,
-      price: pricee,
-      total: pricee * count
-    });
-
     await cart.save();
-    res.status(200).json({ message: "Item added to cart", cart });
+    res.status(200).json({ message: "Item added", cart });
 
   } catch (error) {
-    console.error("Error saving cart:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error:", error);
+    res.status(500).json({ message: "Error adding item" });
   }
 };
 
