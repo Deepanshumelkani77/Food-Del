@@ -18,15 +18,12 @@ const api = axios.create({
 // Request interceptor
 api.interceptors.request.use(
   (config) => {
-    // Add auth token if available - check both cookies and localStorage
-    let token = Cookies.get('token') || localStorage.getItem('token');
+    // Get token from cookies
+    const token = Cookies.get('token');
     
+    // If token exists, add it to the headers
     if (token) {
-      // Ensure the token is properly formatted
-      if (!token.startsWith('Bearer ')) {
-        token = `Bearer ${token}`;
-      }
-      config.headers.Authorization = token;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     
     // Log request details for debugging (only in development)
@@ -34,7 +31,13 @@ api.interceptors.request.use(
       console.log(`[API] ${config.method?.toUpperCase()} ${config.url}`, {
         params: config.params,
         data: config.data,
-        headers: config.headers
+        headers: {
+          ...config.headers,
+          // Don't log the full Authorization header in production
+          Authorization: process.env.NODE_ENV === 'development' 
+            ? config.headers.Authorization 
+            : 'Bearer [REDACTED]'
+        }
       });
     }
     
@@ -88,17 +91,54 @@ api.interceptors.response.use(
   }
 );
 
-// Add response interceptor to handle errors
+// Response interceptor
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      // Handle unauthorized access
-      Cookies.remove('user');
-      Cookies.remove('token');
-      window.location.href = '/login';
+  (response) => {
+    // Log successful responses in development
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[API] ${response.status} ${response.config.method?.toUpperCase()} ${response.config.url}`, {
+        data: response.data,
+        headers: response.headers
+      });
     }
-    return Promise.reject(error);
+    return response;
+  },
+  (error) => {
+    const originalRequest = error.config;
+    
+    // Log error details
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[API] Error:', {
+        url: originalRequest.url,
+        method: originalRequest.method,
+        status: error.response?.status,
+        data: error.response?.data,
+        headers: error.response?.headers
+      });
+    }
+
+    // Handle 401 Unauthorized
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      // Mark this request as retried to prevent infinite loops
+      originalRequest._retry = true;
+      
+      // Clear auth data
+      Cookies.remove('token');
+      Cookies.remove('user');
+      
+      // Redirect to login if we're not already on the login page
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
+    }
+    
+    // Return a consistent error format
+    return Promise.reject({
+      status: error.response?.status || 500,
+      message: error.response?.data?.message || 'An error occurred',
+      data: error.response?.data,
+      isAxiosError: error.isAxiosError
+    });
   }
 );
 

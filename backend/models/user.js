@@ -43,9 +43,12 @@ userSchema.pre('save', async function(next) {
 
 // Sign JWT and return
 userSchema.methods.getSignedJwtToken = function() {
+    // Use the same secret as in authMiddleware
+    const JWT_SECRET = process.env.JWT_SECRET || 'food-del-secret-key-123';
+    
     return jwt.sign(
         { id: this._id },
-        process.env.JWT_SECRET || 'your_jwt_secret',
+        JWT_SECRET,
         { expiresIn: process.env.JWT_EXPIRE || '30d' }
     );
 };

@@ -31,14 +31,34 @@ const StoreContextProvider = (props) => {
     try {
       const response = await authAPI.login(email, password);
       if (response.data && response.data.token) {
-        Cookies.set("token", response.data.token, { expires: 1 });
-        Cookies.set("user", JSON.stringify(response.data.user), { expires: 1 });
-        setUser(response.data.user);
+        // Set token in cookies with secure and httpOnly flags in production
+        const cookieOptions = {
+          expires: 1, // 1 day
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict'
+        };
+        
+        Cookies.set("token", response.data.token, cookieOptions);
+        
+        // Store minimal user data in cookies
+        const userData = {
+          id: response.data.user._id,
+          username: response.data.user.username,
+          email: response.data.user.email
+        };
+        
+        Cookies.set("user", JSON.stringify(userData), cookieOptions);
+        setUser(userData);
+        
+        // Update axios default headers
+        api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+        
         return true;
       }
     } catch (error) {
       console.error('Login error:', error);
-      alert(error.response?.data?.message || "Login failed. Please check your credentials and try again.");
+      const errorMessage = error.response?.data?.message || "Login failed. Please check your credentials and try again.";
+      alert(errorMessage);
       return false;
     }
   };

@@ -1,8 +1,13 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-// Set JWT secret - use environment variable or fallback to development secret
-const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
+// Set JWT secret - use environment variable or fallback to a consistent secret
+const JWT_SECRET = process.env.JWT_SECRET || 'food-del-secret-key-123';
+
+// Log the JWT secret being used (only in development)
+if (process.env.NODE_ENV !== 'production') {
+  console.log('Using JWT_SECRET:', JWT_SECRET ? '***' : 'Not set');
+}
 
 // Protect routes
 const protect = async (req, res, next) => {
