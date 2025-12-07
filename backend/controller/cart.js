@@ -1,6 +1,6 @@
 const express=require("express");
 const Cart =require('../models/cart.js');
-
+const Food = require("../models/Food.js");
 
 module.exports.getData=async (req, res) => {
     try {
@@ -13,6 +13,8 @@ module.exports.getData=async (req, res) => {
   }
 
 
+
+
 module.exports.addItem = async (req, res) => {
   const { foodId, quantity, userId } = req.body;
 
@@ -21,24 +23,35 @@ module.exports.addItem = async (req, res) => {
   }
 
   try {
+    // get the food details
+    const food = await Food.findById(foodId);
+    if (!food) return res.status(404).json({ message: "Food not found" });
+
+    const price = food.price;
+    const total = price * quantity;
+
     let cart = await Cart.findOne({ user: userId });
 
     if (!cart) {
+      // create new cart
       cart = new Cart({
         user: userId,
-        items: [{
-          food: foodId,
-          quantity,
-          price: 0,   // optional if you fetch from Food
-          total: 0
-        }]
+        items: [
+          {
+            food: foodId,
+            quantity,
+            price,
+            total
+          }
+        ]
       });
     } else {
+      // push new item
       cart.items.push({
         food: foodId,
         quantity,
-        price: 0,
-        total: 0
+        price,
+        total
       });
     }
 
