@@ -28,16 +28,32 @@ const Cart = () => {
     try {
       setLoading(true);
       
+      // Debug: Log all cookies
+      console.log('All cookies:', document.cookie);
+      
       const userCookie = Cookies.get('user');
+      const token = Cookies.get('token');
+      console.log('User cookie:', userCookie);
+      console.log('Token exists:', !!token);
+      
       const currentUser = userCookie && userCookie !== 'undefined' ? JSON.parse(userCookie) : null;
+      console.log('Parsed user:', currentUser);
       
       if (!currentUser || !currentUser._id) {
+        console.error('No user or user ID found');
         setCart([]);
         setError('Please log in to view your cart');
         return;
       }
       
+      console.log('Fetching cart for user ID:', currentUser._id);
       const response = await cartAPI.getCart(currentUser._id);
+      console.log('Cart API response:', response);
+      
+      if (!response || !response.data) {
+        throw new Error('Invalid response from server');
+      }
+      
       setCart(Array.isArray(response.data) ? response.data : []);
       setError(null);
     } catch (error) {

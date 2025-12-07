@@ -116,22 +116,41 @@ export const foodAPI = {
 export const cartAPI = {
   getCart: (userId) => {
     if (!userId) {
+      const error = new Error('User ID is required');
       console.error('No userId provided to getCart');
-      return Promise.reject(new Error('User ID is required'));
+      return Promise.reject(error);
     }
     
-    console.log('Making request to /cart with userId:', userId);
+    console.log('Fetching cart for user ID:', userId);
+    
     return api.get('/cart', {
       params: { userId },
-      validateStatus: (status) => status < 500 // Reject only if status is 500 or above
-    }).then(response => {
-      if (response.data && response.data.data) {
-        return { ...response, data: response.data.data };
-      }
-      return response;
-    }).catch(error => {
-      console.error('Error in getCart API call:', error);
-      throw error; // Re-throw to let the caller handle it
+      validateStatus: (status) => status < 500
+    })
+    .then(response => {
+      console.log('Cart API Response:', response.data);
+      // Handle both response formats: direct array or { data: [...] }
+      const cartData = Array.isArray(response.data) 
+        ? response.data 
+        : (response.data?.data || []);
+      
+      return { 
+        ...response, 
+        data: cartData 
+      };
+    })
+    .catch(error => {
+      console.error('Error in getCart API call:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        config: {
+          url: error.config?.url,
+          method: error.config?.method,
+          params: error.config?.params
+        }
+      });
+      throw error;
     });
   },
   

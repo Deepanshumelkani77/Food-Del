@@ -4,7 +4,14 @@ const Food = require('../models/Food');
 // Get user's cart
 const getCart = async (req, res) => {
     try {
-        const cart = await Cart.findOne({ user: req.user.id })
+        // Get user ID from either the authenticated user or query parameter
+        const userId = req.user?.id || req.query.userId;
+        
+        if (!userId) {
+            return res.status(400).json({ message: 'User ID is required' });
+        }
+
+        const cart = await Cart.findOne({ user: userId })
             .populate('items.food', 'name price image')
             .lean();
 
@@ -14,7 +21,12 @@ const getCart = async (req, res) => {
 
         res.status(200).json(cart);
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        console.error('Error in getCart:', error);
+        res.status(500).json({ 
+            message: 'Server error', 
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
     }
 };
 

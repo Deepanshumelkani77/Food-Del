@@ -7,15 +7,21 @@ const { protect } = require("../middleware/authMiddleware");
 router.use(protect);
 
 // Get cart for current user
-router.get('/', cartController.getData);
+router.get('/', (req, res) => {
+    // Pass the request to the controller
+    return cartController.getCart(req, res);
+});
   
 // Add item to cart
-router.post("/", cartController.addItem);
+router.post("/", cartController.addToCart);
 
 // Update item quantity in cart
-router.put("/:id", cartController.editItem);
+router.put("/:id", cartController.updateCartItem);
 
 // Remove item from cart
-router.delete('/:id', cartController.deleteItem);
+router.delete('/:id', cartController.removeFromCart);
+
+// Clear cart
+router.delete('/', cartController.clearCart);
 
 module.exports = router;
