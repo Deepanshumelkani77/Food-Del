@@ -1,52 +1,26 @@
-const express = require("express");
-const { check } = require('express-validator');
-const { protect } = require('../middleware/authMiddleware');
-const {
-    getCart,
-    addToCart,
-    updateCartItem,
-    removeFromCart,
-    clearCart
-} = require('../controllers/newCartController');
+const express=require("express");
+const router=express.Router();
+const cartController=require("../controller/cart.js")
 
-const router = express.Router();
+// to get a data from a cart
+router.get('/',cartController.getData );
+  
 
-// Input validation middleware
-const validateAddToCart = [
-    check('foodId', 'Food ID is required').notEmpty().isMongoId(),
-    check('quantity', 'Quantity must be a positive integer').optional().isInt({ min: 1 })
-];
 
-const validateUpdateCart = [
-    check('quantity', 'Quantity is required and must be a positive integer').isInt({ min: 0 })
-];
+  //add items into cart
 
-// Apply authentication middleware to all routes
-router.use(protect);
+router.post("/",cartController.addItem)
 
-// @route   GET /api/cart
-// @desc    Get user's cart
-// @access  Private
-router.get('/', getCart);
 
-// @route   POST /api/cart
-// @desc    Add item to cart
-// @access  Private
-router.post('/', validateAddToCart, addToCart);
+//update item count
 
-// @route   PUT /api/cart/:foodId
-// @desc    Update cart item quantity
-// @access  Private
-router.put('/:foodId', validateUpdateCart, updateCartItem);
+router.put("/edit/",cartController.editItem)
+  
 
-// @route   DELETE /api/cart/:foodId
-// @desc    Remove item from cart
-// @access  Private
-router.delete('/:foodId', removeFromCart);
 
-// @route   DELETE /api/cart
-// @desc    Clear cart
-// @access  Private
-router.delete('/', clearCart);
 
-module.exports = router;
+  router.delete('/delete/:id', cartController.deleteItem);
+  
+
+
+module.exports=router;

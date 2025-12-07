@@ -30,44 +30,6 @@ app.set('trust proxy', 1);
 // Set security HTTP headers
 app.use(helmet());
 
-// CORS configuration
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:5174',
-  'https://food-del-0kcf.onrender.com',
-  'https://food-del-frontend-jl2g.onrender.com'
-];
-
-// Enable CORS with dynamic origin
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = `The CORS policy for this site does not allow access from the specified origin: ${origin}`;
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  exposedHeaders: ['set-cookie']
-}));
-
-// Handle preflight requests
-app.options('*', cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-}));
-
 // Development logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -128,75 +90,8 @@ const connectDB = async () => {
 
 connectDB();
 
-// API Routes
+// Routes
 app.use('/api/v1/foods', foodRoutes);
-app.use('/api/v1/cart', cartRoutes);
-app.use('/api/v1/users', userRoutes);
-app.use('/api/v1/orders', orderRoutes);
-app.use('/api/v1/admin', adminRoutes);
-app.use('/api/v1/reviews', reviewRoutes);
-
-// 404 handler for unhandled routes
-app.all('*', (req, res, next) => {
-    res.status(404).json({
-        success: false,
-        message: `Can't find ${req.originalUrl} on this server!`,
-        error: 'NOT_FOUND'
-    });
-});
-
-// Global error handling middleware
-app.use((err, req, res, next) => {
-    console.error('Global error handler:', err);
-    
-    // Default error status and message
-    let statusCode = err.statusCode || 500;
-    let message = err.message || 'Internal Server Error';
-    let errorCode = err.code || 'INTERNAL_SERVER_ERROR';
-    let errors = err.errors;
-
-    // Handle validation errors
-    if (err.name === 'ValidationError') {
-        statusCode = 400;
-        message = 'Validation Error';
-        errorCode = 'VALIDATION_ERROR';
-        errors = {};
-        
-        Object.keys(err.errors).forEach(key => {
-            errors[key] = err.errors[key].message;
-        });
-    }
-
-    // Handle duplicate key errors
-    if (err.code === 11000) {
-        statusCode = 400;
-        message = 'Duplicate field value entered';
-        errorCode = 'DUPLICATE_KEY';
-        errors = { [Object.keys(err.keyPattern)[0]]: 'This value already exists' };
-    }
-
-    // Handle JWT errors
-    if (err.name === 'JsonWebTokenError') {
-        statusCode = 401;
-        message = 'Invalid token';
-        errorCode = 'INVALID_TOKEN';
-    }
-
-    if (err.name === 'TokenExpiredError') {
-        statusCode = 401;
-        message = 'Token expired';
-        errorCode = 'TOKEN_EXPIRED';
-    }
-
-    // Send error response
-    res.status(statusCode).json({
-        success: false,
-        message,
-        error: errorCode,
-        ...(errors && { errors }),
-        ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
-    });
-});
 app.use('/api/v1/cart', cartRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/orders', orderRoutes);

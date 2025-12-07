@@ -4,7 +4,6 @@ import { StoreContext } from "../../context/StoreContext";
 import { useNavigate } from "react-router-dom";
 import { FaTrash, FaPlus, FaMinus, FaShoppingCart, FaArrowLeft } from 'react-icons/fa';
 import { cartAPI } from "../../services/api";
-import Cookies from 'js-cookie';
 
 const Cart = () => {
   const { user, setShowLogin } = useContext(StoreContext);
@@ -14,11 +13,7 @@ const Cart = () => {
   const navigate = useNavigate();
 
   // Get cart items for the current user
-  const getUserId = (user) => user?._id || user?.id;
-  const userCart = cart.filter(item => {
-    const userId = getUserId(user);
-    return userId && item.user === userId;
-  });
+  const userCart = cart.filter(item => user && item.author === user.id);
 
   const getTotalCartAmount = () => {
     return userCart.reduce((total, item) => total + (item.price * item.count), 0);
@@ -31,41 +26,12 @@ const Cart = () => {
   const fetchCart = async () => {
     try {
       setLoading(true);
-      
-      // Debug: Log all cookies
-      console.log('All cookies:', document.cookie);
-      
-      const userCookie = Cookies.get('user');
-      const token = Cookies.get('token');
-      console.log('User cookie:', userCookie);
-      console.log('Token exists:', !!token);
-      
-      const currentUser = userCookie && userCookie !== 'undefined' ? JSON.parse(userCookie) : null;
-      console.log('Parsed user:', currentUser);
-      
-      const userId = currentUser?._id || currentUser?.id;
-      
-      if (!userId) {
-        console.error('No user ID found in user object:', currentUser);
-        setCart([]);
-        setError('Please log in to view your cart');
-        return;
-      }
-      
-      console.log('Fetching cart for user ID:', userId);
-      const response = await cartAPI.getCart(userId);
-      console.log('Cart API response:', response);
-      
-      if (!response || !response.data) {
-        throw new Error('Invalid response from server');
-      }
-      
-      setCart(Array.isArray(response.data) ? response.data : []);
+      const response = await cartAPI.getCart();
+      setCart(response.data);
       setError(null);
     } catch (error) {
       console.error("Error fetching cart:", error);
-      setError(error.response?.data?.message || "Failed to load cart. Please try again later.");
-      setCart([]);
+      setError("Failed to load cart. Please try again later.");
     } finally {
       setLoading(false);
     }

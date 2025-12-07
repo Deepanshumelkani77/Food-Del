@@ -1,9 +1,8 @@
-import React, { useState, useContext } from 'react'
+import React, {useState,useContext, useEffect } from 'react'
 import "./FoodItem.css"
 import { assets } from '../../assets/assets'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link ,useNavigate} from 'react-router-dom'
 import { StoreContext } from "../../context/StoreContext.jsx";
-import { cartAPI } from '../../services/api';
 
 
 const FoodItem = ({ id,name,description,price,image}) => {
@@ -22,75 +21,69 @@ const { user ,setShowLogin} = useContext(StoreContext);
 
 
 
-  const [itemCount, setitemCount] = useState(0);
-  const [cartItem, setCartItem] = useState({ namee: '', imagee: '', pricee: '', count: '' });
+  const [itemCount,setitemCount]=useState(0)
+const [cartItem,setCartItem]=useState({namee:'' ,imagee:'',pricee:'' ,count:'' ,})
+ 
 
-  const handleSubmit = async (updatedCartItem) => {
+const handleSubmit = async (updatedCartItem) => {
   try {
-    if (!user) {
-      setShowLogin(true);
-      return;
-    }
-    
-    const response = await cartAPI.addToCart(updatedCartItem.foodId, updatedCartItem.quantity || 1);
-    
-    if (response.status === 200 || response.status === 201) {
-      alert('Food item added to cart successfully!');
+    const response = await fetch('https://food-del-0kcf.onrender.com/api/v1/cart', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedCartItem), // Use the updated cart item
+    });
+
+    if (response.ok) {
+      alert('Food item added successfully into cart!');
+      navigate('/'); // Redirect to home page
     } else {
-      console.error('Failed to add food item to cart');
+      console.error('Failed to add food item into cart');
     }
   } catch (error) {
-    console.error('Error adding to cart:', error);
-    if (error.response?.status === 401) {
-      setShowLogin(true);
-    } else {
-      alert('Failed to add item to cart. Please try again.');
-    }
+    console.error('Error:', error);
   }
 };
 
 
 
-const updateItemCountAdd = async (foodId, quantity) => {
+const updateItemCountAdd = async (itemName) => {
   try {
-    if (!user) {
-      setShowLogin(true);
-      return;
-    }
-    
-    const response = await cartAPI.updateCartItem(foodId, quantity);
-    
-    if (response.status === 200) {
-      setitemCount(prev => prev + 1);
-      alert("Item count updated successfully!");
+    const response = await fetch("https://food-del-0kcf.onrender.com/api/v1/cart/edit", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: itemName, newCount: itemCount+1}),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert("Count updated successfully!");
+      console.log(data);
     } else {
-      console.error('Failed to update item count');
+      alert("Failed to update count: " + data.message);
     }
   } catch (error) {
-    console.error("Error updating item count:", error);
-    alert("Failed to update item count. Please try again.");
+    console.error("Error:", error);
   }
 };
 
 
-const updateItemCountRemove = async (foodId, quantity) => {
+const updateItemCountRemove = async (itemName) => {
   try {
-    if (!user) {
-      setShowLogin(true);
-      return;
-    }
-    
-    const response = await cartAPI.updateCartItem(foodId, quantity);
-    
-    if (response.status === 200) {
-      setitemCount(prev => Math.max(0, prev - 1));
-      alert("Item count updated successfully!");
+    const response = await fetch("https://food-del-0kcf.onrender.com/api/v1/cart/edit", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: itemName, newCount: itemCount-1}),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert("Count updated successfully!");
+      console.log(data);
     } else {
-      console.error('Failed to update item count');
+      alert("Failed to update count: " + data.message);
     }
   } catch (error) {
-    console.error("Error updating item count:", error);
-    alert("Failed to update item count. Please try again.");
+    console.error("Error:", error);
   }
 };
 
@@ -104,30 +97,30 @@ const updateItemCountRemove = async (foodId, quantity) => {
 <Link to={`/${id}`}  >
 <img className='food-item-image'  src={image} alt="" />
 </Link>
-{itemCount===0?<img className='add' onClick={user ? () => {
-    const newCount = itemCount + 1;
-    setitemCount(newCount);
-    handleSubmit({
-      foodId: id,
-      quantity: newCount,
-      name,
-      image,
-      price,
-      author: user.id
+{itemCount===0?<img className='add'   onClick={user?() => {
+    setitemCount((prevCount) => {
+      const newCount = prevCount + 1;
+      const updatedCartItem = {
+        namee: name,
+        imagee: image,
+        pricee: price,
+        count: newCount,
+        author:user.id
+      };
+      setCartItem(updatedCartItem);
+      handleSubmit(updatedCartItem); // Pass the updated item
+      return newCount;
     });
-  } : () => setShowLogin(true)} src={assets.add_icon_white} alt="" />:<div className="food-item-counter">
-  <img 
-    onClick={() => updateItemCountRemove(id, itemCount - 1)} 
-    src={assets.remove_icon_red} 
-    alt="Remove item" 
-  />
-  <p>{itemCount}</p>
-  <img 
-    onClick={() => updateItemCountAdd(id, itemCount + 1)}
-    src={assets.add_icon_green} 
-    alt="Add item"
-  />
-</div>}
+  } :()=>{setShowLogin(true)}}   src={assets.add_icon_white} alt></img>:<div className="food-item-counter">   <img onClick={() => {
+    setitemCount((prevCount) => {
+      const newCount = prevCount - 1;
+      
+  
+      updateItemCountRemove(name); // Pass the updated item
+      return newCount;
+    }); } } src={assets.remove_icon_red}></img> <p>{itemCount}</p>  <img 
+  onClick={() => {
+    setitemCount(itemCount+1); updateItemCountAdd(name); } } src={assets.add_icon_green} alt="" /></div>}
 
 
 </div>
