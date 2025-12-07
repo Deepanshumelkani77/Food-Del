@@ -14,7 +14,11 @@ const Cart = () => {
   const navigate = useNavigate();
 
   // Get cart items for the current user
-  const userCart = cart.filter(item => user && item.user === user._id);
+  const getUserId = (user) => user?._id || user?.id;
+  const userCart = cart.filter(item => {
+    const userId = getUserId(user);
+    return userId && item.user === userId;
+  });
 
   const getTotalCartAmount = () => {
     return userCart.reduce((total, item) => total + (item.price * item.count), 0);
@@ -39,15 +43,17 @@ const Cart = () => {
       const currentUser = userCookie && userCookie !== 'undefined' ? JSON.parse(userCookie) : null;
       console.log('Parsed user:', currentUser);
       
-      if (!currentUser || !currentUser._id) {
-        console.error('No user or user ID found');
+      const userId = currentUser?._id || currentUser?.id;
+      
+      if (!userId) {
+        console.error('No user ID found in user object:', currentUser);
         setCart([]);
         setError('Please log in to view your cart');
         return;
       }
       
-      console.log('Fetching cart for user ID:', currentUser._id);
-      const response = await cartAPI.getCart(currentUser._id);
+      console.log('Fetching cart for user ID:', userId);
+      const response = await cartAPI.getCart(userId);
       console.log('Cart API response:', response);
       
       if (!response || !response.data) {

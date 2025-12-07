@@ -18,18 +18,25 @@ const api = axios.create({
 // Request interceptor
 api.interceptors.request.use(
   (config) => {
-    // Add auth token if available
-    const token = Cookies.get('token');
+    // Add auth token if available - check both cookies and localStorage
+    let token = Cookies.get('token') || localStorage.getItem('token');
+    
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      // Ensure the token is properly formatted
+      if (!token.startsWith('Bearer ')) {
+        token = `Bearer ${token}`;
+      }
+      config.headers.Authorization = token;
     }
     
-    // Log request details for debugging
-    console.log(`[API] ${config.method?.toUpperCase()} ${config.url}`, {
-      params: config.params,
-      data: config.data,
-      headers: config.headers
-    });
+    // Log request details for debugging (only in development)
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[API] ${config.method?.toUpperCase()} ${config.url}`, {
+        params: config.params,
+        data: config.data,
+        headers: config.headers
+      });
+    }
     
     return config;
   },
