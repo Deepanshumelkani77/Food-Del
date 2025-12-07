@@ -5,25 +5,78 @@ import Cookies from 'js-cookie';
 const BASE_URL = import.meta.env.VITE_API_URL || 'https://food-del-0kcf.onrender.com';
 const API_URL = `${BASE_URL}/api/v1`;
 
-// Create axios instance
+// Create axios instance with base URL and headers
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true
+  withCredentials: true,
+  timeout: 10000, // 10 seconds timeout
 });
 
-// Add request interceptor to include auth token
+// Request interceptor
 api.interceptors.request.use(
   (config) => {
+    // Add auth token if available
     const token = Cookies.get('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // Log request details for debugging
+    console.log(`[API] ${config.method?.toUpperCase()} ${config.url}`, {
+      params: config.params,
+      data: config.data,
+      headers: config.headers
+    });
+    
     return config;
   },
   (error) => {
+    console.error('[API] Request Error:', error);
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor
+api.interceptors.response.use(
+  (response) => {
+    // Log successful responses for debugging
+    console.log(`[API] ${response.status} ${response.config.method?.toUpperCase()} ${response.config.url}`, {
+      data: response.data
+    });
+    return response;
+  },
+  (error) => {
+    // Log error responses
+    if (error.response) {
+      // Server responded with a status code outside 2xx
+      console.error(`[API] ${error.response.status} Error:`, {
+        url: error.config?.url,
+        method: error.config?.method,
+        response: error.response.data,
+        request: {
+          params: error.config?.params,
+          data: error.config?.data
+        }
+      });
+      
+      // Handle specific error statuses
+      if (error.response.status === 401) {
+        // Clear auth data on 401
+        Cookies.remove('user');
+        Cookies.remove('token');
+        // You might want to redirect to login here
+      }
+    } else if (error.request) {
+      // Request was made but no response received
+      console.error('[API] No response received:', error.request);
+    } else {
+      // Something happened in setting up the request
+      console.error('[API] Request setup error:', error.message);
+    }
+    
     return Promise.reject(error);
   }
 );
@@ -61,11 +114,81 @@ export const foodAPI = {
 
 // Cart API
 export const cartAPI = {
-  getCart: (userId) => api.get('/cart', { params: { userId } }),
-  addToCart: (foodId, quantity = 1) => api.post('/cart', { foodId, quantity }),
-  updateCartItem: (foodId, quantity) => api.put(`/cart/${foodId}`, { quantity }),
-  removeFromCart: (foodId) => api.delete(`/cart/${foodId}`),
-  clearCart: () => api.delete('/cart'),
+  getCart: (userId) => {
+    if (!userId) {
+      console.error('No userId provided to getCart');
+      return Promise.reject(new Error('User ID is required'));
+    }
+    
+    console.log('Making request to /cart with userId:', userId);
+    return api.get('/cart', {
+      params: { userId },
+      validateStatus: (status) => status < 500 // Reject only if status is 500 or above
+    }).then(response => {
+      if (response.data && response.data.data) {
+        return { ...response, data: response.data.data };
+      }
+      return response;
+    }).catch(error => {
+      console.error('Error in getCart API call:', error);
+      throw error; // Re-throw to let the caller handle it
+    });
+  },
+  
+  addToCart: (foodId, quantity = 1) => {
+    if (!foodId) {
+      console.error('No foodId provided to addToCart');
+      return Promise.reject(new Error('Food ID is required'));
+    }
+    
+    console.log('Adding to cart:', { foodId, quantity });
+    return api.post('/cart', { foodId, quantity }, {
+      validateStatus: (status) => status < 500
+    }).catch(error => {
+      console.error('Error in addToCart API call:', error);
+      throw error;
+    });
+  },
+  
+  updateCartItem: (foodId, quantity) => {
+    if (!foodId) {
+      console.error('No foodId provided to updateCartItem');
+      return Promise.reject(new Error('Food ID is required'));
+    }
+    
+    console.log('Updating cart item:', { foodId, quantity });
+    return api.put(`/cart/${foodId}`, { quantity }, {
+      validateStatus: (status) => status < 500
+    }).catch(error => {
+      console.error('Error in updateCartItem API call:', error);
+      throw error;
+    });
+  },
+  
+  removeFromCart: (foodId) => {
+    if (!foodId) {
+      console.error('No foodId provided to removeFromCart');
+      return Promise.reject(new Error('Food ID is required'));
+    }
+    
+    console.log('Removing from cart:', foodId);
+    return api.delete(`/cart/${foodId}`, {
+      validateStatus: (status) => status < 500
+    }).catch(error => {
+      console.error('Error in removeFromCart API call:', error);
+      throw error;
+    });
+  },
+  
+  clearCart: () => {
+    console.log('Clearing cart');
+    return api.delete('/cart', {
+      validateStatus: (status) => status < 500
+    }).catch(error => {
+      console.error('Error in clearCart API call:', error);
+      throw error;
+    });
+  }
 };
 
 // Order API

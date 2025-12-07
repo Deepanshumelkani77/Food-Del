@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useReducer } from 'react';
 import { cartAPI } from '../services/api';
 import { useAuth } from './AuthContext';
+import Cookies from 'js-cookie';
 
 const CartContext = createContext();
 
@@ -85,17 +86,104 @@ export const CartProvider = ({ children }) => {
   const fetchCart = async () => {
     try {
       dispatch({ type: 'SET_LOADING' });
-      const user = JSON.parse(localStorage.getItem('user'));
-      if (!user || !user._id) {
-        throw new Error('User not authenticated');
+      
+      // 1. Check if user is authenticated
+      if (!isAuthenticated) {
+        throw new Error('User is not authenticated');
       }
-      const { data } = await cartAPI.getCart(user._id);
-      dispatch({ type: 'SET_CART', payload: data });
+      
+      // 2. Get user from cookies with better error handling
+      const userCookie = Cookies.get('user');
+      if (!userCookie || userCookie === 'undefined') {
+        console.error('User cookie not found or invalid');
+        // Clear any invalid cookie
+        if (userCookie === 'undefined') {
+          Cookies.remove('user');
+        }
+        throw new Error('Please log in to view your cart');
+      }
+      
+      // 3. Parse user data safely
+      let user;
+      try {
+        user = JSON.parse(userCookie);
+      } catch (error) {
+        console.error('Error parsing user cookie:', error);
+        // Clear invalid cookie
+        Cookies.remove('user');
+        throw new Error('Session expired. Please log in again.');
+      }
+      
+      // 4. Validate user object
+      if (!user || typeof user !== 'object') {
+        console.error('Invalid user data:', user);
+        throw new Error('Invalid user session');
+      }
+      
+      if (!user._id) {
+        console.error('User ID not found in user object:', user);
+        throw new Error('User information is incomplete');
+      }
+      
+      // 5. Make API request with timeout
+      try {
+        console.log('Fetching cart for user ID:', user._id);
+        const response = await Promise.race([
+          cartAPI.getCart(user._id),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Request timeout')), 10000)
+          )
+        ]);
+        
+        if (!response || !response.data) {
+          throw new Error('Invalid response from server');
+        }
+        
+        dispatch({ 
+          type: 'SET_CART', 
+          payload: response.data 
+        });
+        
+      } catch (apiError) {
+        console.error('API Error:', apiError);
+        if (apiError.response) {
+          // Server responded with error status
+          const { status, data } = apiError.response;
+          if (status === 401) {
+            // Handle unauthorized
+            Cookies.remove('user');
+            throw new Error('Session expired. Please log in again.');
+          } else if (status === 404) {
+            // Handle not found
+            dispatch({ type: 'CLEAR_CART' });
+            throw new Error('Your cart is empty');
+          } else {
+            throw new Error(data.message || 'Failed to load cart');
+          }
+        } else if (apiError.request) {
+          // Request was made but no response
+          throw new Error('Unable to connect to server. Please check your connection.');
+        } else {
+          // Other errors
+          throw apiError;
+        }
+      }
+      
     } catch (error) {
+      console.error('Error in fetchCart:', error);
       dispatch({ 
         type: 'SET_ERROR', 
-        payload: error.response?.data?.message || 'Failed to fetch cart' 
+        payload: error.message || 'Failed to load cart. Please try again.'
       });
+      
+      // If it's an auth-related error, clear user data
+      if (error.message.includes('expired') || 
+          error.message.includes('authenticated') ||
+          error.message.includes('session')) {
+        Cookies.remove('user');
+        Cookies.remove('token');
+        // You might want to redirect to login here or show a login modal
+      }
     }
   };
 

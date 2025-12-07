@@ -26,12 +26,20 @@ const Cart = () => {
   const fetchCart = async () => {
     try {
       setLoading(true);
-      const response = await cartAPI.getCart();
-      setCart(response.data);
+      
+      if (!user || !user._id) {
+        setCart([]);
+        setError('Please log in to view your cart');
+        return;
+      }
+      
+      const response = await cartAPI.getCart(user._id);
+      setCart(Array.isArray(response.data) ? response.data : []);
       setError(null);
     } catch (error) {
       console.error("Error fetching cart:", error);
-      setError("Failed to load cart. Please try again later.");
+      setError(error.response?.data?.message || "Failed to load cart. Please try again later.");
+      setCart([]);
     } finally {
       setLoading(false);
     }

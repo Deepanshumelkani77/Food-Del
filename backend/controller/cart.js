@@ -5,15 +5,25 @@ const Cart = require('../models/cart.js');
 // Get all cart items for a user
 module.exports.getData = async (req, res) => {
     try {
-        console.log('Request query:', req.query); // Log the incoming request
+        console.log('Full Request:', {
+            method: req.method,
+            url: req.originalUrl,
+            query: req.query,
+            params: req.params,
+            headers: req.headers
+        });
         
         const { userId } = req.query;
-        if (!userId) {
-            console.error('No userId provided in query');
+        console.log('Extracted userId:', userId);
+        
+        if (!userId || userId === 'undefined') {
+            console.error('No valid userId provided in query');
             return res.status(400).json({
                 success: false,
                 message: "User ID is required",
-                error: "Missing userId query parameter"
+                error: "Missing or invalid userId query parameter",
+                receivedQuery: req.query,
+                receivedParams: req.params
             });
         }
 
@@ -23,7 +33,8 @@ module.exports.getData = async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: "Invalid user ID format",
-                error: `Invalid userId format: ${userId}`
+                error: `Invalid userId format: ${userId}`,
+                receivedQuery: req.query
             });
         }
 
