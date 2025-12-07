@@ -59,6 +59,30 @@ const addToCart = async (req, res) => {
 
         let cart = await Cart.findOne({ user: req.user.id });
 
+        if (cart) {
+            // Clean up any invalid items in the cart
+            cart.items = cart.items.filter(item => 
+                item && 
+                item.food && 
+                item.name && 
+                item.image && 
+                typeof item.price === 'number' && 
+                typeof item.quantity === 'number'
+            );
+            
+            // If cart is empty after cleanup, set to null to create a new one
+            if (cart.items.length === 0) {
+                await Cart.deleteOne({ _id: cart._id });
+                cart = null;
+            } else {
+                // Recalculate totals for remaining items
+                cart.subTotal = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                cart.tax = cart.subTotal * 0.1;
+                cart.total = cart.subTotal + cart.tax;
+                await cart.save();
+            }
+        }
+
         if (!cart) {
             // Create new cart if it doesn't exist
             cart = new Cart({
