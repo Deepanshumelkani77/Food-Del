@@ -77,7 +77,18 @@ const addToCart = async (req, res) => {
             });
         } else {
             // Check if item already exists in cart
-            const itemIndex = cart.items.findIndex(item => item.food.toString() === foodId);
+            console.log('Checking for existing item in cart. Current items:', cart.items);
+            const itemIndex = cart.items.findIndex(item => {
+                // Safely handle cases where item or item.food might be undefined
+                if (!item || !item.food) {
+                    console.warn('Found invalid cart item:', item);
+                    return false;
+                }
+                const itemFoodId = typeof item.food === 'object' ? item.food.toString() : item.food;
+                console.log('Comparing:', { itemFoodId, foodId });
+                return itemFoodId === foodId;
+            });
+            console.log('Found item at index:', itemIndex);
 
             if (itemIndex > -1) {
                 // Update quantity if item exists
@@ -161,22 +172,52 @@ const addToCart = async (req, res) => {
 
 // Update cart item quantity
 const updateCartItem = async (req, res) => {
-    const { foodId } = req.params;
-    const { quantity } = req.body;
-
     try {
+        const { foodId } = req.params;
+        const { quantity } = req.body;
+
+        if (!foodId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Food ID is required',
+                error: 'FOOD_ID_REQUIRED'
+            });
+        }
+
+        if (typeof quantity !== 'number' || quantity < 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid quantity',
+                error: 'INVALID_QUANTITY'
+            });
+        }
+
         const cart = await Cart.findOne({ user: req.user.id });
         if (!cart) {
-            return res.status(404).json({ message: 'Cart not found' });
+            return res.status(404).json({
+                success: false,
+                message: 'Cart not found',
+                error: 'CART_NOT_FOUND'
+            });
         }
 
-        const itemIndex = cart.items.findIndex(item => item.food.toString() === foodId);
+        const itemIndex = cart.items.findIndex(item => {
+            if (!item || !item.food) return false;
+            const itemFoodId = typeof item.food === 'object' ? item.food.toString() : item.food;
+            return itemFoodId === foodId;
+        });
+
         if (itemIndex === -1) {
-            return res.status(404).json({ message: 'Item not found in cart' });
+            return res.status(404).json({
+                success: false,
+                message: 'Item not found in cart',
+                error: 'ITEM_NOT_FOUND',
+                foodId
+            });
         }
 
-        if (quantity <= 0) {
-            // Remove item if quantity is 0 or negative
+        if (quantity === 0) {
+            // Remove item if quantity is 0
             cart.items.splice(itemIndex, 1);
         } else {
             // Update quantity
@@ -184,46 +225,115 @@ const updateCartItem = async (req, res) => {
             cart.items[itemIndex].total = cart.items[itemIndex].price * quantity;
         }
 
+        // Recalculate cart totals
+        cart.subTotal = cart.items.reduce((sum, item) => sum + item.total, 0);
+        cart.tax = cart.subTotal * 0.1;
+        cart.total = cart.subTotal + cart.tax;
+
         await cart.save();
         const populatedCart = await Cart.findById(cart._id).populate('items.food', 'name price image');
         
         res.status(200).json({
+            success: true,
             message: 'Cart updated',
             cart: populatedCart
         });
 
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        console.error('Error in updateCartItem:', {
+            message: error.message,
+            stack: error.stack,
+            params: req.params,
+            body: req.body
+        });
+        
+        res.status(500).json({
+            success: false,
+            message: 'Server error',
+            error: 'INTERNAL_SERVER_ERROR',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 };
 
 // Remove item from cart
 const removeFromCart = async (req, res) => {
-    const { foodId } = req.params;
-
     try {
+        const { foodId } = req.params;
+
+        if (!foodId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Food ID is required',
+                error: 'FOOD_ID_REQUIRED'
+            });
+        }
+
+        console.log(`Removing item ${foodId} from cart for user ${req.user.id}`);
+        
         const cart = await Cart.findOne({ user: req.user.id });
         if (!cart) {
-            return res.status(404).json({ message: 'Cart not found' });
+            console.log('Cart not found for user:', req.user.id);
+            return res.status(404).json({
+                success: false,
+                message: 'Cart not found',
+                error: 'CART_NOT_FOUND'
+            });
         }
 
-        const itemIndex = cart.items.findIndex(item => item.food.toString() === foodId);
+        console.log('Current cart items before removal:', cart.items);
+        
+        const itemIndex = cart.items.findIndex(item => {
+            if (!item || !item.food) return false;
+            const itemFoodId = typeof item.food === 'object' ? item.food.toString() : item.food;
+            return itemFoodId === foodId;
+        });
+
         if (itemIndex === -1) {
-            return res.status(404).json({ message: 'Item not found in cart' });
+            console.log(`Item ${foodId} not found in cart`);
+            return res.status(404).json({
+                success: false,
+                message: 'Item not found in cart',
+                error: 'ITEM_NOT_FOUND',
+                foodId
+            });
         }
 
-        cart.items.splice(itemIndex, 1);
+        // Remove the item
+        const [removedItem] = cart.items.splice(itemIndex, 1);
+        console.log('Removed item:', removedItem);
+
+        // Recalculate cart totals
+        cart.subTotal = cart.items.reduce((sum, item) => sum + item.total, 0);
+        cart.tax = cart.subTotal * 0.1;
+        cart.total = cart.subTotal + cart.tax;
+
+        console.log('Cart after removal:', cart);
+        
         await cart.save();
         
         const populatedCart = await Cart.findById(cart._id).populate('items.food', 'name price image');
         
         res.status(200).json({
+            success: true,
             message: 'Item removed from cart',
             cart: populatedCart
         });
 
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        console.error('Error in removeFromCart:', {
+            message: error.message,
+            stack: error.stack,
+            params: req.params,
+            user: req.user?.id
+        });
+        
+        res.status(500).json({
+            success: false,
+            message: 'Server error',
+            error: 'INTERNAL_SERVER_ERROR',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 };
 
