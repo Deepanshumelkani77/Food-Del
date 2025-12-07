@@ -66,26 +66,6 @@ export const cartAPI = {
   updateCartItem: (foodId, quantity) => api.put(`/cart/${foodId}`, { quantity }),
   removeFromCart: (foodId) => api.delete(`/cart/${foodId}`),
   clearCart: () => api.delete('/cart'),
-  
-  // Helper methods to handle cart data
-  formatCartItems: (cart) => {
-    if (!cart || !cart.items) return [];
-    return cart.items.map(item => ({
-      _id: item.food?._id,
-      name: item.food?.name,
-      price: item.food?.price,
-      image: item.food?.image,
-      quantity: item.quantity,
-      total: item.quantity * (item.food?.price || 0)
-    }));
-  },
-  
-  calculateTotals: (items) => {
-    const subTotal = items.reduce((sum, item) => sum + (item.quantity * (item.food?.price || 0)), 0);
-    const tax = subTotal * 0.1; // 10% tax
-    const total = subTotal + tax;
-    return { subTotal, tax, total };
-  }
 };
 
 // Order API

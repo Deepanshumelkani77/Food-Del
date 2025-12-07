@@ -1,8 +1,8 @@
-import { useEffect, useState, useContext, useCallback } from "react";
+import { useEffect, useState, useContext } from "react";
 import "./Cart.css";
 import { StoreContext } from "../../context/StoreContext";
 import { useNavigate } from "react-router-dom";
-import { FaTrash, FaPlus, FaMinus, FaShoppingCart, FaArrowLeft } from 'react-icons/fa';
+import { FaTrash, FaPlus, FaMinus, FaShoppingCart, FaArrowLeft } from "react-icons/fa";
 import { cartAPI } from "../../services/api";
 
 const Cart = () => {
@@ -12,16 +12,14 @@ const Cart = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const fetchCart = useCallback(async () => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
-
+  // ------------------------------------
+  // FETCH USER CART
+  // ------------------------------------
+  const fetchCart = async () => {
     try {
       setLoading(true);
       const response = await cartAPI.getCart();
-      setCart(response.data || { items: [] });
+      setCart(response.data);
       setError(null);
     } catch (error) {
       console.error("Error fetching cart:", error);
@@ -29,179 +27,193 @@ const Cart = () => {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  };
 
   useEffect(() => {
     fetchCart();
-  }, [fetchCart]);
+  }, []);
 
+  const userCart = cart.items || [];
+
+  // ------------------------------------
+  // UTIL FUNCTIONS
+  // ------------------------------------
+  const getTotalCartAmount = () => {
+    return userCart.reduce((total, item) => total + item.quantity * item.food.price, 0);
+  };
+
+  const getTotalItems = () => {
+    return userCart.reduce((total, item) => total + item.quantity, 0);
+  };
+
+  // ------------------------------------
+  // DELETE ITEM
+  // ------------------------------------
   const handleDelete = async (foodId) => {
-    if (!user) {
-      setShowLogin(true);
-      return;
-    }
-
-    const confirmDelete = window.confirm('Are you sure you want to remove this item from your cart?');
+    const confirmDelete = window.confirm("Remove this item from cart?");
     if (!confirmDelete) return;
 
     try {
       await cartAPI.removeFromCart(foodId);
-      await fetchCart(); // Refresh cart after deletion
+      fetchCart();
     } catch (error) {
-      console.error("Error deleting item:", error);
-      alert("Failed to remove item. Please try again.");
+      console.error("Error deleting:", error);
+      alert("Failed to delete item.");
     }
   };
 
-  const handleQuantityChange = async (foodId, newQuantity) => {
-    if (newQuantity < 1) return;
-    if (!user) {
-      setShowLogin(true);
-      return;
-    }
+  // ------------------------------------
+  // UPDATE QUANTITY
+  // ------------------------------------
+  const handleQuantityChange = async (foodId, newQty) => {
+    if (newQty < 1) return;
 
     try {
-      await cartAPI.updateCartItem(foodId, newQuantity);
-      await fetchCart(); // Refresh cart after update
+      await cartAPI.updateCartItem(foodId, newQty);
+      fetchCart();
     } catch (error) {
-      console.error("Error updating cart item:", error);
-      setError("Failed to update item quantity. Please try again.");
+      console.error("Error updating item:", error);
+      alert("Failed to update quantity.");
     }
   };
 
-  const handleClearCart = async () => {
-    if (!user) {
-      setShowLogin(true);
-      return;
-    }
-
-    const confirmClear = window.confirm('Are you sure you want to clear your cart?');
-    if (!confirmClear) return;
-
-    try {
-      await cartAPI.clearCart();
-      await fetchCart();
-    } catch (error) {
-      console.error("Error clearing cart:", error);
-      setError("Failed to clear cart. Please try again.");
-    }
-  };
-
-  // Format cart items for display
-  const cartItems = cartAPI.formatCartItems(cart);
-  const { subTotal, tax, total } = cartAPI.calculateTotals(cart.items || []);
-  const itemCount = cart.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
-
+  // ------------------------------------
+  // CHECKOUT
+  // ------------------------------------
   const handleProceedToCheckout = () => {
     if (!user) {
       setShowLogin(true);
       return;
     }
 
-    navigate('/checkout');
+    if (userCart.length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
+
+    navigate("/order", {
+      state: {
+        cartItems: userCart,
+        totalAmount: getTotalCartAmount(),
+        totalItems: getTotalItems(),
+      },
+    });
   };
 
+  // ------------------------------------
+  // UI RENDERING
+  // ------------------------------------
   if (loading) {
-    return <div className="loading">Loading your cart...</div>;
-  }
-
-  if (error) {
-    return <div className="error">{error}</div>;
-  }
-
-  if (!user) {
     return (
-      <div className="empty-cart">
-        <h2>Please log in to view your cart</h2>
-        <button className="btn-primary" onClick={() => setShowLogin(true)}>
-          Log In
-        </button>
+      <div className="cart-container">
+        <div className="loading">Loading your cart...</div>
       </div>
     );
   }
 
-  if (cartItems.length === 0) {
+  if (error) {
     return (
-      <div className="empty-cart">
-        <FaShoppingCart className="empty-cart-icon" />
-        <h2>Your cart is empty</h2>
-        <p>Looks like you haven't added anything to your cart yet.</p>
-        <button className="btn-primary" onClick={() => navigate('/')}>
-          Continue Shopping
-        </button>
+      <div className="cart-container">
+        <div className="error-message">{error}</div>
       </div>
     );
   }
 
   return (
     <div className="cart-container">
-      <h2><FaShoppingCart /> Your Cart ({itemCount} items)</h2>
-      <div className="cart-items">
-        {cartItems.map((item) => (
-          <div key={item._id} className="cart-item">
-            <div className="item-image">
-              <img src={item.image} alt={item.name} />
-            </div>
-            <div className="item-details">
-              <h3>{item.name}</h3>
-              <p className="price">₹{item.price?.toFixed(2)}</p>
-              <div className="quantity-controls">
-                <button 
-                  onClick={() => handleQuantityChange(item._id, item.quantity - 1)}
-                  disabled={item.quantity <= 1}
+      <h2>
+        <FaShoppingCart /> Your Cart ({getTotalItems()} items)
+      </h2>
+
+      {userCart.length === 0 ? (
+        <div className="empty-cart">
+          <p>Your cart is empty</p>
+          <button onClick={() => navigate("/")}>
+            <FaArrowLeft /> Continue Shopping
+          </button>
+        </div>
+      ) : (
+        <>
+          {/* ---------------- CART ITEMS ---------------- */}
+          <div className="cart-items">
+            {userCart.map((item) => (
+              <div key={item.food._id} className="cart-item">
+                <div className="item-image">
+                  <img
+                    src={item.food.image}
+                    alt={item.food.name}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/images/placeholder-food.jpg";
+                    }}
+                  />
+                </div>
+
+                <div className="item-details">
+                  <h3>{item.food.name}</h3>
+                  <p className="price">₹{item.food.price}</p>
+
+                  <div className="quantity-controls">
+                    <button
+                      onClick={() =>
+                        handleQuantityChange(item.food._id, item.quantity - 1)
+                      }
+                      disabled={item.quantity <= 1}
+                    >
+                      <FaMinus />
+                    </button>
+
+                    <span>{item.quantity}</span>
+
+                    <button
+                      onClick={() =>
+                        handleQuantityChange(item.food._id, item.quantity + 1)
+                      }
+                    >
+                      <FaPlus />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="item-total">
+                  ₹{(item.food.price * item.quantity).toFixed(2)}
+                </div>
+
+                <button
+                  className="remove-item"
+                  onClick={() => handleDelete(item.food._id)}
                 >
-                  <FaMinus />
-                </button>
-                <span>{item.quantity}</span>
-                <button onClick={() => handleQuantityChange(item._id, item.quantity + 1)}>
-                  <FaPlus />
+                  <FaTrash />
                 </button>
               </div>
-            </div>
-            <div className="item-actions">
-              <p className="item-total">₹{item.total?.toFixed(2)}</p>
-              <button 
-                className="remove-btn"
-                onClick={() => handleDelete(item._id)}
-                aria-label="Remove item"
-              >
-                <FaTrash />
-              </button>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      <div className="cart-summary">
-        <h3>Order Summary</h3>
-        <div className="summary-row">
-          <span>Subtotal ({itemCount} {itemCount === 1 ? 'item' : 'items'})</span>
-          <span>₹{subTotal.toFixed(2)}</span>
-        </div>
-        <div className="summary-row">
-          <span>Tax (10%)</span>
-          <span>₹{tax.toFixed(2)}</span>
-        </div>
-        <div className="summary-row total">
-          <span>Total</span>
-          <span>₹{total.toFixed(2)}</span>
-        </div>
+          {/* ---------------- SUMMARY ---------------- */}
+          <div className="cart-summary">
+            <div className="summary-row">
+              <span>Subtotal ({getTotalItems()} items):</span>
+              <span>₹{getTotalCartAmount().toFixed(2)}</span>
+            </div>
 
-        <div className="cart-actions">
-          <button 
-            className="btn-secondary"
-            onClick={handleClearCart}
-          >
-            Clear Cart
-          </button>
-          <button 
-            className="checkout-btn" 
-            onClick={handleProceedToCheckout}
-          >
-            Proceed to Checkout (₹{total.toFixed(2)})
-          </button>
-        </div>
-      </div>
+            <div className="summary-row">
+              <span>Delivery Fee:</span>
+              <span>₹{getTotalCartAmount() > 0 ? 40 : 0}</span>
+            </div>
+
+            <div className="summary-row total">
+              <span>Total:</span>
+              <span>
+                ₹{(getTotalCartAmount() + (getTotalCartAmount() > 0 ? 40 : 0)).toFixed(2)}
+              </span>
+            </div>
+
+            <button className="checkout-button" onClick={handleProceedToCheckout}>
+              Proceed to Checkout
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

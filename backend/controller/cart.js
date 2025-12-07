@@ -2,15 +2,23 @@ const express=require("express");
 const Cart =require('../models/cart.js');
 const Food = require("../models/Food.js");
 
-module.exports.getData=async (req, res) => {
-    try {
-      const cart = await Cart.find();
-      res.status(200).json(cart);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      res.status(500).json({ message: "Error fetching data", error });
+module.exports.getCart = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const cart = await Cart.findOne({ user: userId }).populate("items.food");
+
+    if (!cart) {
+      return res.status(200).json({ items: [], subTotal: 0, total: 0 });
     }
+
+    res.status(200).json(cart);
+  } 
+  catch (error) {
+    res.status(500).json({ message: "Error fetching cart" });
   }
+};
+
 
 
 
