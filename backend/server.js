@@ -14,7 +14,7 @@ const server = app.listen(port, () => {
   console.log(`Server running on port ${port}...`);
 });
 
-
+app.use(express.json());   
 
 
 
@@ -49,3 +49,5 @@ connectDB();
 
 const foodRoutes = require('./routes/Food');
 app.use('/food', foodRoutes);
+const userRoutes = require('./routes/User');
+app.use('/user', userRoutes);

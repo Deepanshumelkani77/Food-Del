@@ -1,7 +1,7 @@
 //database connection
 const mongoose = require("mongoose");
 const {Schema}=mongoose;
-//const User=require("./user.js")
+const User=require("./user.js")
 
 const reviewSchema=new mongoose.Schema({
 
