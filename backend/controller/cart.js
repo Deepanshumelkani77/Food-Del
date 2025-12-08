@@ -4,18 +4,47 @@ const Food = require("../models/Food.js");
 
 module.exports.getCart = async (req, res) => {
   try {
-    const userId = req.user.id;
-
-    const cart = await Cart.findOne({ user: userId }).populate("items.food");
-
-    if (!cart) {
-      return res.status(200).json({ items: [], subTotal: 0, total: 0 });
+    if (!req.user || !req.user.id) {
+      console.error('No user found in request');
+      return res.status(401).json({ 
+        success: false,
+        message: 'Authentication required',
+        error: 'User not authenticated'
+      });
     }
 
-    res.status(200).json(cart);
+    const userId = req.user.id;
+    console.log('Fetching cart for user:', userId);
+
+    const cart = await Cart.findOne({ user: userId }).populate({
+      path: 'items.food',
+      select: 'name price image'
+    });
+
+    if (!cart) {
+      console.log('No cart found for user, returning empty cart');
+      return res.status(200).json({ 
+        success: true, 
+        items: [], 
+        subTotal: 0, 
+        total: 0 
+      });
+    }
+
+    console.log('Cart found with items:', cart.items.length);
+    res.status(200).json({
+      success: true,
+      ...cart.toObject()
+    });
   } 
   catch (error) {
-    res.status(500).json({ message: "Error fetching cart" });
+    console.error('Error in getCart:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Failed to fetch cart',
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 };
 

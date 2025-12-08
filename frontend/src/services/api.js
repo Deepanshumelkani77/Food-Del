@@ -5,16 +5,17 @@ import Cookies from 'js-cookie';
 const BASE_URL = import.meta.env.VITE_API_URL || 'https://food-del-0kcf.onrender.com';
 const API_URL = `${BASE_URL}/api/v1`;
 
-// Create axios instance
+// Create axios instance with config
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 10000, // 10 seconds timeout
   withCredentials: true
 });
 
-// Add request interceptor to include auth token
+// Request interceptor for adding auth token
 api.interceptors.request.use(
   (config) => {
     const token = Cookies.get('token');
@@ -61,11 +62,66 @@ export const foodAPI = {
 
 // Cart API
 export const cartAPI = {
-  getCart: () => api.get('/cart'),
-  addToCart: (foodId, quantity = 1) => api.post('/cart', { foodId, quantity }),
-  updateCartItem: (foodId, quantity) => api.put(`/cart/${foodId}`, { quantity }),
-  removeFromCart: (foodId) => api.delete(`/cart/${foodId}`),
-  clearCart: () => api.delete('/cart'),
+  getCart: async () => {
+    try {
+      const response = await api.get('/cart');
+      return response.data;
+    } catch (error) {
+      console.error('Error in getCart:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      throw error;
+    }
+  },
+  addToCart: async (foodId, quantity = 1) => {
+    try {
+      const response = await api.post('/cart', { foodId, quantity });
+      return response.data;
+    } catch (error) {
+      console.error('Error in addToCart:', {
+        foodId,
+        quantity,
+        error: error.response?.data || error.message
+      });
+      throw error;
+    }
+  },
+  updateCartItem: async (foodId, quantity) => {
+    try {
+      const response = await api.put(`/cart/edit`, { foodId, quantity });
+      return response.data;
+    } catch (error) {
+      console.error('Error in updateCartItem:', {
+        foodId,
+        quantity,
+        error: error.response?.data || error.message
+      });
+      throw error;
+    }
+  },
+  removeFromCart: async (foodId) => {
+    try {
+      const response = await api.delete(`/cart/delete/${foodId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error in removeFromCart:', {
+        foodId,
+        error: error.response?.data || error.message
+      });
+      throw error;
+    }
+  },
+  clearCart: async () => {
+    try {
+      const response = await api.delete('/cart');
+      return response.data;
+    } catch (error) {
+      console.error('Error in clearCart:', error.response?.data || error.message);
+      throw error;
+    }
+  },
 };
 
 // Order API
