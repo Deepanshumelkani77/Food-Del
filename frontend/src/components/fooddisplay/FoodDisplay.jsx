@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import "./FoodDisplay.css";
 import { StoreContext } from "../../context/StoreContext.jsx";
 import FoodItem from '../fooditem/FoodItem.jsx';
-import { foodAPI } from '../../services/api';
+
 
 const FoodDisplay = ({category}) => {
 
@@ -22,22 +22,6 @@ const FoodDisplay = ({category}) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchFoods = async () => {
-      try {
-        setLoading(true);
-        const response = await foodAPI.getAllFoods();
-        setFoods(response.data);
-      } catch (error) {
-        console.error("Error fetching food data:", error);
-        setError("Failed to load food items. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFoods();
-  }, []);
 
 
   return (

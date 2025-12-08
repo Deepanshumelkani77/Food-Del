@@ -3,7 +3,7 @@ import "./Cart.css";
 import { StoreContext } from "../../context/StoreContext";
 import { useNavigate } from "react-router-dom";
 import { FaTrash, FaPlus, FaMinus, FaShoppingCart, FaArrowLeft } from "react-icons/fa";
-import { cartAPI } from "../../services/api";
+
 
 const Cart = () => {
   const { user, setShowLogin } = useContext(StoreContext);
@@ -11,27 +11,6 @@ const Cart = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
-  // ------------------------------------
-  // FETCH USER CART
-  // ------------------------------------
-  const fetchCart = async () => {
-    try {
-      setLoading(true);
-      const response = await cartAPI.getCart();
-      setCart(response.data);
-      setError(null);
-    } catch (error) {
-      console.error("Error fetching cart:", error);
-      setError("Failed to load cart. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCart();
-  }, []);
 
   const userCart = cart.items || [];
 
