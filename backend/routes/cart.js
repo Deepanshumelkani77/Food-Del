@@ -1,19 +1,20 @@
-const express = require("express");
-const router = express.Router();
-const cartController = require("../controller/cart.js");
-const { protect } = require("../middleware/authMiddleware");
-
-// Apply protect middleware to all cart routes
-router.use(protect);
+const express=require("express");
+const router=express.Router();
+const cartController=require("../controller/cart.js")
 
 // to get a data from a cart
-router.get('/', cartController.getCart );
+router.get('/',cartController.getCart );
+  
 
-//add items into cart
-router.post("/", cartController.addItem);
+
+  //add items into cart
+
+router.post("/",cartController.addItem)
+
 
 //update item count
-router.put("/edit/", cartController.editItem);
+
+router.put("/edit/",cartController.editItem)
   
 
 

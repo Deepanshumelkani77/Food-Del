@@ -20,6 +20,7 @@ const userRoutes = require('./routes/user');
 const orderRoutes = require('./routes/order');
 const adminRoutes = require('./routes/admin');
 const reviewRoutes = require('./routes/review');
+const authRoutes = require('./routes/auth');
 
 // Initialize express app
 const app = express();
@@ -46,7 +47,15 @@ app.use('/api', limiter);
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
+// Cookie parser
 app.use(cookieParser());
+
+// Enable CORS with credentials
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  credentials: true
+}));
 
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
@@ -91,6 +100,7 @@ const connectDB = async () => {
 connectDB();
 
 // Routes
+app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/foods', foodRoutes);
 app.use('/api/v1/cart', cartRoutes);
 app.use('/api/v1/users', userRoutes);
