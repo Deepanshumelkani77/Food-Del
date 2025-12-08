@@ -30,12 +30,12 @@ const StoreContextProvider = (props) => {
   const login = async (email, password) => {
     try {
       const response = await authAPI.login(email, password);
-      if (response.data && response.data.token) {
-        Cookies.set("token", response.data.token, { expires: 1 });
-        Cookies.set("user", JSON.stringify(response.data.user), { expires: 1 });
+      if (response.data && response.data.success) {
+        // The cookie is set by the server with httpOnly flag
         setUser(response.data.user);
         return true;
       }
+      return false;
     } catch (error) {
       console.error('Login error:', error);
       alert(error.response?.data?.message || "Login failed. Please check your credentials and try again.");
@@ -46,11 +46,12 @@ const StoreContextProvider = (props) => {
   const signup = async (username, email, password) => {
     try {
       const response = await authAPI.register({ username, email, password });
-      if (response.data) {
-        alert("Signup successful! Please login.");
-        setShowLogin(true);
+      if (response.data && response.data.success) {
+        // The cookie is set by the server with httpOnly flag
+        setUser(response.data.user);
         return true;
       }
+      return false;
     } catch (error) {
       console.error('Signup error:', error);
       alert(error.response?.data?.message || "Signup failed. Please try again.");

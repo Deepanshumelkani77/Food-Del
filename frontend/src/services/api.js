@@ -45,10 +45,10 @@ api.interceptors.response.use(
 
 // Auth API
 export const authAPI = {
-  login: (email, password) => api.post('/users/login', { email, password }),
-  register: (userData) => api.post('/users/signup', userData),
-  getMe: () => api.get('/users/me'),
-  updateProfile: (userData) => api.put('/users/profile', userData),
+  login: (email, password) => api.post('/auth/login', { email, password }),
+  register: (userData) => api.post('/auth/register', userData),
+  getMe: () => api.get('/auth/me'),
+  logout: () => api.post('/auth/logout'),
 };
 
 // Food API
