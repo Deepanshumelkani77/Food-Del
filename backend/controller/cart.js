@@ -5,6 +5,7 @@ const Food = require("../models/Food.js");
 module.exports.getCart = async (req, res) => {
   try {
     const userId = req.user.id;
+    console.log(userId);
 
     const cart = await Cart.findOne({ user: userId }).populate("items.food");
 
