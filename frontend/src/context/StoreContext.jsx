@@ -5,10 +5,11 @@ export const StoreContext = createContext();
 
 const StoreContextProvider = (props) => {
   
-
+const [showLogin,setShowLogin] = useState(false);
  
   const contextValue = {
-  
+    showLogin,
+    setShowLogin
   };
 
   return (
