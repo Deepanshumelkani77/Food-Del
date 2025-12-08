@@ -8,6 +8,12 @@ dotenv.config();
 
 // Initialize express app
 const app = express();
+// Start server
+const port = process.env.PORT || 4000;
+const server = app.listen(port, () => {
+  console.log(`Server running on port ${port}...`);
+});
+
 
 
 
@@ -39,9 +45,7 @@ connectDB();
 
 
 
-// Start server
-const port = process.env.PORT || 4000;
-const server = app.listen(port, () => {
-  console.log(`Server running on port ${port}...`);
-});
 
+
+const foodRoutes = require('./routes/Food');
+app.use('/food', foodRoutes);
