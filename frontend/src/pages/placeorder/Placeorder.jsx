@@ -390,26 +390,26 @@ const Placeorder = () => {
         <div className="order-summary">
           <h3>Order Summary</h3>
           <div className="order-items">
-            {cartItems.map(item => (
-              <div key={item._id} className="order-item">
-                <div className="item-image">
-                  <img 
-                    src={item.image} 
-                    alt={item.name} 
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = '/images/placeholder-food.jpg';
-                    }}
-                  />
-                </div>
-                <div className="item-details">
-                  <h4>{item.name}</h4>
-                  <p>Qty: {item.count}</p>
-                </div>
-                <div className="item-price">₹{(item.price * item.count).toFixed(2)}</div>
-              </div>
-            ))}
-          </div>
+  {cartItems.map(item => (
+    <div key={item.food._id} className="order-item">
+      <div className="item-image">
+        <img 
+          src={item.food.image} 
+          alt={item.food.name} 
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = '/images/placeholder-food.jpg';
+          }}
+        />
+      </div>
+      <div className="item-details">
+        <h4>{item.food.name}</h4>
+        <p>Qty: {item.quantity}</p>
+      </div>
+      <div className="item-price">₹{(item.food.price * item.quantity).toFixed(2)}</div>
+    </div>
+  ))}
+</div>
 
           <div className="order-totals">
             <div className="total-row">
