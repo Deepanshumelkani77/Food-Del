@@ -20,7 +20,7 @@ const OrderConfirmation = () => {
 
     const fetchOrder = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/api/orders/${orderId}`, {
+        const response = await axios.get(`http://localhost:4000/orders/${orderId}`, {
           withCredentials: true
         });
         

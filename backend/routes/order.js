@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const { protect } = require('../middleware/auth');
 const {
     createOrder,
     getMyOrders,
@@ -10,14 +10,14 @@ const {
 
 // User routes
 router.route('/')
-    .post( createOrder)
-    .get(getMyOrders);
+    .post(protect, createOrder)
+    .get(protect, getMyOrders);
 
 router.route('/:id')
-    .get( getOrderById);
+    .get(protect, getOrderById)
 
 // Admin routes
 router.route('/:id/status')
-    .put( updateOrderStatus);
+    .put(protect, updateOrderStatus);
 
 module.exports = router;

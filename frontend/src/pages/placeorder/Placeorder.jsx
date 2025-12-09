@@ -27,37 +27,6 @@ const Placeorder = () => {
 
 
 
- const fetchCart = async () => {
-    
-
- 
-
-    try {
-      const res = await fetch(
-        `http://localhost:4000/cart/get?userId=${user.id}`
-      );
-
-      const data = await res.json();
-
-      if (data.success) {
-        setUserCart(data.cart.items || []);
-      }
-
-      setLoading(false);
-    } catch (err) {
-      setLoading(false);
-      setError("Failed to load cart");
-    }
-  };
-
-
-
-
-
-
-
-
-
 
 
 
@@ -160,9 +129,7 @@ const Placeorder = () => {
           quantity: item.quantity || item.count, // Handle both quantity and count
           image: item.image
         })),
-        itemsPrice,
-        taxPrice,
-        shippingPrice,
+       
         totalPrice
       };
 

@@ -1,45 +1,28 @@
 const Order = require('../models/order');
 const Cart = require('../models/Cart');
-const Food = require('../models/Food');
 
 // @desc    Create new order
-// @route   POST /api/orders
+// @route   POST /orders
 // @access  Private
 exports.createOrder = async (req, res) => {
     try {
-        const { deliveryAddress, paymentMethod, deliveryInstructions } = req.body;
+        const { items, totalAmount, deliveryAddress, paymentMethod, deliveryInstructions } = req.body;
         const userId = req.user._id;
+        console.log(req.body)
 
-        // Get user's cart
-        const cart = await Cart.findOne({ user: userId }).populate('items.food');
-        if (!cart || cart.items.length === 0) {
-            return res.status(400).json({ success: false, message: 'Your cart is empty' });
+        if (!items || items.length === 0) {
+            return res.status(400).json({ success: false, message: 'No order items' });
         }
-
-        // Calculate total amount and prepare order items
-        let totalAmount = 0;
-        const orderItems = cart.items.map(item => {
-            const itemTotal = item.food.price * item.quantity;
-            totalAmount += itemTotal;
-            
-            return {
-                foodId: item.food._id,
-                name: item.food.name,
-                quantity: item.quantity,
-                price: item.food.price,
-                image: item.food.image
-            };
-        });
 
         // Create order
         const order = new Order({
             user: userId,
-            items: orderItems,
+            items,
             totalAmount,
             deliveryAddress,
-            paymentMethod,
+            paymentMethod: paymentMethod || 'cod',
             deliveryInstructions: deliveryInstructions || '',
-            paymentStatus: paymentMethod === 'cod' ? 'pending' : 'completed',
+            paymentStatus: 'pending',
             orderStatus: 'pending',
             estimatedDeliveryTime: new Date(Date.now() + 60 * 60 * 1000) // 1 hour from now
         });
@@ -65,7 +48,7 @@ exports.createOrder = async (req, res) => {
 };
 
 // @desc    Get user's orders
-// @route   GET /api/orders/my-orders
+// @route   GET /orders
 // @access  Private
 exports.getMyOrders = async (req, res) => {
     try {
@@ -84,7 +67,7 @@ exports.getMyOrders = async (req, res) => {
 };
 
 // @desc    Get order by ID
-// @route   GET /api/orders/:id
+// @route   GET /orders/:id
 // @access  Private
 exports.getOrderById = async (req, res) => {
     try {
@@ -95,7 +78,7 @@ exports.getOrderById = async (req, res) => {
         }
 
         // Check if the order belongs to the user
-        if (order.user.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+        if (order.user.toString() !== req.user._id.toString()) {
             return res.status(401).json({ success: false, message: 'Not authorized to view this order' });
         }
 
@@ -110,7 +93,7 @@ exports.getOrderById = async (req, res) => {
 };
 
 // @desc    Update order status
-// @route   PUT /api/orders/:id/status
+// @route   PUT /orders/:id/status
 // @access  Private/Admin
 exports.updateOrderStatus = async (req, res) => {
     try {
