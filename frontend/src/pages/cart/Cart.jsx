@@ -7,12 +7,12 @@ import { FaTrash, FaPlus, FaMinus, FaShoppingCart, FaArrowLeft } from "react-ico
 
 const Cart = () => {
   const { user, setShowLogin } = useContext(StoreContext);
-  const [cart, setCart] = useState({ items: [] });
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const userCart = cart.items || [];
+
 
   // ------------------------------------
   // UTIL FUNCTIONS

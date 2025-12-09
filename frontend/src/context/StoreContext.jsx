@@ -9,6 +9,7 @@ const API = "http://localhost:4000";
 const StoreContextProvider = (props) => {
   const [showLogin, setShowLogin] = useState(false);
   const [user, setUser] = useState(null);
+  const [cart, setCart] = useState({});
   console.log(user)
 
   // ---------------- LOGIN ----------------
@@ -50,10 +51,25 @@ const StoreContextProvider = (props) => {
     if (savedUser) setUser(JSON.parse(savedUser));
   }, []);
 
+  // Load cart from localStorage on initial render
+  useEffect(() => {
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
+  }, []);
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
+
   const contextValue = {
     showLogin,
     setShowLogin,
     user,
+    cart,
+    setCart,
     login,
     signup,
     logout,
