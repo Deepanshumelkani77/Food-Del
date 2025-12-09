@@ -73,16 +73,18 @@ exports.removeFromCart = async (req, res) => {
 // ---------------- GET CART ----------------
 exports.getCart = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.query.userId;
 
-    const cart = await Cart.findOne({ user: userId }).populate("items.food");
+    if (!userId) return res.json({ success: false, message: "User ID missing" });
 
-    res.json({
-      success: true,
-      cart: cart || { items: [] }
-    });
+    let cart = await Cart.findOne({ user: userId }).populate("items.food");
 
+    if (!cart) {
+      cart = await Cart.create({ user: userId, items: [] });
+    }
+
+    res.json({ success: true, cart });
   } catch (e) {
-    res.status(500).json({ message: e.message });
+    res.status(500).json({ success: false, message: e.message });
   }
 };

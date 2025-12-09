@@ -2,72 +2,117 @@ import { useEffect, useState, useContext } from "react";
 import "./Cart.css";
 import { StoreContext } from "../../context/StoreContext";
 import { useNavigate } from "react-router-dom";
-import { FaTrash, FaPlus, FaMinus, FaShoppingCart, FaArrowLeft } from "react-icons/fa";
-
+import {
+  FaTrash,
+  FaPlus,
+  FaMinus,
+  FaShoppingCart,
+  FaArrowLeft,
+} from "react-icons/fa";
 
 const Cart = () => {
   const { user, setShowLogin } = useContext(StoreContext);
 
+  const [userCart, setUserCart] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const navigate = useNavigate();
 
+  // --------------------------------------------
+  // FETCH CART ITEMS
+  // --------------------------------------------
+  const fetchCart = async () => {
+    if (!user) {
+      setLoading(false);
+      return setShowLogin(true);
+    }
 
+    try {
+      const res = await fetch(
+        `http://localhost:4000/cart/get?userId=${user.id}`
+      );
+      const data = await res.json();
 
-  // ------------------------------------
-  // UTIL FUNCTIONS
-  // ------------------------------------
+      if (data.success) {
+        setUserCart(data.cart.items || []);
+      }
+
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      setError("Failed to load cart");
+    }
+  };
+
+  useEffect(() => {
+    fetchCart();
+  }, [user]);
+
+  // --------------------------------------------
+  // GET TOTALS
+  // --------------------------------------------
   const getTotalCartAmount = () => {
-    return userCart.reduce((total, item) => total + item.quantity * item.food.price, 0);
+    return userCart.reduce(
+      (total, item) => total + item.quantity * item.food.price,
+      0
+    );
   };
 
   const getTotalItems = () => {
     return userCart.reduce((total, item) => total + item.quantity, 0);
   };
 
-  // ------------------------------------
+  // --------------------------------------------
   // DELETE ITEM
-  // ------------------------------------
+  // --------------------------------------------
   const handleDelete = async (foodId) => {
-    const confirmDelete = window.confirm("Remove this item from cart?");
+    const confirmDelete = window.confirm("Remove this item?");
     if (!confirmDelete) return;
 
     try {
-      await cartAPI.removeFromCart(foodId);
+      await fetch(
+        `http://localhost:4000/cart/remove/${foodId}?userId=${user.id}`,
+        { method: "DELETE" }
+      );
+
       fetchCart();
-    } catch (error) {
-      console.error("Error deleting:", error);
-      alert("Failed to delete item.");
+    } catch (err) {
+      alert("Failed to delete item");
     }
   };
 
-  // ------------------------------------
+  // --------------------------------------------
   // UPDATE QUANTITY
-  // ------------------------------------
+  // --------------------------------------------
   const handleQuantityChange = async (foodId, newQty) => {
     if (newQty < 1) return;
 
     try {
-      await cartAPI.updateCartItem(foodId, newQty);
+      await fetch("http://localhost:4000/cart/update", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user.id,
+          foodId,
+          quantity: newQty,
+        }),
+      });
+
       fetchCart();
-    } catch (error) {
-      console.error("Error updating item:", error);
-      alert("Failed to update quantity.");
+    } catch (err) {
+      alert("Failed to update quantity");
     }
   };
 
-  // ------------------------------------
-  // CHECKOUT
-  // ------------------------------------
+  // --------------------------------------------
+  // PROCEED TO CHECKOUT
+  // --------------------------------------------
   const handleProceedToCheckout = () => {
-    if (!user) {
-      setShowLogin(true);
-      return;
-    }
+    if (!user) return setShowLogin(true);
 
     if (userCart.length === 0) {
-      alert("Your cart is empty.");
-      return;
+      return alert("Your cart is empty.");
     }
 
     navigate("/order", {
@@ -79,9 +124,9 @@ const Cart = () => {
     });
   };
 
-  // ------------------------------------
-  // UI RENDERING
-  // ------------------------------------
+  // --------------------------------------------
+  // UI RENDER
+  // --------------------------------------------
   if (loading) {
     return (
       <div className="cart-container">
@@ -113,19 +158,12 @@ const Cart = () => {
         </div>
       ) : (
         <>
-          {/* ---------------- CART ITEMS ---------------- */}
+          {/* --------------- CART ITEMS --------------- */}
           <div className="cart-items">
             {userCart.map((item) => (
               <div key={item.food._id} className="cart-item">
                 <div className="item-image">
-                  <img
-                    src={item.food.image}
-                    alt={item.food.name}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = "/images/placeholder-food.jpg";
-                    }}
-                  />
+                  <img src={item.food.image} alt={item.food.name} />
                 </div>
 
                 <div className="item-details">
@@ -135,7 +173,10 @@ const Cart = () => {
                   <div className="quantity-controls">
                     <button
                       onClick={() =>
-                        handleQuantityChange(item.food._id, item.quantity - 1)
+                        handleQuantityChange(
+                          item.food._id,
+                          item.quantity - 1
+                        )
                       }
                       disabled={item.quantity <= 1}
                     >
@@ -146,7 +187,10 @@ const Cart = () => {
 
                     <button
                       onClick={() =>
-                        handleQuantityChange(item.food._id, item.quantity + 1)
+                        handleQuantityChange(
+                          item.food._id,
+                          item.quantity + 1
+                        )
                       }
                     >
                       <FaPlus />
@@ -168,7 +212,7 @@ const Cart = () => {
             ))}
           </div>
 
-          {/* ---------------- SUMMARY ---------------- */}
+          {/* --------------- SUMMARY --------------- */}
           <div className="cart-summary">
             <div className="summary-row">
               <span>Subtotal ({getTotalItems()} items):</span>
@@ -183,11 +227,18 @@ const Cart = () => {
             <div className="summary-row total">
               <span>Total:</span>
               <span>
-                ₹{(getTotalCartAmount() + (getTotalCartAmount() > 0 ? 40 : 0)).toFixed(2)}
+                ₹
+                {(
+                  getTotalCartAmount() +
+                  (getTotalCartAmount() > 0 ? 40 : 0)
+                ).toFixed(2)}
               </span>
             </div>
 
-            <button className="checkout-button" onClick={handleProceedToCheckout}>
+            <button
+              className="checkout-button"
+              onClick={handleProceedToCheckout}
+            >
               Proceed to Checkout
             </button>
           </div>
