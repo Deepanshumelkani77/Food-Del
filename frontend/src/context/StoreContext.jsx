@@ -14,6 +14,15 @@ const StoreContextProvider = (props) => {
   const [cart, setCart] = useState({});
   console.log(user)
 
+
+
+useEffect(() => {
+  const savedUser = Cookies.get("user");
+  if (savedUser) setUser(JSON.parse(savedUser));
+  setLoadingUser(false); // <-- IMPORTANT
+}, []);
+
+
   // ---------------- LOGIN ----------------
   const login = async (email, password) => {
     const res = await axios.post(`${API}/user/login`, { email, password });
@@ -75,6 +84,7 @@ const StoreContextProvider = (props) => {
     login,
     signup,
     logout,
+      loadingUser,
   };
 
   return (

@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 
 const Cart = () => {
-  const { user, setShowLogin } = useContext(StoreContext);
+  const { user, setShowLogin, loadingUser } = useContext(StoreContext);
 
   const [userCart, setUserCart] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,6 +23,8 @@ const Cart = () => {
   // FETCH CART ITEMS
   // --------------------------------------------
   const fetchCart = async () => {
+    if (loadingUser) return; // ⬅ WAIT UNTIL USER LOADED
+
     if (!user) {
       setLoading(false);
       return setShowLogin(true);
@@ -32,6 +34,7 @@ const Cart = () => {
       const res = await fetch(
         `http://localhost:4000/cart/get?userId=${user.id}`
       );
+
       const data = await res.json();
 
       if (data.success) {
@@ -47,7 +50,7 @@ const Cart = () => {
 
   useEffect(() => {
     fetchCart();
-  }, [user]);
+  }, [user, loadingUser]);
 
   // --------------------------------------------
   // GET TOTALS
@@ -127,7 +130,7 @@ const Cart = () => {
   // --------------------------------------------
   // UI RENDER
   // --------------------------------------------
-  if (loading) {
+  if (loading || loadingUser) {
     return (
       <div className="cart-container">
         <div className="loading">Loading your cart...</div>
@@ -158,7 +161,6 @@ const Cart = () => {
         </div>
       ) : (
         <>
-          {/* --------------- CART ITEMS --------------- */}
           <div className="cart-items">
             {userCart.map((item) => (
               <div key={item.food._id} className="cart-item">
@@ -173,10 +175,7 @@ const Cart = () => {
                   <div className="quantity-controls">
                     <button
                       onClick={() =>
-                        handleQuantityChange(
-                          item.food._id,
-                          item.quantity - 1
-                        )
+                        handleQuantityChange(item.food._id, item.quantity - 1)
                       }
                       disabled={item.quantity <= 1}
                     >
@@ -187,10 +186,7 @@ const Cart = () => {
 
                     <button
                       onClick={() =>
-                        handleQuantityChange(
-                          item.food._id,
-                          item.quantity + 1
-                        )
+                        handleQuantityChange(item.food._id, item.quantity + 1)
                       }
                     >
                       <FaPlus />
@@ -212,7 +208,6 @@ const Cart = () => {
             ))}
           </div>
 
-          {/* --------------- SUMMARY --------------- */}
           <div className="cart-summary">
             <div className="summary-row">
               <span>Subtotal ({getTotalItems()} items):</span>
