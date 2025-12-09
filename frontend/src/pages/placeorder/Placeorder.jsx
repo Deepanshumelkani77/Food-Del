@@ -10,6 +10,7 @@ const Placeorder = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { cartItems = [], totalAmount = 0, totalItems = 0 } = location.state || {};
+  console.log('Cart Items from location state:', cartItems);
   const { user, clearCart } = useContext(StoreContext);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [formData, setFormData] = useState({
@@ -22,6 +23,43 @@ const Placeorder = () => {
     postalCode: '',
     paymentMethod: 'cash'
   });
+
+
+
+
+ const fetchCart = async () => {
+    
+
+ 
+
+    try {
+      const res = await fetch(
+        `http://localhost:4000/cart/get?userId=${user.id}`
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        setUserCart(data.cart.items || []);
+      }
+
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      setError("Failed to load cart");
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -131,7 +169,7 @@ const Placeorder = () => {
       console.log('Creating order with items:', JSON.stringify(orderData, null, 2));
 
       // First create the order
-      const response = await axios.post('https://food-del-0kcf.onrender.com/api/v1/orders', 
+      const response = await axios.post('http://localhost:4000/orders', 
         orderData,
         {
           headers: {
@@ -155,7 +193,7 @@ const Placeorder = () => {
       };
 
       // Update order with shipping information
-      const shippingResponse = await axios.post('https://food-del-0kcf.onrender.com/api/v1/orders/shipping', 
+      const shippingResponse = await axios.post('http://localhost:4000/orders/shipping', 
         shippingData,
         {
           headers: {

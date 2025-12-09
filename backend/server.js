@@ -2,21 +2,25 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 dotenv.config();
-
-
 
 // Initialize express app
 const app = express();
+
+// Middleware
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:3001'],
+  credentials: true
+}));
+app.use(express.json());
+app.use(cookieParser());
+
 // Start server
 const port = process.env.PORT || 4000;
 const server = app.listen(port, () => {
   console.log(`Server running on port ${port}...`);
 });
-
-app.use(express.json());   
-
-
 
 // Enable CORS with specific origin and credentials
 const corsOptions = {
@@ -50,6 +54,8 @@ connectDB();
 const foodRoutes = require('./routes/Food');
 app.use('/food', foodRoutes);
 const userRoutes = require('./routes/User');
-app.use('/user', userRoutes);
+app.use('/users', userRoutes);
 const cartRoutes = require('./routes/Cart');
 app.use('/cart', cartRoutes);
+const orderRoutes = require('./routes/order');
+app.use('/orders', orderRoutes);
