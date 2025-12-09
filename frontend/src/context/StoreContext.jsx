@@ -8,6 +8,8 @@ const API = "http://localhost:4000";
 
 const StoreContextProvider = (props) => {
   const [showLogin, setShowLogin] = useState(false);
+  const [loadingUser, setLoadingUser] = useState(true);
+
   const [user, setUser] = useState(null);
   const [cart, setCart] = useState({});
   console.log(user)
