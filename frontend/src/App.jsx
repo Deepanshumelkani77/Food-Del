@@ -9,6 +9,7 @@ import LoginPopup from './components/loginpopup/LoginPopup.jsx'
 import Item from './pages/item/Item.jsx'
 import Order from './pages/order/Order.jsx'
 import { StoreContext } from './context/StoreContext'
+import OederConfirmation from './components/OrderConfirmation/OrderConfirmation.jsx'
 
 
 
@@ -32,6 +33,7 @@ const App = () => {
 <Route path='/cart' element={<Cart />}></Route>
 <Route path='/order' element={<Order />}></Route>
 <Route path='/:id' element={<Item />}></Route>
+<Route path='/order-confirmation/' element={<OederConfirmation />}></Route>
       </Routes>
 
 

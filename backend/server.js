@@ -54,7 +54,7 @@ connectDB();
 const foodRoutes = require('./routes/Food');
 app.use('/food', foodRoutes);
 const userRoutes = require('./routes/User');
-app.use('/users', userRoutes);
+app.use('/user', userRoutes);
 const cartRoutes = require('./routes/Cart');
 app.use('/cart', cartRoutes);
 const orderRoutes = require('./routes/Order');

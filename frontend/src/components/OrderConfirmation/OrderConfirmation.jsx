@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { StoreContext } from '../../context/StoreContext';
 import axios from 'axios';
 import './OrderConfirmation.css';
 
 const OrderConfirmation = () => {
-  const { orderId } = useParams();
+  const location = useLocation();
+  const { orderId } = location.state || {};
   const { user } = useContext(StoreContext);
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,10 +21,7 @@ const OrderConfirmation = () => {
 
     const fetchOrder = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/orders/${orderId}`, {
-          withCredentials: true
-        });
-        
+        const response = await axios.get(`http://localhost:4000/order/${orderId}`);
         if (response.data.success) {
           setOrder(response.data.order);
         } else {
@@ -41,9 +39,10 @@ const OrderConfirmation = () => {
   }, [orderId, user, navigate]);
 
   const formatDate = (dateString) => {
-    const options = { 
-      year: 'numeric', 
-      month: 'long', 
+    if (!dateString) return '';
+    const options = {
+      year: 'numeric',
+      month: 'long',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
@@ -51,30 +50,24 @@ const OrderConfirmation = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  if (loading) {
-    return <div className="loading">Loading order details...</div>;
-  }
+  if (loading) return <div className="loading">Loading order details...</div>;
+  if (error) return <div className="error">{error}</div>;
+  if (!order) return <div className="not-found">Order not found</div>;
 
-  if (error) {
-    return <div className="error">{error}</div>;
-  }
-
-  if (!order) {
-    return <div className="not-found">Order not found</div>;
-  }
+  const totalAmount = order.totalAmount || 0;
 
   return (
     <div className="order-confirmation">
       <div className="confirmation-header">
         <h1>Order Confirmation</h1>
-        <p className="order-number">Order #{order._id.slice(-8).toUpperCase()}</p>
-        <div className={`status-badge ${order.orderStatus}`}>
-          {order.orderStatus.replace(/_/g, ' ')}
+        <p className="order-number">Order #{order.orderNumber || order._id}</p>
+        <div className={`status-badge ${order.status || 'pending'}`}>
+          {(order.status || 'pending').replace(/_/g, ' ')}
         </div>
       </div>
 
       <div className="confirmation-message">
-        <h2>Thank you for your order, {user.username}!</h2>
+        <h2>Thank you for your order{user?.username ? `, ${user.username}` : ''}!</h2>
         <p>Your order has been received and is being processed.</p>
         {order.estimatedDeliveryTime && (
           <p className="delivery-estimate">
@@ -87,39 +80,38 @@ const OrderConfirmation = () => {
         <div className="order-section">
           <h3>Order Summary</h3>
           <div className="order-items">
-            {order.items.map((item, index) => (
-              <div key={index} className="order-item">
-                <div className="item-image">
-                  <img src={item.image} alt={item.name} />
-                  <span className="quantity">{item.quantity}x</span>
-                </div>
-                <div className="item-details">
-                  <h4>{item.name}</h4>
-                  <p className="item-category">{item.category}</p>
-                  {item.description && <p className="item-description">{item.description}</p>}
-                  <div className="item-price-row">
-                    <span>₹{item.price.toFixed(2)} each</span>
-                    <span className="item-quantity">× {item.quantity}</span>
+            {order.items.map((item, index) => {
+              const itemTotal = (item.price ?? 0) * (item.quantity ?? 1);
+              return (
+                <div key={index} className="order-item">
+                  { item.image && (
+                    <div className="item-image">
+                      <img src={item.image} alt={item.name} />
+                      <span className="quantity">{item.quantity}x</span>
+                    </div>
+                  )}
+                  <div className="item-details">
+                    <h4>{item.name}</h4>
+                    <div className="item-price-row">
+                      <span>₹{item.price.toFixed(2)} each</span>
+                      <span className="item-quantity"> × {item.quantity}</span>
+                    </div>
                   </div>
+                  <div className="item-total">₹{itemTotal.toFixed(2)}</div>
                 </div>
-                <div className="item-total">
-                  ₹{item.totalPrice.toFixed(2)}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
+
           <div className="order-totals">
             <div className="total-row">
               <span>Subtotal:</span>
-              <span>₹{order.totalAmount.toFixed(2)}</span>
+              <span>₹{totalAmount.toFixed(2)}</span>
             </div>
-            <div className="total-row">
-              <span>Delivery Fee:</span>
-              <span>Free</span>
-            </div>
+            {/* adjust delivery fee if any */}
             <div className="total-row grand-total">
               <span>Total:</span>
-              <span>₹{order.totalAmount.toFixed(2)}</span>
+              <span>₹{totalAmount.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -127,48 +119,24 @@ const OrderConfirmation = () => {
         <div className="delivery-details">
           <h3>Delivery Information</h3>
           <div className="info-section">
-            <h4>Delivery Address</h4>
-            <p>{order.deliveryAddress.street}</p>
-            <p>
-              {order.deliveryAddress.city}, {order.deliveryAddress.state}
-            </p>
-            <p>{order.deliveryAddress.postalCode}</p>
-            <p>{order.deliveryAddress.country}</p>
-            {order.deliveryInstructions && (
-              <div className="delivery-instructions">
-                <h4>Delivery Instructions</h4>
-                <p>{order.deliveryInstructions}</p>
-              </div>
-            )}
+            <p>{order.name}</p>
+            <p>{order.address}</p>
+            <p>{order.city}, {order.state} - {order.postalCode}</p>
+            <p>Phone: {order.phone}</p>
           </div>
 
           <div className="info-section">
             <h4>Payment Method</h4>
-            <p>
-              {order.paymentMethod === 'cod' 
-                ? 'Cash on Delivery' 
-                : order.paymentMethod === 'card' 
-                  ? 'Credit/Debit Card' 
-                  : 'UPI'}
-            </p>
-            <p className={`payment-status ${order.paymentStatus}`}>
-              {order.paymentStatus}
-            </p>
+            <p>{order.paymentMethod === 'cash' ? 'Cash on Delivery' : order.paymentMethod}</p>
           </div>
         </div>
       </div>
 
       <div className="order-actions">
-        <button 
-          className="continue-shopping"
-          onClick={() => navigate('/')}
-        >
+        <button className="continue-shopping" onClick={() => navigate('/')}>
           Continue Shopping
         </button>
-        <button 
-          className="view-orders"
-          onClick={() => navigate('/my-orders')}
-        >
+        <button className="view-orders" >
           View All Orders
         </button>
       </div>

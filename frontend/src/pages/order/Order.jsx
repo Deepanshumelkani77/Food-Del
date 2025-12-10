@@ -62,7 +62,7 @@ const handleSubmit = async (e) => {
 
     if (response.data.success) {
       clearCart(); // Clear the cart after successful order
-      navigate('/', { 
+      navigate('/order-confirmation', { 
         state: { 
           orderId: response.data.order._id,
           total: response.data.order.totalAmount
