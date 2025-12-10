@@ -75,16 +75,38 @@ useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
+  // Clear the cart
+const clearCart = async () => {
+  try {
+    const res = await fetch(
+      `http://localhost:4000/cart/clear?userId=${user.id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    const data = await res.json();
+    if (data.success) {
+      setCart({});
+      localStorage.removeItem("cart");
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+
   const contextValue = {
     showLogin,
     setShowLogin,
     user,
     cart,
     setCart,
+    clearCart,
     login,
     signup,
     logout,
-      loadingUser,
+    loadingUser,
   };
 
   return (

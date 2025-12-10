@@ -88,3 +88,29 @@ exports.getCart = async (req, res) => {
     res.status(500).json({ success: false, message: e.message });
   }
 };
+
+
+
+
+exports.clearCart = async (req, res) => {
+  try {
+    const userId = req.query.userId; // from frontend
+
+    if (!userId) {
+      return res.status(400).json({ success: false, message: "User ID missing" });
+    }
+
+    const cart = await Cart.findOne({ user: userId });
+    if (!cart) {
+      return res.json({ success: true });
+    }
+
+    cart.items = [];  // clearing all items
+    await cart.save();
+
+    res.json({ success: true, message: "Cart cleared" });
+
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
