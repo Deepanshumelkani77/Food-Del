@@ -20,6 +20,11 @@ a{
 .app{
   width: 80%;
   margin: auto;
+  overflow-y: auto;
   scroll-behavior: smooth;
+  height:100vh;
+   scrollbar-width: none;   /* Firefox */
+  -ms-overflow-style: none;
+  
 }
 

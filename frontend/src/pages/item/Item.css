@@ -119,7 +119,7 @@
 }
 
 .create-review button {
-    background: #ff6b6b;
+    background: #FF4C24;
     color: white;
     border: none;
     padding: 12px 25px;
@@ -174,7 +174,7 @@
 
 .user-review button {
     background: #ffebee;
-    color: #ff6b6b;
+    color: #FF4C24;
     border: 1px solid #ffcdd2;
     padding: 5px 12px;
     border-radius: 15px;
@@ -186,7 +186,7 @@
 
 .user-review button:hover {
     background: #ffcdd2;
-    color: #d32f2f;
+    color: #FF4C24;
 }
 
 /* Responsive Design */
