@@ -13,7 +13,7 @@ import menu_5 from './menu_5.png'
 import menu_6 from './menu_6.png'
 import menu_7 from './menu_7.png'
 import menu_8 from './menu_8.png'
-
+import rating_stars from './rating_starts.png'
 
 export const assets ={
     logo,
@@ -23,6 +23,7 @@ export const assets ={
     upload_area,
     parcel_icon,
     cross_icon,
+    rating_stars
 }
 
 

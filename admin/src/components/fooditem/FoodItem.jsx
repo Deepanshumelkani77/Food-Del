@@ -39,27 +39,36 @@ const handleDelete = async () => {
 
   return (
     <div className='food-item'>
+      <div className="food-item-img-container">
+        <img className='food-item-image' src={image} alt={name} />
+        <div className="food-item-price-badge">${price}</div>
+      </div>
+
+      <div className="food-item-info">
+        <div className="food-item-name-rating">
+          <p>{name}</p>
+          <img src={assets.rating_stars} alt="Rating" />
+        </div>
+        <p className="food-item-description" title={description}>
+          {description}
+        </p>
+        <div className="food-item-btns">
+          <button 
+            onClick={user ? () => navigate(`/edit/${id}`) : () => setShowLogin(true)}
+            title="Edit item"
+          >
+           
       
-<div className="food-item-img-container">
-    <img className='food-item-image'  src={image} alt="" />
-   
-</div>
-
-<div className="food-item-info">
-<div className="food-item-name-rating">
-    <p>{name}</p>
- <img src={assets.rating_starts} alt="" />
-</div>
-<p className="food-item-description">{description}</p>
-<p className="food-item-price">${price}</p>
-
-</div>
-
-<div className="food-item-btns">
-  <button onClick={user?()=>navigate(`/edit/${id}`):()=>{setShowLogin(true)}}>Edit</button>
-  <button onClick={user?handleDelete:()=>{setShowLogin(true)}}>Delete</button>
-</div>
-
+          </button>
+          <button 
+            onClick={user ? handleDelete : () => setShowLogin(true)}
+            title="Delete item"
+            className="delete-btn"
+          >
+           
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
