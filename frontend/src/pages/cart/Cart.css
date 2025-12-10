@@ -28,6 +28,21 @@
   margin-bottom: 1rem;
 }
 
+
+.empty-cart button{
+    width: 100%;
+  padding: 1rem;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  transition: background-color 0.2s;
+}
+
 .continue-shopping {
   display: inline-flex;
   align-items: center;
