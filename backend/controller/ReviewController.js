@@ -38,6 +38,7 @@ module.exports.addReview = async (req, res) => {
 module.exports.deleteReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
+    console.log("Deleting review with ID:", reviewId);
 
     // Remove review from Food items
     await Food.updateMany(

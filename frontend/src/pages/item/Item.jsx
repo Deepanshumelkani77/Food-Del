@@ -86,7 +86,7 @@ const handleDelete = async (id) => {
   if (!confirmDelete) return;
 
   try {
-    const response = await fetch(`http://localhost:4000/food/${id}`, {
+    const response = await fetch(`http://localhost:4000/review/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
