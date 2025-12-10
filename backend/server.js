@@ -59,3 +59,5 @@ const cartRoutes = require('./routes/Cart');
 app.use('/cart', cartRoutes);
 const orderRoutes = require('./routes/Order');
 app.use('/order', orderRoutes);
+const reviewRoutes = require('./routes/Review');
+app.use('/review', reviewRoutes);

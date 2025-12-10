@@ -21,7 +21,7 @@ const Item = () => {
         throw new Error('Failed to fetch food data');
       }
       const data = await response.json();
-      console.log(data.data.review.author);
+      console.log(data.data.review);
       setFoodItem(data.data);
       setReviews(data.data.review || []);
     } catch (error) {
@@ -53,7 +53,7 @@ const Item = () => {
 const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    const response = await fetch(``, {
+    const response = await fetch(`http://localhost:4000/review/${id}`, {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ const handleDelete = async (id) => {
   if (!confirmDelete) return;
 
   try {
-    const response = await fetch(``, {
+    const response = await fetch(`http://localhost:4000/food/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
