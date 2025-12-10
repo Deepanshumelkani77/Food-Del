@@ -58,7 +58,8 @@ exports.placeOrder = async (req, res) => {
       ...orderData,
       user: userId,
       items: orderItems,
-      totalAmount
+      totalAmount,
+      orderNumber: `ORD${Date.now().toString().slice(-8)}` // Generate a timestamp-based order number
     });
 
     await order.save({ session });

@@ -2,6 +2,15 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
+  orderNumber: {
+    type: String,
+    unique: true,
+    required: true,
+    default: function() {
+      // Generate a random 8-character alphanumeric string
+      return 'ORD' + Math.random().toString(36).substr(2, 8).toUpperCase();
+    }
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -45,5 +54,30 @@ const orderSchema = new mongoose.Schema({
     required: true
   }
 }, { timestamps: true });
+
+// Add a pre-save hook to ensure orderNumber is unique
+orderSchema.pre('save', async function(next) {
+  if (this.isNew) {
+    let isUnique = false;
+    while (!isUnique) {
+      try {
+        // Check if an order with this orderNumber already exists
+        const existingOrder = await mongoose.model('Order').findOne({ orderNumber: this.orderNumber });
+        if (!existingOrder) {
+          isUnique = true;
+        } else {
+          // Regenerate orderNumber if there's a collision
+          this.orderNumber = 'ORD' + Math.random().toString(36).substr(2, 8).toUpperCase();
+        }
+      } catch (err) {
+        return next(err);
+      }
+    }
+  }
+  next();
+});
+
+// Create index on orderNumber
+orderSchema.index({ orderNumber: 1 }, { unique: true });
 
 module.exports = mongoose.model('Order', orderSchema);
