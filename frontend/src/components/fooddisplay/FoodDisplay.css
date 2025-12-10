@@ -11,10 +11,10 @@ font-family: "Outfit",sans-serif;
 }
 
 .food-display-list{
-
     display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(240px,1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     margin-top: 30px;
-    gap:30px;
-    row-gap: 50px;
+    gap: 25px;
+    row-gap: 40px;
+    padding: 0 20px;
 }
