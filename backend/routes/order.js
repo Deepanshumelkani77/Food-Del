@@ -1,23 +1,22 @@
+// backend/routes/order.js
 const express = require('express');
 const router = express.Router();
-const { protect } = require('../middleware/auth');
-const {
-    createOrder,
-    getMyOrders,
-    getOrderById,
-    updateOrderStatus
+
+const { 
+  placeOrder, 
+  getUserOrders, 
+  getOrderById 
 } = require('../controller/orderController');
 
-// User routes
-router.route('/')
-    .post(protect, createOrder)
-    .get(protect, getMyOrders);
 
-router.route('/:id')
-    .get(protect, getOrderById)
 
-// Admin routes
-router.route('/:id/status')
-    .put(protect, updateOrderStatus);
+// Place a new order
+router.post('/place', placeOrder);
+
+// Get logged in user's orders
+router.get('/my-orders', getUserOrders);
+
+// Get order by ID
+router.get('/:id', getOrderById);
 
 module.exports = router;

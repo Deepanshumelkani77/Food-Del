@@ -1,123 +1,143 @@
-const Order = require('../models/order');
-const Cart = require('../models/Cart');
+// backend/controller/orderController.js
+const Order = require('../models/Order');
+const User = require('../models/User');
+const Food = require('../models/Food');
+const mongoose = require('mongoose');
 
-// @desc    Create new order
-// @route   POST /orders
-// @access  Private
-exports.createOrder = async (req, res) => {
-    try {
-        const { items, totalAmount, deliveryAddress, paymentMethod, deliveryInstructions } = req.body;
-        const userId = req.user._id;
-        console.log(req.body)
+// Place a new order
+exports.placeOrder = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  
+  try {
+    const { items, ...orderData } = req.body;
+    const userId = req.body.UserId;
+    console.log('Placing order for user:', req.body);
+    
 
-        if (!items || items.length === 0) {
-            return res.status(400).json({ success: false, message: 'No order items' });
-        }
+    // Validate food items and calculate total
+    let totalAmount = 0;
+    const orderItems = [];
 
-        // Create order
-        const order = new Order({
-            user: userId,
-            items,
-            totalAmount,
-            deliveryAddress,
-            paymentMethod: paymentMethod || 'cod',
-            deliveryInstructions: deliveryInstructions || '',
-            paymentStatus: 'pending',
-            orderStatus: 'pending',
-            estimatedDeliveryTime: new Date(Date.now() + 60 * 60 * 1000) // 1 hour from now
+    for (const item of items) {
+      const food = await Food.findById(item.foodId).session(session);
+      if (!food) {
+        await session.abortTransaction();
+        session.endSession();
+        return res.status(400).json({
+          success: false,
+          message: `Food item with ID ${item.foodId} not found`
         });
+      }
 
-        await order.save();
-
-        // Clear the cart after successful order
-        await Cart.findOneAndUpdate(
-            { user: userId },
-            { $set: { items: [] } }
-        );
-
-        res.status(201).json({
-            success: true,
-            message: 'Order placed successfully',
-            order
+      // Check if requested quantity is available
+      if (food.quantity < item.quantity) {
+        await session.abortTransaction();
+        session.endSession();
+        return res.status(400).json({
+          success: false,
+          message: `Insufficient quantity for ${food.name}`
         });
+      }
 
-    } catch (error) {
-        console.error('Error creating order:', error);
-        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+      // Update food quantity
+      food.quantity -= item.quantity;
+      await food.save({ session });
+
+      orderItems.push({
+        food: food._id,
+        quantity: item.quantity,
+        price: item.price
+      });
+
+      totalAmount += item.price * item.quantity;
     }
+
+    // Create order
+    const order = new Order({
+      ...orderData,
+      user: userId,
+      items: orderItems,
+      totalAmount
+    });
+
+    await order.save({ session });
+
+    // Update user's order history
+    await User.findByIdAndUpdate(
+      userId,
+      { $push: { orders: order._id } },
+      { session, new: true }
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+
+    res.status(201).json({
+      success: true,
+      message: 'Order placed successfully',
+      order
+    });
+
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    console.error('Error placing order:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error placing order',
+      error: error.message
+    });
+  }
 };
 
-// @desc    Get user's orders
-// @route   GET /orders
-// @access  Private
-exports.getMyOrders = async (req, res) => {
-    try {
-        const orders = await Order.find({ user: req.user._id })
-            .sort({ createdAt: -1 });
-            
-        res.status(200).json({
-            success: true,
-            count: orders.length,
-            orders
-        });
-    } catch (error) {
-        console.error('Error fetching orders:', error);
-        res.status(500).json({ success: false, message: 'Server error', error: error.message });
-    }
+
+
+// Get user's orders
+exports.getUserOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({ user: req.user.id })
+      .populate('items.food', 'name image')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      orders
+    });
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching orders',
+      error: error.message
+    });
+  }
 };
 
-// @desc    Get order by ID
-// @route   GET /orders/:id
-// @access  Private
+// Get order by ID
 exports.getOrderById = async (req, res) => {
-    try {
-        const order = await Order.findById(req.params.id);
-        
-        if (!order) {
-            return res.status(404).json({ success: false, message: 'Order not found' });
-        }
+  try {
+    const order = await Order.findById(req.params.id)
+      .populate('user', 'name email')
+      .populate('items.food', 'name image price');
 
-        // Check if the order belongs to the user
-        if (order.user.toString() !== req.user._id.toString()) {
-            return res.status(401).json({ success: false, message: 'Not authorized to view this order' });
-        }
-
-        res.status(200).json({
-            success: true,
-            order
-        });
-    } catch (error) {
-        console.error('Error fetching order:', error);
-        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found'
+      });
     }
-};
 
-// @desc    Update order status
-// @route   PUT /orders/:id/status
-// @access  Private/Admin
-exports.updateOrderStatus = async (req, res) => {
-    try {
-        const { status } = req.body;
-        const order = await Order.findById(req.params.id);
-        
-        if (!order) {
-            return res.status(404).json({ success: false, message: 'Order not found' });
-        }
-
-        order.orderStatus = status;
-        if (status === 'delivered') {
-            order.deliveredAt = Date.now();
-        }
-        
-        await order.save();
-
-        res.status(200).json({
-            success: true,
-            message: 'Order status updated',
-            order
-        });
-    } catch (error) {
-        console.error('Error updating order status:', error);
-        res.status(500).json({ success: false, message: 'Server error', error: error.message });
-    }
+    res.status(200).json({
+      success: true,
+      order
+    });
+  } catch (error) {
+    console.error('Error fetching order:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching order',
+      error: error.message
+    });
+  }
 };

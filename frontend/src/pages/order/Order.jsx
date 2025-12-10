@@ -1,9 +1,12 @@
+
+
+
 import { useState, useEffect, useContext, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { StoreContext } from '../../context/StoreContext';
-import './Placeorder.css';
+import './Order.css';
 
 const Placeorder = () => {
   // All hooks at the top level
@@ -23,6 +26,57 @@ const Placeorder = () => {
     postalCode: '',
     paymentMethod: 'cash'
   });
+
+
+
+
+
+
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setError('');
+
+  try {
+    const orderData = {
+      ...formData,
+      items: cartItems.map(item => ({
+        foodId: item.food._id,
+        quantity: item.quantity,
+        price: item.food.price
+      })),
+      totalAmount: totalAmount + 40 + (totalAmount * 0.1), // Including delivery and tax
+      status: 'pending',
+      UserId: user?.id
+    };
+
+    const token = Cookies.get('token');
+    const response = await axios.post('http://localhost:4000/order/place', orderData, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.data.success) {
+      //clearCart(); // Clear the cart after successful order
+      navigate('/order-success', { 
+        state: { 
+          orderId: response.data.order._id,
+          total: response.data.order.totalAmount
+        } 
+      });
+    }
+  } catch (err) {
+    setError(err.response?.data?.message || 'Failed to place order. Please try again.');
+    console.error('Order submission error:', err);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
 
 
@@ -86,122 +140,7 @@ const Placeorder = () => {
     return <div>Checking authentication status...</div>;
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    try {
-      // Validate form
-      const requiredFields = ['name', 'email', 'phone', 'address', 'city', 'state', 'postalCode'];
-      const missingFields = requiredFields.filter(field => !formData[field].trim());
-      
-      if (missingFields.length > 0) {
-        throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
-      }
-
-      // Check user authentication with fallback to cookie
-      const userFromCookie = Cookies.get('user');
-      const currentUser = user?.id || user?._id ? user : (userFromCookie ? JSON.parse(userFromCookie) : null);
-      
-      // Handle both 'id' and '_id' properties
-      const userId = currentUser?.id || currentUser?._id;
-      const token = Cookies.get('token');
-      
-      if (!userId) {
-        console.error('User not authenticated. User state:', user, 'Cookie:', userFromCookie);
-        throw new Error('Please login to place an order');
-      }
-
-      // Calculate order totals
-      const itemsPrice = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-      const taxPrice = itemsPrice * 0.1; // 10% tax
-      const shippingPrice = 40; // Flat rate shipping
-      const totalPrice = itemsPrice + taxPrice + shippingPrice;
-
-      // Create order data in the format expected by the backend
-      const orderData = {
-        userId,
-        items: cartItems.map(item => ({
-          food: item._id,     // Use _id as the food reference
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity || item.count, // Handle both quantity and count
-          image: item.image
-        })),
-       
-        totalPrice
-      };
-
-      console.log('Creating order with items:', JSON.stringify(orderData, null, 2));
-
-      // First create the order
-      const response = await axios.post('http://localhost:4000/orders', 
-        orderData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          withCredentials: true
-        }
-      );
-
-      console.log('Order created, now adding shipping info');
-      
-      // Prepare shipping data
-      const shippingData = {
-        userId,
-        address: formData.address,
-        city: formData.city,
-        state: formData.state,
-        postalCode: formData.postalCode,
-        phone: formData.phone
-      };
-
-      // Update order with shipping information
-      const shippingResponse = await axios.post('http://localhost:4000/orders/shipping', 
-        shippingData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          withCredentials: true
-        }
-      );
-
-      console.log('Shipping info updated:', shippingResponse.data);
-
-      // Clear the cart and redirect to home page
-      if (clearCart) {
-        clearCart();
-      }
-      navigate('/');
-
-    } catch (error) {
-      console.error('Error placing order:', error);
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.error('Error response data:', error.response.data);
-        console.error('Error response status:', error.response.status);
-        console.error('Error response headers:', error.response.headers);
-        setError(error.response.data?.message || `Server error: ${error.response.status}`);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error('No response received:', error.request);
-        setError('No response from server. Please check your connection.');
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error('Error setting up request:', error.message);
-        setError(error.message || 'Failed to place order. Please try again.');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
+ 
   
 
   if (!cartItems || cartItems.length === 0) {
@@ -403,3 +342,5 @@ const Placeorder = () => {
 };
 
 export default Placeorder;
+
+

@@ -1,33 +1,49 @@
-const mongoose = require("mongoose");
-
-const orderItemSchema = new mongoose.Schema({
-  food: { type: mongoose.Schema.Types.ObjectId, ref: "Food", required: true },
-  name: { type: String, required: true },
-  quantity: { type: Number, required: true },
-  price: { type: Number, required: true },
-  image: { type: String }
-}, { _id: false });
+// backend/models/order.js
+const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  items: [orderItemSchema],
-  totalAmount: { type: Number, required: true },
-
-  deliveryAddress: {
-    name: String,
-    phone: String,
-    email: String,
-    address: String,
-    city: String,
-    state: String,
-    postalCode: String,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
-
-  paymentMethod: { type: String, default: "cod" },
-  paymentStatus: { type: String, enum: ["pending", "completed"], default: "pending" },
-  orderStatus: { type: String, enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"], default: "pending" },
-  estimatedDeliveryTime: { type: Date },
-  deliveredAt: { type: Date }
+  items: [{
+    food: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Food',
+      required: true
+    },
+    quantity: {
+      type: Number,
+      required: true
+    },
+    price: {
+      type: Number,
+      required: true
+    }
+  }],
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  phone: { type: String, required: true },
+  address: { type: String, required: true },
+  city: { type: String, required: true },
+  state: { type: String, required: true },
+  postalCode: { type: String, required: true },
+  paymentMethod: { 
+    type: String, 
+    required: true,
+    enum: ['cash', 'card'],
+    default: 'cash'
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'confirmed', 'preparing', 'onDelivery', 'delivered', 'cancelled'],
+    default: 'pending'
+  },
+  totalAmount: {
+    type: Number,
+    required: true
+  }
 }, { timestamps: true });
 
-module.exports = mongoose.model("Order", orderSchema);
+module.exports = mongoose.model('Order', orderSchema);
