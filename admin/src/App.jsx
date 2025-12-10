@@ -30,7 +30,7 @@ console.log(showLogin)
        showLogin?<Login/>:<></>
      }
       <Navbar />
-      <hr/>
+   
       <div className="app-content">
 <Sidebar/>    
 <Routes>

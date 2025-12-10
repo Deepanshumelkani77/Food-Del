@@ -1,53 +1,155 @@
-import React from "react";
-import { useContext } from "react";
-import "./Sidebar.css";
-import { assets } from "../../assets/assets";
-import { NavLink } from "react-router-dom";
+import React, { useContext, useState, useEffect } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import { StoreContext } from "../../context/StoreContext";
-import { useNavigate } from "react-router-dom";
+import { assets } from "../../assets/assets";
+import "./Sidebar.css";
 
 const Sidebar = () => {
+  const { user, setShowLogin } = useContext(StoreContext);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isOpen, setIsOpen] = useState(!isMobile);
+  const location = useLocation();
 
-  const {user,setShowLogin} =useContext(StoreContext)
-const navigate = useNavigate();
-  const handleClick = (e) => {
-    if (!user) {
-      e.preventDefault(); // Prevent navigation
-      setShowLogin(true);
-     
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setIsOpen(!mobile);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Close sidebar when clicking outside on mobile
+  useEffect(() => {
+    if (!isMobile) return;
+    
+    const handleClickOutside = (e) => {
+      const sidebar = document.querySelector('.sidebar');
+      const menuButton = document.querySelector('.menu-toggle');
+      
+      if (isOpen && 
+          !sidebar.contains(e.target) && 
+          (!menuButton || !menuButton.contains(e.target))) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen, isMobile]);
+
+  // Close sidebar when route changes on mobile
+  useEffect(() => {
+    if (isMobile) {
+      setIsOpen(false);
     }
-  
+  }, [location.pathname, isMobile]);
+
+  const handleNavClick = (e) => {
+    if (!user) {
+      e.preventDefault();
+      setShowLogin(true);
+    }
   };
 
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
 
-
+  // Menu items configuration
+  const menuItems = [
+    { 
+      to: "/", 
+      icon: assets.order_icon, 
+      text: "List Items",
+      requiresAuth: false
+    },
+    { 
+      to: "/add", 
+      icon: assets.add_icon, 
+      text: "Add Items",
+      requiresAuth: true
+    },
+    { 
+      to: "/order", 
+      icon: "order_approve", 
+      text: "Orders",
+      requiresAuth: true,
+      isMaterialIcon: true
+    }
+  ];
 
   return (
-    <div className="sidebar">
+    <>
+      {/* Mobile menu toggle button */}
+      {isMobile && (
+        <button 
+          className="menu-toggle" 
+          onClick={toggleSidebar}
+          aria-label="Toggle menu"
+        >
+          <span className="material-symbols-outlined">
+            {isOpen ? 'close' : 'menu'}
+          </span>
+        </button>
+      )}
 
-      <div className="sidebar-options">
+      <div className={`sidebar ${isOpen ? 'active' : ''}`}>
+        {/* Brand/Logo */}
+        <div className="sidebar-brand">
+          <h2>Admin Panel</h2>
+        </div>
 
-      <NavLink to="/" className="sidebar-option">
-          <img src={assets.order_icon} alt="" />
-          <p>List Items</p>
-        </NavLink>
+        {/* Navigation Menu */}
+        <nav className="sidebar-options">
+          {menuItems.map((item, index) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) => 
+                `sidebar-option ${isActive ? 'active' : ''}`
+              }
+              onClick={item.requiresAuth ? handleNavClick : null}
+              title={item.text}
+            >
+              {item.isMaterialIcon ? (
+                <span className="material-symbols-outlined">
+                  {item.icon}
+                </span>
+              ) : (
+                <img src={item.icon} alt="" aria-hidden="true" />
+              )}
+              <span>{item.text}</span>
+            </NavLink>
+          ))}
+        </nav>
 
-        <NavLink to="/add" onClick={handleClick} className="sidebar-option">
-          <img src={assets.add_icon} alt="" />
-          <p>Add Items</p>
-        </NavLink>
-
-        <NavLink to="/order" onClick={handleClick} className="sidebar-option">
-        <span className="material-symbols-outlined">
-order_approve
-</span>
-          <p>Orders</p>
-        </NavLink>
-        
-
+        {/* User Info (optional) */}
+        {user && (
+          <div className="user-info">
+            <div className="user-avatar">
+              {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+            </div>
+            <div className="user-details">
+              <span className="user-name">{user.name || 'Admin User'}</span>
+              <span className="user-role">Administrator</span>
+            </div>
+          </div>
+        )}
       </div>
       
-    </div>
+      {/* Overlay for mobile */}
+      {isMobile && isOpen && (
+        <div 
+          className="sidebar-overlay"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+    </>
   );
 };
 

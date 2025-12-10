@@ -1,48 +1,283 @@
-.sidebar{
-  
-    width:18%;
-    min-height:90vh;
-    border:1px solid #a9a9a9;
-    border-top: 0;
-    font-size: max(1vw,10px);
-
-    
-    
+/* Sidebar Container */
+.sidebar {
+    width: 280px;
+    min-height: 90vh;
+    background: #ffffff;
+    color: #49557e;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
    
-}
-.sidebar-options{
-    padding-top: 50px;
-    padding-left: 20%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    
     display: flex;
     flex-direction: column;
-    gap:20px;
+    border-right: 1px solid #f0f0f0;
+    
 }
-.sidebar-option{
+
+/* Logo/Brand Section */
+.sidebar-brand {
+    padding: 24px 20px;
     display: flex;
     align-items: center;
-    gap:12px;
-    border: 1px solid #a9a9a9;
-    border-right: 0;
-    padding: 8px 10px;
-    border-radius: 3px 0px 0px 3px;
+    justify-content: center;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 10px;
+    background: #fff;
+}
+
+.sidebar-brand h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #FF4C24;
+    text-align: center;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.5px;
+}
+
+/* Navigation Options */
+.sidebar-options {
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.sidebar-options::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-options::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.sidebar-option {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    border-radius: 8px;
     cursor: pointer;
-}
-.sidebar-options .active{
-    background-color: #fff0ed;
-    border-color: tomato;
-}
-.sidebar-option .material-symbols-outlined{
-font-size: 30px;
-color: rgba(0, 0, 0, 0.778);
+    color: #49557e;
+    text-decoration: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 15px;
+    font-weight: 500;
+    margin: 2px 0;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Outfit', sans-serif;
 }
 
-@media (max-width:955px)
-{
+.sidebar-option::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: #FF4C24;
+    transform: scaleY(0);
+    transition: transform 0.2s ease;
+}
 
+.sidebar-option:hover {
+    background: #fff4f2;
+    color: #FF4C24;
+    transform: translateX(4px);
+}
+
+.sidebar-option:hover::before {
+    transform: scaleY(1);
+}
+
+.sidebar-option.active {
+    background: #fff4f2;
+    color: #FF4C24;
+    font-weight: 600;
+    transform: translateX(4px);
+}
+
+.sidebar-option.active::before {
+    transform: scaleY(1);
+    background: #FF4C24;
+}
+
+.sidebar-option img {
+    width: 20px;
+    height: 20px;
+    filter: invert(42%) sepia(10%) saturate(1033%) hue-rotate(183deg) brightness(90%) contrast(86%);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.sidebar-option:hover img,
+.sidebar-option.active img {
+    filter: invert(40%) sepia(99%) saturate(1857%) hue-rotate(346deg) brightness(100%) contrast(103%);
+    transform: scale(1.1);
+}
+
+.sidebar-option .material-symbols-outlined {
+    font-size: 22px;
+    color: #49557e;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.sidebar-option:hover .material-symbols-outlined,
+.sidebar-option.active .material-symbols-outlined {
+    color: #FF4C24;
+}
+
+/* User Info Section */
+.user-info {
+    padding: 16px;
+    margin-top: auto;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #FF4C24;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(255, 76, 36, 0.2);
+    font-family: 'Outfit', sans-serif;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+.user-name {
+    font-weight: 500;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: 'Outfit', sans-serif;
+}
+
+.user-role {
+    font-size: 12px;
+    color: #888;
+    margin-top: 2px;
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Mobile Menu Toggle Button */
+.menu-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #fff;
+    color: #FF4C24;
+    border: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1100;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.menu-toggle:hover {
+    background: #fff4f2;
+    transform: scale(1.05);
+    border-color: #FF4C24;
+}
+
+.menu-toggle .material-symbols-outlined {
+    font-size: 24px;
+}
+
+/* Mobile Overlay */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 260px;
+    }
     
-
-.sidebar-option p{
-    display: none;
+    .sidebar-option {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
 }
 
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+    }
 }
+
+/* Animation for menu items */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.sidebar-option {
+    animation: slideIn 0.3s ease-out forwards;
+    opacity: 0;
+}
+
+.sidebar-option:nth-child(1) { animation-delay: 0.1s; }
+.sidebar-option:nth-child(2) { animation-delay: 0.15s; }
+.sidebar-option:nth-child(3) { animation-delay: 0.2s; }
+.sidebar-option:nth-child(4) { animation-delay: 0.25s; }
