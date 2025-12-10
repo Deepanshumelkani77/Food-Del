@@ -7,7 +7,7 @@ import './OrderConfirmation.css';
 const OrderConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { orderId, total } = location.state || {};
+  const { orderId, total, orderNumber } = location.state || {};
 
   useEffect(() => {
     if (!orderId) {
@@ -38,11 +38,11 @@ const OrderConfirmation = () => {
         <div className="order-details-card">
           <div className="order-detail-item">
             <span className="detail-label">Order Number:</span>
-            <span className="detail-value">{orderId}</span>
+            <span className="detail-value">{orderNumber}</span>
           </div>
           <div className="order-detail-item total-amount">
             <span className="detail-label">Total Amount:</span>
-            <span className="detail-value">₹{total?.toFixed(2)}</span>
+            <span className="detail-value">${total?.toFixed(2)}</span>
           </div>
           <div className="order-status">
             <div className="status-timeline">

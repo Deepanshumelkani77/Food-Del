@@ -65,7 +65,8 @@ const handleSubmit = async (e) => {
       navigate('/order-confirmation', { 
         state: { 
           orderId: response.data.order._id,
-          total: response.data.order.totalAmount
+          total: response.data.order.totalAmount,
+          orderNumber: response.data.order.orderNumber
         } 
       });
     }
