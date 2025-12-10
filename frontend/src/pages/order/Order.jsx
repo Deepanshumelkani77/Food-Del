@@ -47,7 +47,7 @@ const handleSubmit = async (e) => {
         quantity: item.quantity,
         price: item.food.price
       })),
-      totalAmount: totalAmount + 40 + (totalAmount * 0.1), // Including delivery and tax
+      totalAmount: totalAmount + 5 + (totalAmount * 0.1), // Including delivery and tax
       status: 'pending',
       UserId: user?.id
     };
@@ -312,7 +312,7 @@ const handleSubmit = async (e) => {
         <h4>{item.food.name}</h4>
         <p>Qty: {item.quantity}</p>
       </div>
-      <div className="item-price">₹{(item.food.price * item.quantity).toFixed(2)}</div>
+      <div className="item-price">${(item.food.price * item.quantity).toFixed(2)}</div>
     </div>
   ))}
 </div>
@@ -320,19 +320,19 @@ const handleSubmit = async (e) => {
           <div className="order-totals">
             <div className="total-row">
               <span>Subtotal ({totalItems} items):</span>
-              <span>₹{totalAmount.toFixed(2)}</span>
+              <span>${totalAmount.toFixed(2)}</span>
             </div>
             <div className="total-row">
               <span>Delivery Fee:</span>
-              <span>₹40.00</span>
+              <span>$5.00</span>
             </div>
             <div className="total-row">
               <span>Tax (10%):</span>
-              <span>₹{(totalAmount * 0.1).toFixed(2)}</span>
+              <span>${(totalAmount * 0.1).toFixed(2)}</span>
             </div>
             <div className="total-row grand-total">
               <span>Total:</span>
-              <span>₹{(totalAmount + 40 + (totalAmount * 0.1)).toFixed(2)}</span>
+              <span>${(totalAmount + 5 + (totalAmount * 0.1)).toFixed(2)}</span>
             </div>
           </div>
         </div>

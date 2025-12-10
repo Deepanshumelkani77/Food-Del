@@ -16,7 +16,7 @@ exports.placeOrder = async (req, res) => {
     
 
     // Validate food items and calculate total
-    let totalAmount = 0;
+    let totalAmount = req.body.totalAmount ;;
     const orderItems = [];
 
     for (const item of items) {
@@ -50,7 +50,7 @@ exports.placeOrder = async (req, res) => {
         price: item.price
       });
 
-      totalAmount += item.price * item.quantity;
+     
     }
 
     // Create order
@@ -58,7 +58,7 @@ exports.placeOrder = async (req, res) => {
       ...orderData,
       user: userId,
       items: orderItems,
-      totalAmount,
+      totalAmount: totalAmount,
       orderNumber: `ORD${Date.now().toString().slice(-8)}` // Generate a timestamp-based order number
     });
 
