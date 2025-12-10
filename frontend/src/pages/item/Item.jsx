@@ -11,16 +11,19 @@ const Item = () => {
   const [foodItem, setFoodItem] = useState({});
   const [reviews, setReviews] = useState([]);
 
+
+
   // Fetch food details
   const fetchFoodItem = async () => {
     try {
-      const response = await fetch(``);
+      const response = await fetch(`http://localhost:4000/food/${id}`);
       if (!response.ok) {
         throw new Error('Failed to fetch food data');
       }
       const data = await response.json();
-      setFoodItem(data);
-      setReviews(data.review || []);
+      console.log(data.data.review.author);
+      setFoodItem(data.data);
+      setReviews(data.data.review || []);
     } catch (error) {
       console.error('Error fetching food item:', error);
     }
@@ -139,7 +142,7 @@ const handleDelete = async (id) => {
           {reviews.length > 0 ? (
             reviews.map((review, index) => (
               <div key={index} className='user-review'>
-                <p className='username'>{review.author.username || 'Anonymous'}</p>
+                <p className='username'>{review.author?.username || 'Anonymous'}</p>
                 <hr></hr>
                 <p className='comment'>{review.comment}</p>
                
