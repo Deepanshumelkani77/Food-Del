@@ -24,7 +24,7 @@ const server = app.listen(port, () => {
 
 // Enable CORS with specific origin and credentials
 const corsOptions = {
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://your-production-domain.com'],
+  origin: ['http://localhost:5173', 'http://localhost:5174', ],
   credentials: true,
   optionsSuccessStatus: 200 // For legacy browser support
 };
