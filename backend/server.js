@@ -9,10 +9,32 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174','https://food-del-beta-ebon.vercel.app/','https://food-del-admin-sigma.vercel.app/'],
-  credentials: true
-}));
+// CORS configuration
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'https://food-del-beta-ebon.vercel.app',
+  'https://food-del-admin-sigma.vercel.app'
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  optionsSuccessStatus: 200
+};
+
+// Enable CORS pre-flight
+app.options('*', cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -21,16 +43,6 @@ const port = process.env.PORT || 4000;
 const server = app.listen(port, () => {
   console.log(`Server running on port ${port}...`);
 });
-
-// Enable CORS with specific origin and credentials
-const corsOptions = {
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://food-del-beta-ebon.vercel.app/','https://food-del-admin-sigma.vercel.app/'],
-  credentials: true,
-  optionsSuccessStatus: 200 // For legacy browser support
-};
-app.use(cors(corsOptions));
-
-
 
 // Database connection
 const mongoose = require('mongoose');
