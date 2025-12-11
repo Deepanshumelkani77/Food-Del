@@ -10,7 +10,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  origin: ['http://localhost:5173', 'http://localhost:5174','https://food-del-beta-ebon.vercel.app/','https://food-del-admin-sigma.vercel.app/'],
   credentials: true
 }));
 app.use(express.json());
@@ -24,7 +24,7 @@ const server = app.listen(port, () => {
 
 // Enable CORS with specific origin and credentials
 const corsOptions = {
-  origin: ['http://localhost:5173', 'http://localhost:5174', ],
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://food-del-beta-ebon.vercel.app/','https://food-del-admin-sigma.vercel.app/'],
   credentials: true,
   optionsSuccessStatus: 200 // For legacy browser support
 };
