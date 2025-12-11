@@ -41,7 +41,8 @@ width:100%;
   height:90vh;
    overflow-y: scroll;
     scrollbar-width: none;   /* Firefox */
-  -ms-overflow-style: none;
+  background-color: rgba(128, 128, 128, 0.034);
+    -ms-overflow-style: none;
 }
 
 /* Header Styles */

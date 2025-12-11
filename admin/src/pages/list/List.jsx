@@ -11,7 +11,7 @@ const List = () => {
     <div className='list'>
       
       <div className="list-content">
-      <Header/>
+
       <ExploreMenu category={category} setCategory={setCategory}/>
       <FoodDisplay category={category}/>
       </div>

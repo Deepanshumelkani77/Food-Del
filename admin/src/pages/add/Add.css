@@ -15,7 +15,7 @@
 
 .add-container {
   width: 100%;
-  max-width: 1000px;
+  
   margin:  auto;
   padding: 0 1.5rem;
   font-family: 'Outfit', sans-serif;
@@ -24,6 +24,7 @@
     scrollbar-width: none;   /* Firefox */
   -ms-overflow-style: none;
   padding-bottom: 10vh;
+    background-color: rgba(128, 128, 128, 0.034);
     
 }
 

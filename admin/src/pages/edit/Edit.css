@@ -15,7 +15,7 @@
 
 .edit-container {
   width: 100%;
-  max-width: 1000px;
+
   margin: 0 auto;
   padding: 2rem 1.5rem;
   font-family: 'Outfit', sans-serif;
@@ -23,6 +23,7 @@
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+   background-color: rgba(128, 128, 128, 0.034);
 }
 
 .edit-container::-webkit-scrollbar {

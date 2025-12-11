@@ -6,6 +6,7 @@
     overflow-y: scroll;
     scrollbar-width: none;   /* Firefox */
   -ms-overflow-style: none;
+  background-color: rgba(128, 128, 128, 0.034);
     
     
 }
