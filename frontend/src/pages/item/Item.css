@@ -188,6 +188,9 @@
     background: #ffcdd2;
     color: #FF4C24;
 }
+.loading-container{
+    height:90vh;
+}
 
 /* Responsive Design */
 @media (max-width: 1200px) {
