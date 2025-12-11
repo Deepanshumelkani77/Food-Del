@@ -5,7 +5,7 @@ import { assets } from "../../assets/assets";
 import "./Sidebar.css";
 
 const Sidebar = () => {
-  const { user, setShowLogin } = useContext(StoreContext);
+  const { admin, setShowLogin } = useContext(StoreContext);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isOpen, setIsOpen] = useState(!isMobile);
   const location = useLocation();
@@ -50,7 +50,7 @@ const Sidebar = () => {
   }, [location.pathname, isMobile]);
 
   const handleNavClick = (e) => {
-    if (!user) {
+    if (!admin) {
       e.preventDefault();
       setShowLogin(true);
     }
@@ -129,13 +129,13 @@ const Sidebar = () => {
         </nav>
 
         {/* User Info (optional) */}
-        {user && (
+        {admin && (
           <div className="user-info">
             <div className="user-avatar">
-              {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+              {admin.username ? admin.username.charAt(0).toUpperCase() : 'U'}
             </div>
             <div className="user-details">
-              <span className="user-name">{user.name || 'Admin User'}</span>
+              <span className="user-name">{admin.username || 'Admin User'}</span>
               <span className="user-role">Administrator</span>
             </div>
           </div>

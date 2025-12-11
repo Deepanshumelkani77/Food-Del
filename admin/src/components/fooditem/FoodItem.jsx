@@ -7,7 +7,7 @@ import { StoreContext } from '../../context/StoreContext'
 const FoodItem = ({id,name,description,price,image}) => {
 
 
-  const {user,setShowLogin}=useContext(StoreContext)
+  const {admin,setShowLogin}=useContext(StoreContext)
 const navigate=useNavigate();
 
 
@@ -54,14 +54,14 @@ const handleDelete = async () => {
         </p>
         <div className="food-item-btns">
           <button 
-            onClick={user ? () => navigate(`/edit/${id}`) : () => setShowLogin(true)}
+            onClick={admin ? () => navigate(`/edit/${id}`) : () => setShowLogin(true)}
             title="Edit item"
           >
            
       
           </button>
           <button 
-            onClick={user ? handleDelete : () => setShowLogin(true)}
+            onClick={admin ? handleDelete : () => setShowLogin(true)}
             title="Delete item"
             className="delete-btn"
           >
