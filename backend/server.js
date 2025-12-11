@@ -61,3 +61,5 @@ const orderRoutes = require('./routes/Order');
 app.use('/order', orderRoutes);
 const reviewRoutes = require('./routes/Review');
 app.use('/review', reviewRoutes);
+const adminRoutes = require('./routes/Admin');
+app.use('/admin', adminRoutes);
