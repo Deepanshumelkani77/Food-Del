@@ -38,6 +38,10 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1.5rem;
+  height:90vh;
+   overflow-y: scroll;
+    scrollbar-width: none;   /* Firefox */
+  -ms-overflow-style: none;
 }
 
 /* Header Styles */
