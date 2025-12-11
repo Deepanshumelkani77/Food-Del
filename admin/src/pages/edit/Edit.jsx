@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import "../add/Add.css";
-import "./Edit.css"
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import "./Edit.css";
 
 const Edit = () => {
 
@@ -98,85 +97,127 @@ const Edit = () => {
   };
 
   return (
-    <div className='add'>
-      <form className='flex-col' onSubmit={handleUpdate}>
-        <div className="add-product-name">
-          <p>Product name</p>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder={foodItem.name}
-          />
-        </div>
+    <div className='edit-container'>
+      <div className='edit-header'>
+        <h2>Edit Food Item</h2>
+        <p>Update the details below to modify this menu item</p>
+      </div>
 
-        <div className="add-img-upload">
-       
-
-          <p>Upload Image</p>
-          {/* Note: Do not set a value for file inputs */}
-          <input
-            type="file"
-            onChange={handleFileChange}
-            accept="image/*"
-            id="image"
-            name="image"
-            placeholder={foodItem.image}
-           
-         
-          />
-
-{foodItem.image && <img src={foodItem.image} alt="Current food item" style={{ width: '70px', height: '60px', objectFit: 'cover' }} />}
-        </div>
-
-        <div className="add-product-discription">
-          <p>Product description</p>
-          <textarea
-            name="description"
-            rows="2"
-            placeholder={foodItem.description}
-            value={formData.description}
-            onChange={handleChange}
-            required
-          ></textarea>
-        </div>
-
-        <div className="add-category-price">
-          <div className="add-category">
-            <p className='p1'>Product category</p>
-            <p className='p2'>category</p>
-            <select
-              name="category"
-              onChange={handleChange}
-              value={formData.category}
-            >
-              <option value="">Select category</option>
-              <option value="Salad">Salad</option>
-              <option value="Rolls">Rolls</option>
-              <option value="Deserts">Deserts</option>
-              <option value="Sandwich">Sandwich</option>
-              <option value="Cake">Cake</option>
-              <option value="Pure Veg">Pure Veg</option>
-              <option value="pasta">pasta</option>
-              <option value="Noodles">Noodles</option>
-            </select>
-          </div>
-          <div className="add-price">
-            <p className='p1'>Product price</p>
-            <p2 className="p2">price</p2>
-
-            <input
-              type="number"
-              name="price"
-              placeholder={foodItem.price}
-              value={formData.price}
-              onChange={handleChange}
+      <form className='edit-form' onSubmit={handleUpdate}>
+        <div className="form-group">
+          <label htmlFor="name">Product Name</label>
+          <div className="input-with-icon">
+            <input 
+              type="text" 
+              id="name"
+              name='name'  
+              value={formData.name}
+              onChange={handleChange}  
+              placeholder='e.g., Margherita Pizza' 
+              required
             />
           </div>
         </div>
 
-        <button type="submit" className="add-btn">Update</button>
+        <div className="form-group file-upload-container">
+          <label>Product Image</label>
+          <div className="file-upload-wrapper">
+            <input 
+              type="file" 
+              id='image' 
+              name='image'   
+              onChange={handleFileChange} 
+              accept="image/*" 
+              className="file-input"
+            />
+            <div className="file-upload-content">
+              <p>{file ? file.name : 'Click to change the current image'}</p>
+              <small>PNG, JPG, JPEG (max. 5MB)</small>
+              {foodItem.image && (
+                <div className="current-image-preview">
+                  <span>Current Image:</span>
+                  <img 
+                    src={foodItem.image} 
+                    alt="Current food item" 
+                    className="current-image"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="description">Product Description</label>
+          <div className="input-with-icon">
+            <textarea 
+              id="description"
+              name="description" 
+              rows='4' 
+              value={formData.description}
+              onChange={handleChange} 
+              required
+            ></textarea>
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="category">Category</label>
+            <div className="select-wrapper">
+              <select 
+                id="category" 
+                name="category" 
+                value={formData.category}
+                onChange={handleChange} 
+                required
+              >
+                <option value="">Select a category</option>
+                <option value="Salad">Salad</option>
+                <option value="Rolls">Rolls</option>
+                <option value="Desserts">Desserts</option>
+                <option value="Sandwich">Sandwich</option>
+                <option value="Cake">Cake</option>
+                <option value="Pure Veg">Pure Veg</option>
+                <option value="Pasta">Pasta</option>
+                <option value="Noodles">Noodles</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="price">Price ($)</label>
+            <div className="input-with-icon">
+              <input 
+                type="number" 
+                id="price"
+                name="price"   
+                value={formData.price}
+                onChange={handleChange} 
+                placeholder='0.00' 
+                min="0"
+                step="0.01"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="form-actions">
+          <button 
+            type="button" 
+            className="btn btn-secondary"
+            onClick={() => navigate(-1)}
+          >
+            Cancel
+          </button>
+          <button 
+            type='submit' 
+            className='btn btn-primary'
+          >
+            Update Food Item
+          </button>
+        </div>
       </form>
     </div>
   );

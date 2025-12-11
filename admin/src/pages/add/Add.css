@@ -23,6 +23,7 @@
    overflow-y: scroll;
     scrollbar-width: none;   /* Firefox */
   -ms-overflow-style: none;
+  padding-bottom: 10vh;
     
 }
 
