@@ -16,3 +16,13 @@
     margin: auto;
     
 }
+
+
+
+@media (max-width: 768px) {
+
+  .list{
+    width:100%;
+  }
+
+}

@@ -5,7 +5,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 8px 4%;
-    z-index: 999;
+ 
     border-bottom: 2px solid rgba(0, 0, 0, 0.05);
     background-color: white;
     position: relative;
@@ -31,7 +31,7 @@
 }
 
 /* Hide on desktop by default */
-@media (min-width: 1025px) {
+@media (min-width: 769px) {
     .menu-button {
         display: none;
     }
@@ -68,7 +68,7 @@
 }
 
 /* Mobile styles */
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
     .menu-button {
         display: block; /* Show menu button on mobile */
     }

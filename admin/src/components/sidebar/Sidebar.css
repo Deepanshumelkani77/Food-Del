@@ -1,6 +1,6 @@
 /* Sidebar Container */
 .sidebar {
-    width: 280px;
+    width: 18%;
     min-height: 90vh;
     background: #ffffff;
     color: #49557e;
@@ -309,8 +309,7 @@
 @media (max-width: 1024px) {
     .sidebar {
         width: 260px;
-        position:fixed;
-        z-index: 1000;
+       
     }
     
     .sidebar-option {
@@ -323,6 +322,8 @@
     .sidebar {
         transform: translateX(-100%);
         box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
+         position:fixed;
+        z-index: 1000;
     }
     
     .sidebar.active {
