@@ -1,5 +1,5 @@
 // backend/controller/orderController.js
-const Order = require('../models/Order');
+const Order = require('../models/order');
 const User = require('../models/User');
 const Food = require('../models/Food');
 const mongoose = require('mongoose');
