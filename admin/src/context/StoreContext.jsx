@@ -1,51 +1,67 @@
 import React from 'react'
-import { createContext,useState } from "react";
+import { createContext,useState ,useEffect} from "react";
 export const StoreContext=createContext();
 import Cookies from "js-cookie";
 import axios from "axios";
+  const API = "http://localhost:4000";
+
 
 const StoreContextProvider=(props)=>{
 
+
+
   //state variable for login page
   const [showLogin,setShowLogin]=useState(false)
-  
-  //store current user in cookie than we use currentuser anywhere
-  const adminCookie = Cookies.get("admin");
-const initialUser = adminCookie && adminCookie !== "undefined" 
-  ? JSON.parse(adminCookie) 
-  : null;
+   const [admin, setAdmin] = useState(null);
+   console.log("Admin:", admin)
 
-const [user, setUser] = useState(initialUser);
 
-console.log(user)
-  
+  // ---------------- LOGIN ----------------
   const login = async (email, password) => {
-      try {
-        const response = await axios.post("https://food-del-0kcf.onrender.com/admin/login", { email, password });
-        console.log("Login response:", response.data);
-        Cookies.set("token", response.data.token, { expires: 1 });
-        Cookies.set("admin", JSON.stringify(response.data.admin), { expires: 1 });
-        setUser(response.data.admin);
-      } catch (error) {
-        alert(error.response?.data?.message || "Login failed");
-      }
-    }
-  
-    const signup = async (name, email, password) => {
-      try {
-        await axios.post("https://food-del-0kcf.onrender.com/admin/signup", { name, email, password });
-        alert("Signup successful! Please login.");
-      } catch (error) {
-        alert(error.response?.data?.message || "Signup failed");
-      }
-    };
-  
+    const res = await axios.post(`${API}/admin/login`, { email, password });
+
+    Cookies.set("token", res.data.token);
+    Cookies.set("admin", JSON.stringify(res.data.admin));
+
+    setAdmin(res.data.admin);
+    alert("Login successful");
+  };
+
+
+   // ---------------- SIGNUP ----------------
+  const signup = async (username, email, password) => {
+    const res = await axios.post(`${API}/admin/signup`, {
+      username,
+      email,
+      password,
+    });
+
+    Cookies.set("token", res.data.token);
+    Cookies.set("admin", JSON.stringify(res.data.admin));
+
+    setAdmin(res.data.admin);
+    alert("Account created successfully");
+  };
+
+  // ---------------- LOGOUT ----------------
     const logout = () => {
       Cookies.remove("token");
       Cookies.remove("admin");
-      setUser(null);
+      setAdmin(null);
     };
+
+
+
+   // ---------------- LOAD USER FROM COOKIES ----------------
+    useEffect(() => {
+      const savedAdmin = Cookies.get("admin");
+      if (savedAdmin) setAdmin(JSON.parse(savedAdmin));
+    }, []);
   
+
+  
+  
+ 
 
 
 
@@ -54,7 +70,7 @@ console.log(user)
     login,
     signup,
     logout,
-    user,
+    admin,
     showLogin,
     setShowLogin
 
