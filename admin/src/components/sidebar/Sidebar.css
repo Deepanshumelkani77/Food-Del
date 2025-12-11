@@ -143,9 +143,25 @@
     margin-top: auto;
     border-top: 1px solid #f0f0f0;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 12px;
     background: #fff;
+    position: relative;
+}
+.user-info .flex{
+    
+    width:100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    
+}
+
+.user-info-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
 }
 
 .user-avatar {
@@ -169,6 +185,8 @@
     flex-direction: column;
     flex: 1;
     overflow: hidden;
+    text-align: center;
+  
 }
 
 .user-name {
@@ -185,6 +203,57 @@
     color: #888;
     margin-top: 2px;
     font-family: 'Outfit', sans-serif;
+}
+
+/* Logout Button */
+.logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 16px;
+    margin-top: 8px;
+    background: #fff4f2;
+    border: 1px solid #ffd6d0;
+    border-radius: 8px;
+    color: #FF4C24;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: #ffece9;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 76, 36, 0.1);
+}
+
+.logout-btn:active {
+    transform: translateY(0);
+}
+
+.logout-btn .material-symbols-outlined {
+    font-size: 18px;
+    transition: transform 0.2s ease;
+}
+
+.logout-btn:hover .material-symbols-outlined {
+    transform: translateX(2px);
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+    .user-info {
+        padding: 12px;
+    }
+    
+    .logout-btn {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
 }
 
 /* Mobile Menu Toggle Button */

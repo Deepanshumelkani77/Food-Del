@@ -1,11 +1,12 @@
 import React, { useContext, useState, useEffect } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { StoreContext } from "../../context/StoreContext";
 import { assets } from "../../assets/assets";
 import "./Sidebar.css";
 
 const Sidebar = () => {
-  const { admin, setShowLogin } = useContext(StoreContext);
+  const { logout,admin, setShowLogin, setToken } = useContext(StoreContext);
+  const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isOpen, setIsOpen] = useState(!isMobile);
   const location = useLocation();
@@ -54,6 +55,11 @@ const Sidebar = () => {
       e.preventDefault();
       setShowLogin(true);
     }
+  };
+
+  const handleLogout = () => {
+    // Clear admin data and token
+    logout();
   };
 
   const toggleSidebar = () => {
@@ -131,13 +137,21 @@ const Sidebar = () => {
         {/* User Info (optional) */}
         {admin && (
           <div className="user-info">
+<div className="flex">
             <div className="user-avatar">
               {admin.username ? admin.username.charAt(0).toUpperCase() : 'U'}
             </div>
+
             <div className="user-details">
               <span className="user-name">{admin.username || 'Admin User'}</span>
               <span className="user-role">Administrator</span>
             </div>
+</div>
+
+            <button className="logout-btn" onClick={handleLogout}>
+            
+              <span>Logout</span>
+            </button>
           </div>
         )}
       </div>
