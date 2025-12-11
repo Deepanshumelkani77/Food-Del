@@ -1,5 +1,5 @@
-import React from 'react'
-import  { useContext} from 'react'
+import React, { useState } from 'react'
+import { useContext } from 'react'
 import Navbar from './components/navbar/Navbar'
 import Sidebar from "./components/sidebar/Sidebar"
 import {Route, Routes} from "react-router-dom"
@@ -16,9 +16,12 @@ const App = () => {
   
 
 
-  //signup
-const { showLogin } = useContext(StoreContext);
-console.log(showLogin)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
+  const { showLogin } = useContext(StoreContext);
+  
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
      
@@ -29,10 +32,9 @@ console.log(showLogin)
     {
        showLogin?<Login/>:<></>
      }
-      <Navbar />
-   
+      <Navbar toggleSidebar={toggleSidebar} />
       <div className="app-content">
-<Sidebar/>    
+        <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 <Routes>
   <Route path="/add" element={<Add/>}></Route>
   <Route path="/" element={<List/>}></Route>

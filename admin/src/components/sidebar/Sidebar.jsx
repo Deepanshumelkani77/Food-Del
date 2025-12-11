@@ -4,12 +4,19 @@ import { StoreContext } from "../../context/StoreContext";
 import { assets } from "../../assets/assets";
 import "./Sidebar.css";
 
-const Sidebar = () => {
-  const { logout,admin, setShowLogin, setToken } = useContext(StoreContext);
+const Sidebar = ({ isOpen: propIsOpen, toggleSidebar }) => {
+  const { logout, admin, setShowLogin, setToken } = useContext(StoreContext);
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [isOpen, setIsOpen] = useState(!isMobile);
+  const [isOpen, setIsOpen] = useState(propIsOpen !== undefined ? propIsOpen : !isMobile);
   const location = useLocation();
+
+  // Sync with parent's isOpen state when it changes
+  useEffect(() => {
+    if (propIsOpen !== undefined) {
+      setIsOpen(propIsOpen);
+    }
+  }, [propIsOpen]);
 
   // Handle window resize
   useEffect(() => {
@@ -30,18 +37,22 @@ const Sidebar = () => {
     
     const handleClickOutside = (e) => {
       const sidebar = document.querySelector('.sidebar');
-      const menuButton = document.querySelector('.menu-toggle');
+      const menuButton = document.querySelector('.menu-button');
       
-      if (isOpen && 
-          !sidebar.contains(e.target) && 
-          (!menuButton || !menuButton.contains(e.target))) {
-        setIsOpen(false);
+      if (sidebar && !sidebar.contains(e.target) && 
+          menuButton && !menuButton.contains(e.target) && 
+          isOpen) {
+        const newState = false;
+        setIsOpen(newState);
+        if (toggleSidebar) {
+          toggleSidebar();
+        }
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isOpen, isMobile]);
+  }, [isMobile, isOpen, toggleSidebar]);
 
   // Close sidebar when route changes on mobile
   useEffect(() => {
@@ -62,8 +73,12 @@ const Sidebar = () => {
     logout();
   };
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+  const handleToggleSidebar = () => {
+    const newState = !isOpen;
+    setIsOpen(newState);
+    if (toggleSidebar) {
+      toggleSidebar();
+    }
   };
 
   // Menu items configuration
@@ -91,19 +106,7 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Mobile menu toggle button */}
-      {isMobile && (
-        <button 
-          className="menu-toggle" 
-          onClick={toggleSidebar}
-          aria-label="Toggle menu"
-        >
-          <span className="material-symbols-outlined">
-            {isOpen ? 'close' : 'menu'}
-          </span>
-        </button>
-      )}
-
+    
       <div className={`sidebar ${isOpen ? 'active' : ''}`}>
         {/* Brand/Logo */}
         <div className="sidebar-brand">

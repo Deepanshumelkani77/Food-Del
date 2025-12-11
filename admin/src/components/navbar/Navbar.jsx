@@ -1,21 +1,48 @@
-import React from 'react'
-import  { useState,useContext } from 'react'
-import "./Navbar.css"
-import {assets} from "../../assets/assets.js"
-import { StoreContext } from '../../context/StoreContext'
+import React, { useState, useContext, useEffect } from 'react';
+import "./Navbar.css";
+import { assets } from "../../assets/assets.js";
+import { StoreContext } from '../../context/StoreContext';
 
-const Navbar = () => {
+const Navbar = ({ toggleSidebar }) => {
+  const { user, logout, setShowLogin } = useContext(StoreContext);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
-  const {user,logout}=useContext(StoreContext)
- 
- //signup
-const { setShowLogin } = useContext(StoreContext);
+  // Update mobile state on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleMenuClick = () => {
+    if (toggleSidebar) {
+      toggleSidebar();
+    }
+  };
 
   return (
     <div className='navbar'>
-      <img className='logo' src={assets.logo} alt="" />
-      
-     {user?<button onClick={logout}>logout</button>:<img className='profile' onClick={()=>{setShowLogin(true)}} src={assets.profile_image} alt="" />} 
+      <div className="navbar-left">
+        {isMobile && (
+          <button className="menu-button" onClick={handleMenuClick}>
+            ☰
+          </button>
+        )}
+        <img className='logo' src={assets.logo} alt="" />
+      </div>
+      {user ? (
+        <button className='logout-btn' onClick={logout}>Logout</button>
+      ) : (
+        <img 
+          className='profile' 
+          onClick={() => setShowLogin(true)} 
+          src={assets.profile_image} 
+          alt="" 
+        />
+      )}
     </div>
   )
 }
