@@ -57,3 +57,43 @@ module.exports.getFoodById = async (req, res) => {
 
 
 
+
+
+module.exports.createFood = async (req, res) => {
+  try {
+    const { name, description, category, price, image } = req.body;
+    console.log(req.body);
+
+    // Check required fields
+    if (!name || !description || !category || !price || !image) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields including image are required"
+      });
+    }
+
+    const newFood = await Food.create({
+      name,
+      description,
+      category,
+      price,
+      image
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Food item created successfully",
+      data: newFood
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Server Error: " + error.message
+    });
+  }
+};
+
+
+
+
