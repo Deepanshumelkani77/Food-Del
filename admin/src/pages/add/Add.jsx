@@ -71,55 +71,117 @@ const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
 
   return (
-    <div className='add'>
+    <div className='add-container'>
+      <div className='add-header'>
+        <h2>Add New Food Item</h2>
+        <p>Fill in the details below to add a new item to your menu</p>
+      </div>
 
-      <form className='flex-col' onSubmit={handleSubmit}>
+      <form className='add-form' onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="name">Product Name</label>
+          <div className="input-with-icon">
+          
+            <input 
+              type="text" 
+              id="name"
+              name='name'  
+              onChange={handleChange}  
+              placeholder='e.g., Margherita Pizza' 
+              required
+            />
+          </div>
+        </div>
 
-      <div className="add-product-name ">
-<p>Product name</p>
-<input type="text" name='name'  onChange={handleChange}  placeholder='Type here' />
-</div>
+        <div className="form-group file-upload-container">
+          <label>Product Image</label>
+          <div className="file-upload-wrapper">
+            <input 
+              type="file" 
+              id='image' 
+              name='image'   
+              onChange={handleFileChange} 
+              accept="image/*" 
+              required
+              className="file-input"
+            />
+            <div className="file-upload-content">
+             
+              <p>{file ? file.name : 'Click to upload or drag and drop'}</p>
+              <small>PNG, JPG, JPEG (max. 5MB)</small>
+            </div>
+          </div>
+        </div>
 
+        <div className="form-group">
+          <label htmlFor="description">Product Description</label>
+          <div className="input-with-icon">
+          
+            <textarea 
+              id="description"
+              name="description" 
+              rows='4' 
+              placeholder='Describe the food item in detail...'  
+              onChange={handleChange} 
+              required
+            ></textarea>
+          </div>
+        </div>
 
-<div className="add-img-upload ">
-<p>Upload Image</p>
-  
-<input  type="file" id='image' placeholder="upload" name='image'   onChange={handleFileChange} accept="image/*" required/>
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="category">Category</label>
+            <div className="select-wrapper">
+           
+              <select id="category" name="category" onChange={handleChange} required>
+                <option value="">Select a category</option>
+                <option value="Salad">Salad</option>
+                <option value="Rolls">Rolls</option>
+                <option value="Deserts">Desserts</option>
+                <option value="Sandwich">Sandwich</option>
+                <option value="Cake">Cake</option>
+                <option value="Pure Veg">Pure Veg</option>
+                <option value="Pasta">Pasta</option>
+                <option value="Noodles">Noodles</option>
+              </select>
+            </div>
+          </div>
 
-</div>
+          <div className="form-group">
+            <label htmlFor="price">Price ($)</label>
+            <div className="input-with-icon">
+             
+              <input 
+                type="number" 
+                id="price"
+                name="price"   
+                onChange={handleChange} 
+                placeholder='0.00' 
+                min="0"
+                step="0.01"
+                required
+              />
+            </div>
+          </div>
+        </div>
 
-
-<div className="add-product-discription ">
-  <p>Product description</p>
-  <textarea name="description" row='5' placeholder='write content here'  onChange={handleChange} required></textarea>
-</div>
-
-<div className="add-category-price">
-  <div className="add-category ">
-<p className='p1'>Product category</p>
-<p className='p2'>category</p>
-<select name="category"  onChange={handleChange} >
-  <option value="Salad">Salad</option>
-  <option value="Rolls">Rolls</option>
-  <option value="Deserts">Deserts</option>
-  <option value="Sandwich">Sandwich</option>
-  <option value="Cake">Cake</option>
-  <option value="Pure Veg">Pure Veg</option>
-  <option value="pasta">pasta</option>
-  <option value="Noodles">Noodles</option>
-</select>
-  </div>
-  <div className="add-price ">
-    <p className='p1'>Product price</p>
-    <p className='p2'>price</p>
-    <input type="number" name="price"   onChange={handleChange} placeholder='Type here'/>
-  </div>
-</div>
-
-<button type='submit' className='add-btn' onClick={handleSubmit}>Add</button>
-
+        <div className="form-actions">
+          <button 
+            type="button" 
+            className="btn btn-secondary"
+            onClick={() => navigate(-1)}
+          >
+            Cancel
+          </button>
+          <button 
+            type='submit' 
+            className='btn btn-primary'
+          >
+            
+            Add Food Item
+          </button>
+        </div>
       </form>
-      
     </div>
   )
 }
