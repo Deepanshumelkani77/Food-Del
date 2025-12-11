@@ -13,7 +13,7 @@ const StoreContextProvider=(props)=>{
   //state variable for login page
   const [showLogin,setShowLogin]=useState(false)
    const [admin, setAdmin] = useState(null);
-   console.log("Admin:", admin)
+   
 
 
   // ---------------- LOGIN ----------------

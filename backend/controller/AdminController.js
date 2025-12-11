@@ -1,4 +1,4 @@
-const User = require("../models/Admin");
+const Admin = require("../models/Admin");
 const jwt = require("jsonwebtoken");
 
 // Create JWT token
@@ -10,7 +10,7 @@ const generateToken = (id) => {
 module.exports.signup = async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    console.log(req.body);
+    console.log("hello",req.body);
 
     let admin = await Admin.findOne({ email });
     if (admin) return res.status(400).json({ message: "Email already exists" });
