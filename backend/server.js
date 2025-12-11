@@ -57,7 +57,7 @@ const userRoutes = require('./routes/User');
 app.use('/user', userRoutes);
 const cartRoutes = require('./routes/Cart');
 app.use('/cart', cartRoutes);
-const orderRoutes = require('./routes/Order');
+const orderRoutes = require('./routes/order');
 app.use('/order', orderRoutes);
 const reviewRoutes = require('./routes/Review');
 app.use('/review', reviewRoutes);
