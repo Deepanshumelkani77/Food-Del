@@ -26,18 +26,20 @@ const Edit = () => {
   // State for file upload
   const [file, setFile] = useState(null);
 
+console.log("hello",foodItem.data)
+
   useEffect(() => {
     // Fetch the food item details from the backend
     fetch(`http://localhost:4000/food/${id}`)
       .then(response => response.json())                                     
       .then(data => {
-        setFoodItem(data);
+        setFoodItem(data.data);
         // Optionally prefill the form with existing data
         setFormData({
-          name: data.name || '',
-          description: data.description || '',
-          category: data.category || '',
-          price: data.price || '',
+          name: data.data.name || '',
+          description: data.data.description || '',
+          category: data.data.category || '',
+          price: data.data.price || '',
         });
       })
       .catch(error => console.error('Error fetching food item:', error));
