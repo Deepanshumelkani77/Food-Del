@@ -97,3 +97,45 @@ module.exports.createFood = async (req, res) => {
 
 
 
+
+// EDIT FOOD ITEM
+module.exports.editFood = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description, category, price, image } = req.body;
+
+    // Validate input
+    if (!name || !description || !category || !price) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+
+    // Update the food item
+    const updatedFood = await Food.findByIdAndUpdate(
+      id,
+      { name, description, category, price, image },
+      { new: true }
+    );
+
+    if (!updatedFood) {
+      return res.status(404).json({
+        success: false,
+        message: "Food item not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Food item updated successfully",
+      data: updatedFood,
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Server Error: " + error.message,
+    });
+  }
+};
