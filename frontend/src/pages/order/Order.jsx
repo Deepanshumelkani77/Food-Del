@@ -53,7 +53,7 @@ const handleSubmit = async (e) => {
     };
 
     const token = Cookies.get('token');
-    const response = await axios.post('http://localhost:4000/order/place', orderData, {
+    const response = await axios.post('https://food-del-0kcf.onrender.com/order/place', orderData, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'

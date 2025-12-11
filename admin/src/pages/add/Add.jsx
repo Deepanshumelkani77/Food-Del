@@ -52,7 +52,7 @@ const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
     const updatedData = { ...formData, image: imageUrl };
 
     try {
-      const response = await fetch(`http://localhost:4000/food`, {
+      const response = await fetch(`https://food-del-0kcf.onrender.com/food`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData),

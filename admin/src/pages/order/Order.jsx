@@ -14,7 +14,7 @@ const Order = () => {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:4000/order');
+        const response = await fetch('https://food-del-0kcf.onrender.com/order');
         const data = await response.json();
         if (data.success) {
           setOrders(data.data);
@@ -33,7 +33,7 @@ const Order = () => {
   // Update order status
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:4000/order/update-status/${orderId}`, {
+      const response = await fetch(`https://food-del-0kcf.onrender.com/order/update-status/${orderId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),

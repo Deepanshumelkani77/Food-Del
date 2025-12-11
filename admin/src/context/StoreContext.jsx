@@ -3,7 +3,7 @@ import { createContext,useState ,useEffect} from "react";
 export const StoreContext=createContext();
 import Cookies from "js-cookie";
 import axios from "axios";
-  const API = "http://localhost:4000";
+  const API = "https://food-del-0kcf.onrender.com";
 
 
 const StoreContextProvider=(props)=>{

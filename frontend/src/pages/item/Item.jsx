@@ -29,7 +29,7 @@ const Item = () => {
   const fetchFoodItem = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:4000/food/${id}`);
+      const response = await fetch(`https://food-del-0kcf.onrender.com/food/${id}`);
       if (!response.ok) {
         throw new Error('Failed to fetch food data');
       }
@@ -67,7 +67,7 @@ const Item = () => {
     }
     
     try {
-      const response = await fetch(`http://localhost:4000/review/${id}`, {
+      const response = await fetch(`https://food-del-0kcf.onrender.com/review/${id}`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ const Item = () => {
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`http://localhost:4000/review/${reviewId}`, {
+      const response = await fetch(`https://food-del-0kcf.onrender.com/review/${reviewId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

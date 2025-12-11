@@ -12,7 +12,7 @@ const FoodItem = ({ id, name, description, price, image }) => {
   // ---------------- ADD ITEM ----------------
   const addToCart = async () => {
     try {
-      const res = await fetch("http://localhost:4000/cart/add", {
+      const res = await fetch("https://food-del-0kcf.onrender.com/cart/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -33,7 +33,7 @@ const FoodItem = ({ id, name, description, price, image }) => {
   // ---------------- UPDATE QUANTITY ----------------
   const updateQuantity = async (newQty) => {
     try {
-      const res = await fetch("http://localhost:4000/cart/update", {
+      const res = await fetch("https://food-del-0kcf.onrender.com/cart/update", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -56,7 +56,7 @@ const FoodItem = ({ id, name, description, price, image }) => {
   const removeFromCart = async () => {
     try {
       const res = await fetch(
-        `http://localhost:4000/cart/remove/${id}?userId=${user.id}`,
+        `https://food-del-0kcf.onrender.com/cart/remove/${id}?userId=${user.id}`,
         {
           method: "DELETE",
         }

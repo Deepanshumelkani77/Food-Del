@@ -4,7 +4,7 @@ import axios from "axios";
 
 export const StoreContext = createContext();
 
-const API = "http://localhost:4000";
+const API = "https://food-del-0kcf.onrender.com";
 
 const StoreContextProvider = (props) => {
   const [showLogin, setShowLogin] = useState(false);
@@ -79,7 +79,7 @@ useEffect(() => {
 const clearCart = async () => {
   try {
     const res = await fetch(
-      `http://localhost:4000/cart/clear?userId=${user.id}`,
+      `https://food-del-0kcf.onrender.com/cart/clear?userId=${user.id}`,
       {
         method: "DELETE",
       }

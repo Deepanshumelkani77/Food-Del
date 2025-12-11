@@ -32,7 +32,7 @@ const Cart = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:4000/cart/get?userId=${user.id}`
+        `https://food-del-0kcf.onrender.com/cart/get?userId=${user.id}`
       );
 
       const data = await res.json();
@@ -75,7 +75,7 @@ const Cart = () => {
 
     try {
       await fetch(
-        `http://localhost:4000/cart/remove/${foodId}?userId=${user.id}`,
+        `https://food-del-0kcf.onrender.com/cart/remove/${foodId}?userId=${user.id}`,
         { method: "DELETE" }
       );
 
@@ -92,7 +92,7 @@ const Cart = () => {
     if (newQty < 1) return;
 
     try {
-      await fetch("http://localhost:4000/cart/update", {
+      await fetch("https://food-del-0kcf.onrender.com/cart/update", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

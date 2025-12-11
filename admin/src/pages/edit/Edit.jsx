@@ -30,7 +30,7 @@ console.log("hello",foodItem.data)
 
   useEffect(() => {
     // Fetch the food item details from the backend
-    fetch(`http://localhost:4000/food/${id}`)
+    fetch(`https://food-del-0kcf.onrender.com/food/${id}`)
       .then(response => response.json())                                     
       .then(data => {
         setFoodItem(data.data);
@@ -81,7 +81,7 @@ console.log("hello",foodItem.data)
     const updatedData = { ...formData, image: imageUrl };
 
     try {
-      const response = await fetch(`http://localhost:4000/food/edit/${id}`, {
+      const response = await fetch(`https://food-del-0kcf.onrender.com/food/edit/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData),

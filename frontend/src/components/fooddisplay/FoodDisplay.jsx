@@ -12,7 +12,7 @@ const FoodDisplay = ({ category = 'All' }) => {
     const fetchFoods = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:4000/food');
+        const response = await axios.get('https://food-del-0kcf.onrender.com/food');
         if (response.data.success) {
           setFoods(response.data.data);
         } else {

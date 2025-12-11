@@ -12,7 +12,7 @@ const FoodDisplay = ({ category = 'All' }) => {
     const fetchFood = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:4000/food');
+        const response = await axios.get('https://food-del-0kcf.onrender.com/food');
         
         // Check if response.data exists and has a data property that is an array
         if (response.data && Array.isArray(response.data.data)) {
