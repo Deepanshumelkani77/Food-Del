@@ -5,7 +5,7 @@ const router = express.Router();
 const { 
   placeOrder, 
   getUserOrders, 
-  getOrderById 
+  getOrderById ,getAllOrders,updateOrderStatus
 } = require('../controller/orderController');
 
 
@@ -18,5 +18,11 @@ router.get('/my-orders', getUserOrders);
 
 // Get order by ID
 router.get('/:id', getOrderById);
+
+// ⭐ NEW: Get all orders (admin)
+router.get('/', getAllOrders);
+
+// ⭐ NEW: Update order status
+router.put('/update-status/:id', updateOrderStatus);
 
 module.exports = router;
