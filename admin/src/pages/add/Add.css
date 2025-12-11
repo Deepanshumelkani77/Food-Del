@@ -14,7 +14,7 @@
 }
 
 .add-container {
-  width: 100%;
+  width: 82%;
   
   margin:  auto;
   padding: 0 1.5rem;
@@ -339,4 +339,15 @@ select:focus-visible {
 
 .success-message .material-symbols-outlined {
   color: #10b981;
+}
+
+
+
+
+@media (max-width: 768px) {
+
+  .add-container{
+    width:100%;
+  }
+
 }

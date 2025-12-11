@@ -35,7 +35,7 @@ body {
 }
 
 .orders-container {
-width:100%;
+width:82%;
   margin: 0 auto;
   padding: 2rem 1.5rem;
   height:90vh;
@@ -43,6 +43,7 @@ width:100%;
     scrollbar-width: none;   /* Firefox */
   background-color: rgba(128, 128, 128, 0.034);
     -ms-overflow-style: none;
+
 }
 
 /* Header Styles */
@@ -524,4 +525,14 @@ width:100%;
     width: 100%;
     text-align: center;
   }
+}
+
+
+
+@media (max-width: 768px) {
+
+  .orders-container{
+    width:100%;
+  }
+
 }
