@@ -6,7 +6,7 @@ const {
   placeOrder, 
   getUserOrders, 
   getOrderById ,getAllOrders,updateOrderStatus
-} = require('../controller/orderController');
+} = require('../controller/OrderController');
 
 
 
