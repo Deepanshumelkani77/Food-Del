@@ -1,4 +1,5 @@
 const Food = require('../models/Food');
+const Review=require('../models/Review');
 
 
 
@@ -130,6 +131,45 @@ module.exports.editFood = async (req, res) => {
       success: true,
       message: "Food item updated successfully",
       data: updatedFood,
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Server Error: " + error.message,
+    });
+  }
+};
+
+
+
+// DELETE FOOD + ITS REVIEWS
+module.exports.deleteFood = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+
+    // 1️⃣ Find the food item
+    const food = await Food.findById(id);
+
+    if (!food) {
+      return res.status(404).json({
+        success: false,
+        message: "Food item not found",
+      });
+    }
+
+    // 2️⃣ Delete all reviews linked to this food
+    if (food.review.length > 0) {
+      await Review.deleteMany({ _id: { $in: food.review } });
+    }
+
+    // 3️⃣ Delete the food item
+    await Food.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Food item and its reviews deleted successfully",
     });
 
   } catch (error) {
