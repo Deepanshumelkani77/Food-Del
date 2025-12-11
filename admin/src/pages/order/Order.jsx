@@ -18,6 +18,7 @@ const Order = () => {
         const data = await response.json();
         if (data.success) {
           setOrders(data.data);
+          console.log(data.data);
         }
       } catch (error) {
         console.error('Error fetching orders:', error);
@@ -205,9 +206,9 @@ const Order = () => {
               <div className="order-details">
                 <div className="customer-info">
                   <h4>Customer</h4>
-                  <p>{order.user?.name || 'Guest User'}</p>
-                  <p>{order.shippingAddress?.phone || 'N/A'}</p>
-                  <p>{order.shippingAddress?.address || 'N/A'}</p>
+                  <p>{order.name || 'Guest User'}</p>
+                  <p>{order.phone || 'N/A'}</p>
+                  <p>{order.address || 'N/A'}</p>
                 </div>
                 
                 <div className="order-summary">
@@ -215,7 +216,7 @@ const Order = () => {
                   <div className="order-items">
                     {order.items?.map((item, index) => (
                       <div key={index} className="order-item">
-                        <span className="item-name">{item.name} × {item.quantity}</span>
+                        <span className="item-name">{item.food.name} × {item.quantity}</span>
                         <span className="item-price">${(item.price * item.quantity).toFixed(2)}</span>
                       </div>
                     ))}
