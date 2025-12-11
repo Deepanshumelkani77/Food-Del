@@ -3,6 +3,7 @@ import { useState } from 'react'
 import './Navbar.css'
 import { assets } from '../../assets/assets'
 import { Link } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 
 
 import { StoreContext } from '../../context/StoreContext'
@@ -20,7 +21,8 @@ const [menu,setMenu]=useState("home");
 
   return (
     <div className='navbar'>
-    <img src={assets.logo} alt='logo' className='logo'></img>
+    <a href="/"> <img src={assets.logo} alt='logo'  className='logo'></img></a>
+   
       
       <ul className="navbar-menu">
 <Link to="/" onClick={()=>{setMenu("home")}}  className={menu==='home'?'active':""}>home</Link>
