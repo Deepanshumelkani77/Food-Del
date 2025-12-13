@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { showSuccess } from "../utils/toast";
 
 export const StoreContext = createContext();
 
@@ -54,6 +55,7 @@ useEffect(() => {
     Cookies.remove("token");
     Cookies.remove("user");
     setUser(null);
+    showSuccess("You have been logged out successfully!");
   };
 
   // ---------------- LOAD USER FROM COOKIES ----------------

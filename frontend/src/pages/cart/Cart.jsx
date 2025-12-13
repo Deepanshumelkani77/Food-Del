@@ -9,12 +9,16 @@ import {
   FaShoppingCart,
   FaArrowLeft,
 } from "react-icons/fa";
+import { showSuccess, showError } from "../../utils/toast";
 
 const Cart = () => {
   const { user, setShowLogin, loadingUser } = useContext(StoreContext);
 
   const [userCart, setUserCart] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [updatingItem, setUpdatingItem] = useState(null);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
@@ -23,7 +27,7 @@ const Cart = () => {
   // FETCH CART ITEMS
   // --------------------------------------------
   const fetchCart = async () => {
-    if (loadingUser) return; // ⬅ WAIT UNTIL USER LOADED
+    if (loadingUser) return;
 
     if (!user) {
       setLoading(false);
@@ -39,12 +43,14 @@ const Cart = () => {
 
       if (data.success) {
         setUserCart(data.cart.items || []);
+      } else {
+        showError("Failed to load cart");
       }
-
       setLoading(false);
     } catch (err) {
       setLoading(false);
       setError("Failed to load cart");
+      showError("Failed to load cart. Please try again.");
     }
   };
 
@@ -70,18 +76,28 @@ const Cart = () => {
   // DELETE ITEM
   // --------------------------------------------
   const handleDelete = async (foodId) => {
-    const confirmDelete = window.confirm("Remove this item?");
+    if (isRemoving) return;
+    
+    const confirmDelete = window.confirm("Remove this item from your cart?");
     if (!confirmDelete) return;
 
+    setIsRemoving(true);
     try {
-      await fetch(
+      const response = await fetch(
         `https://food-del-0kcf.onrender.com/cart/remove/${foodId}?userId=${user.id}`,
         { method: "DELETE" }
       );
 
-      fetchCart();
+      if (response.ok) {
+        showSuccess("Item removed from cart");
+        await fetchCart();
+      } else {
+        showError("Failed to remove item. Please try again.");
+      }
     } catch (err) {
-      alert("Failed to delete item");
+      showError("An error occurred while removing the item");
+    } finally {
+      setIsRemoving(false);
     }
   };
 
@@ -90,9 +106,11 @@ const Cart = () => {
   // --------------------------------------------
   const handleQuantityChange = async (foodId, newQty) => {
     if (newQty < 1) return;
+    if (updatingItem === foodId) return;
 
+    setUpdatingItem(foodId);
     try {
-      await fetch("https://food-del-0kcf.onrender.com/cart/update", {
+      const response = await fetch("https://food-del-0kcf.onrender.com/cart/update", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -102,9 +120,16 @@ const Cart = () => {
         }),
       });
 
-      fetchCart();
+      if (response.ok) {
+        showSuccess("Cart updated");
+        await fetchCart();
+      } else {
+        showError("Failed to update quantity. Please try again.");
+      }
     } catch (err) {
-      alert("Failed to update quantity");
+      showError("An error occurred while updating the quantity");
+    } finally {
+      setUpdatingItem(null);
     }
   };
 
@@ -112,19 +137,30 @@ const Cart = () => {
   // PROCEED TO CHECKOUT
   // --------------------------------------------
   const handleProceedToCheckout = () => {
-    if (!user) return setShowLogin(true);
-
-    if (userCart.length === 0) {
-      return alert("Your cart is empty.");
+    if (!user) {
+      showError("Please login to proceed to checkout");
+      return setShowLogin(true);
     }
 
-    navigate("/order", {
-      state: {
-        cartItems: userCart,
-        totalAmount: getTotalCartAmount(),
-        totalItems: getTotalItems(),
-      },
-    });
+    if (userCart.length === 0) {
+      return showError("Your cart is empty. Add some items first!");
+    }
+
+    setIsCheckingOut(true);
+    try {
+      navigate("/order", {
+        state: {
+          cartItems: userCart,
+          totalAmount: getTotalCartAmount(),
+          totalItems: getTotalItems(),
+        },
+      });
+      showSuccess("Proceeding to checkout");
+    } catch (err) {
+      showError("Failed to proceed to checkout. Please try again.");
+    } finally {
+      setIsCheckingOut(false);
+    }
   };
 
   // --------------------------------------------
@@ -177,7 +213,7 @@ const Cart = () => {
                       onClick={() =>
                         handleQuantityChange(item.food._id, item.quantity - 1)
                       }
-                      disabled={item.quantity <= 1}
+                      disabled={item.quantity <= 1 || updatingItem === item.food._id}
                     >
                       <FaMinus />
                     </button>
@@ -188,6 +224,7 @@ const Cart = () => {
                       onClick={() =>
                         handleQuantityChange(item.food._id, item.quantity + 1)
                       }
+                      disabled={updatingItem === item.food._id}
                     >
                       <FaPlus />
                     </button>
@@ -201,6 +238,7 @@ const Cart = () => {
                 <button
                   className="remove-item"
                   onClick={() => handleDelete(item.food._id)}
+                  disabled={isRemoving}
                 >
                   <FaTrash />
                 </button>
@@ -233,6 +271,7 @@ const Cart = () => {
             <button
               className="checkout-button"
               onClick={handleProceedToCheckout}
+              disabled={isCheckingOut || userCart.length === 0}
             >
               Proceed to Checkout
             </button>

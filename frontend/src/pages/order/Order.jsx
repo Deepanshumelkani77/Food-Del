@@ -1,11 +1,9 @@
-
-
-
 import { useState, useEffect, useContext, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { StoreContext } from '../../context/StoreContext';
+import { showSuccess, showError } from '../../utils/toast';
 import './Order.css';
 
 const Placeorder = () => {
@@ -13,7 +11,6 @@ const Placeorder = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { cartItems = [], totalAmount = 0, totalItems = 0 } = location.state || {};
-  console.log('Cart Items from location state:', cartItems);
   const { user, clearCart } = useContext(StoreContext);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [formData, setFormData] = useState({
@@ -26,64 +23,66 @@ const Placeorder = () => {
     postalCode: '',
     paymentMethod: 'cash'
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-
-
-
-
-
-
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setError('');
-
-  try {
-    const orderData = {
-      ...formData,
-      items: cartItems.map(item => ({
-        foodId: item.food._id,
-        quantity: item.quantity,
-        price: item.food.price
-      })),
-      totalAmount: totalAmount + 5 + (totalAmount * 0.1), // Including delivery and tax
-      status: 'pending',
-      UserId: user?.id
-    };
-
-    const token = Cookies.get('token');
-    const response = await axios.post('https://food-del-0kcf.onrender.com/order/place', orderData, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (response.data.success) {
-      clearCart(); // Clear the cart after successful order
-      navigate('/order-confirmation', { 
-        state: { 
-          orderId: response.data.order._id,
-          total: response.data.order.totalAmount,
-          orderNumber: response.data.order.orderNumber
-        } 
-      });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validate form fields
+    const requiredFields = ['name', 'email', 'phone', 'address', 'city', 'state', 'postalCode'];
+    const missingFields = requiredFields.filter(field => !formData[field].trim());
+    
+    if (missingFields.length > 0) {
+      showError(`Please fill in all required fields: ${missingFields.join(', ')}`);
+      return;
     }
-  } catch (err) {
-    setError(err.response?.data?.message || 'Failed to place order. Please try again.');
-    console.error('Order submission error:', err);
-  } finally {
-    setLoading(false);
-  }
-};
 
+    setLoading(true);
+    setError('');
 
+    try {
+      const orderData = {
+        ...formData,
+        items: cartItems.map(item => ({
+          foodId: item.food._id,
+          quantity: item.quantity,
+          price: item.food.price,
+          name: item.food.name
+        })),
+        totalAmount: totalAmount + 5 + (totalAmount * 0.1), // Including delivery and tax
+        status: 'pending',
+        UserId: user?.id
+      };
 
+      const token = Cookies.get('token');
+      const response = await axios.post('https://food-del-0kcf.onrender.com/order/place', orderData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
 
-
-
-
+      if (response.data.success) {
+        showSuccess('Order placed successfully! Redirecting to confirmation...');
+        clearCart(); // Clear the cart after successful order
+        navigate('/order-confirmation', { 
+          state: { 
+            orderId: response.data.order._id,
+            total: response.data.order.totalAmount,
+            orderNumber: response.data.order.orderNumber
+          } 
+        });
+      }
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || 'Failed to place order. Please try again.';
+      showError(errorMessage);
+      setError(errorMessage);
+      console.error('Order submission error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -101,7 +100,7 @@ const handleSubmit = async (e) => {
     
     if (token && userCookie && userCookie !== 'undefined') {
       try {
-        // Parse user data from cookie instead of making an API call
+        // Parse user data from cookie
         const userData = JSON.parse(userCookie);
         if (userData) {
           // Update form data with user info from cookie
@@ -114,35 +113,30 @@ const handleSubmit = async (e) => {
         }
       } catch (error) {
         console.error('Error parsing user data from cookie:', error);
+        showError('Error loading your profile information');
       }
+    } else {
+      showError('Please login to place an order');
+      navigate('/login');
     }
     setIsCheckingAuth(false);
-  }, []);
+  }, [navigate]);
 
-  // Debug: Log user state and cookies on mount
   useEffect(() => {
-    console.log('User from context:', user);
-    console.log('User cookie:', Cookies.get('user'));
-    console.log('Token cookie:', Cookies.get('token'));
     checkAuth();
-  }, [checkAuth, user]);
-  
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  }, [checkAuth]);
 
   useEffect(() => {
     if (!cartItems || cartItems.length === 0) {
+      showError('Your cart is empty. Please add items before checkout.');
       navigate('/cart');
     }
   }, [cartItems, navigate]);
 
   // Show loading state while checking auth
   if (isCheckingAuth) {
-    return <div>Checking authentication status...</div>;
+    return <div className="loading-container">Checking authentication status...</div>;
   }
-
- 
-  
 
   if (!cartItems || cartItems.length === 0) {
     return (
@@ -152,7 +146,10 @@ const handleSubmit = async (e) => {
           <p>Please add some items to your cart before proceeding to checkout.</p>
           <button 
             className="continue-shopping" 
-            onClick={() => navigate('/')}
+            onClick={() => {
+              showSuccess('Redirecting to menu...');
+              navigate('/');
+            }}
           >
             Continue Shopping
           </button>
@@ -297,26 +294,26 @@ const handleSubmit = async (e) => {
         <div className="order-summary">
           <h3>Order Summary</h3>
           <div className="order-items">
-  {cartItems.map(item => (
-    <div key={item.food._id} className="order-item">
-      <div className="item-image">
-        <img 
-          src={item.food.image} 
-          alt={item.food.name} 
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = '/images/placeholder-food.jpg';
-          }}
-        />
-      </div>
-      <div className="item-details">
-        <h4>{item.food.name}</h4>
-        <p>Qty: {item.quantity}</p>
-      </div>
-      <div className="item-price">${(item.food.price * item.quantity).toFixed(2)}</div>
-    </div>
-  ))}
-</div>
+            {cartItems.map(item => (
+              <div key={item.food._id} className="order-item">
+                <div className="item-image">
+                  <img 
+                    src={item.food.image} 
+                    alt={item.food.name} 
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/images/placeholder-food.jpg';
+                    }}
+                  />
+                </div>
+                <div className="item-details">
+                  <h4>{item.food.name}</h4>
+                  <p>Qty: {item.quantity}</p>
+                </div>
+                <div className="item-price">${(item.food.price * item.quantity).toFixed(2)}</div>
+              </div>
+            ))}
+          </div>
 
           <div className="order-totals">
             <div className="total-row">
@@ -343,5 +340,3 @@ const handleSubmit = async (e) => {
 };
 
 export default Placeorder;
-
-

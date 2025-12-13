@@ -4,12 +4,14 @@ import "./Item.css";
 import { assets } from '../../assets/assets';
 import { StoreContext } from '../../context/StoreContext';
 import { useNavigate } from 'react-router-dom';
+import { showSuccess, showError } from '../../utils/toast';
 
 const Item = () => {
   const { id } = useParams();
   const [foodItem, setFoodItem] = useState({});
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({ comment: "", author: "" });
   const { user } = useContext(StoreContext);
   const navigate = useNavigate();
@@ -38,6 +40,7 @@ const Item = () => {
       setReviews(data.data.review || []);
     } catch (error) {
       console.error('Error fetching food item:', error);
+      showError('Failed to load food item. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -61,10 +64,19 @@ const Item = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (!formData.comment.trim()) {
-      alert('Please enter a review before submitting.');
+      showError('Please enter a review before submitting.');
       return;
     }
+    
+    if (!user) {
+      showError('Please log in to leave a review.');
+      navigate('/login');
+      return;
+    }
+    
+    setIsSubmitting(true);
     
     try {
       const response = await fetch(`https://food-del-0kcf.onrender.com/review/${id}`, {
@@ -79,14 +91,17 @@ const Item = () => {
       if (response.ok) {
         await fetchFoodItem();
         setFormData({...formData, comment: ''});
+        showSuccess('Thank you for your review!');
       } else {
         const errorData = await response.json();
         console.error('Failed to add review:', errorData);
-        alert('Please log in to leave a review.');
+        showError(errorData.message || 'Failed to submit review. Please try again.');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred while submitting your review.');
+      showError('An error occurred while submitting your review.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -104,12 +119,14 @@ const Item = () => {
 
       if (response.ok) {
         await fetchFoodItem();
+        showSuccess('Review deleted successfully');
       } else {
-        alert('Failed to delete the review.');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to delete review');
       }
     } catch (error) {
       console.error('Error deleting review:', error);
-      alert('An error occurred while deleting the review.');
+      showError(error.message || 'Failed to delete review. Please try again.');
     }
   };
 
@@ -160,10 +177,11 @@ const Item = () => {
                 onChange={handleChange}
               />
               <button 
+                type="submit"
                 onClick={handleSubmit}
-                disabled={!formData.comment.trim()}
+                disabled={isSubmitting || !formData.comment.trim()}
               >
-                Submit Review
+                {isSubmitting ? 'Submitting...' : 'Submit Review'}
               </button>
             </>
           ) : (
@@ -185,9 +203,10 @@ const Item = () => {
                     <button 
                       className="delete-review-btn"
                       onClick={() => handleDelete(review._id)}
+                      disabled={isSubmitting}
                       title="Delete review"
                     >
-                      ×
+                      {isSubmitting ? 'Deleting...' : '×'}
                     </button>
                   )}
                 </div>
