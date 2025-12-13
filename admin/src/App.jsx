@@ -7,15 +7,12 @@ import Add from "./pages/add/Add.jsx"
 import List from "./pages/list/List.jsx"
 import Edit from './pages/edit/Edit.jsx'
 import Login from './components/login/Login.jsx'
-
 import { StoreContext } from './context/StoreContext'
-
 import Order from "./pages/order/Order.jsx"
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
 const App = () => {
-
-  
-
-
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
   const { showLogin } = useContext(StoreContext);
   
@@ -24,28 +21,33 @@ const App = () => {
   };
 
   return (
-     
-     <div className='app'>
-
-
-
-    {
-       showLogin?<Login/>:<></>
-     }
+    <div className='app'>
+      {/* Toast Container for notifications */}
+      <ToastContainer 
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      
+      {showLogin && <Login/>}
+      
       <Navbar toggleSidebar={toggleSidebar} />
       <div className="app-content">
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-<Routes>
-  <Route path="/add" element={<Add/>}></Route>
-  <Route path="/" element={<List/>}></Route>
-  <Route path='/edit/:id' element={<Edit/>}></Route>
-  <Route path="/order" element={<Order/>}></Route>
-  </Routes>  
-
+        <Routes>
+          <Route path="/add" element={<Add/>}></Route>
+          <Route path="/" element={<List/>}></Route>
+          <Route path='/edit/:id' element={<Edit/>}></Route>
+          <Route path="/order" element={<Order/>}></Route>
+        </Routes>  
       </div>
-      
-
-
     </div>
   )
 }

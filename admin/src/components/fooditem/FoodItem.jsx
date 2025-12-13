@@ -1,41 +1,51 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import "./FoodItem.css"
 import { assets } from '../../assets/assets'
 import { useNavigate } from 'react-router-dom'
 import { StoreContext } from '../../context/StoreContext'
+import { showSuccess, showError } from '../../utils/toast';
 
 const FoodItem = ({id,name,description,price,image}) => {
+  const {admin, setShowLogin} = useContext(StoreContext);
+  const navigate = useNavigate();
+  const [isDeleting, setIsDeleting] = useState(false);
 
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this food item?');
+    if (!confirmDelete) return;
 
-  const {admin,setShowLogin}=useContext(StoreContext)
-const navigate=useNavigate();
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`https://food-del-0kcf.onrender.com/food/delete/${id}`, {
+        method: 'DELETE',
+      });
 
-
-
-const handleDelete = async () => {
-
-  const confirmDelete = window.confirm('Are you sure you want to delete this food item?');
-  if (!confirmDelete) return;
-
-  try {
-    const response = await fetch(`https://food-del-0kcf.onrender.com/food/delete/${id}`, {
-      method: 'DELETE',
-    });
-
-    if (response.ok) {
-      window.location.reload(); // Refresh the page after deletion
-      alert('Food item deleted successfully!');
-     
-      // Redirect to the home page
-    } else {
-      alert('Failed to delete the food item.');
+      if (response.ok) {
+        showSuccess('Food item deleted successfully!');
+        // Small delay to show the success message before reloading
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to delete the food item');
+      }
+    } catch (error) {
+      console.error('Error deleting food item:', error);
+      showError(error.message || 'An error occurred while deleting the food item.');
+    } finally {
+      setIsDeleting(false);
     }
-  } catch (error) {
-    console.error('Error deleting food item:', error);
-    alert('An error occurred while deleting the food item.');
-  }
-};
+  };
 
+  const handleEditClick = () => {
+    if (!admin) {
+      showError('Please login to edit items');
+      setShowLogin(true);
+      return;
+    }
+    navigate(`/edit/${id}`);
+  };
 
   return (
     <div className='food-item'>
@@ -54,18 +64,19 @@ const handleDelete = async () => {
         </p>
         <div className="food-item-btns">
           <button 
-            onClick={admin ? () => navigate(`/edit/${id}`) : () => setShowLogin(true)}
+            onClick={handleEditClick}
             title="Edit item"
+            disabled={isDeleting}
           >
-           
-      
+            {/* Edit icon or text */}
           </button>
           <button 
             onClick={admin ? handleDelete : () => setShowLogin(true)}
             title="Delete item"
             className="delete-btn"
+            disabled={isDeleting}
           >
-           
+            {isDeleting ? 'Deleting...' : null}
           </button>
         </div>
       </div>
@@ -73,4 +84,4 @@ const handleDelete = async () => {
   )
 }
 
-export default FoodItem
+export default FoodItem;
